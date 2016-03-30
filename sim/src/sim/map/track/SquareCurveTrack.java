@@ -22,16 +22,13 @@ public class SquareCurveTrack implements AbstractTrack {
 		this.ePoint = endPoint;
 
 		// Approximate track length using Riemann sum.
-		// sum [sqrt(dx^2 + dy^2) * dt], where dt = 0: (1/RIEMANN_STEPS) : 1
 		double length = 0;
 		Point2D from = startPoint;
-		for (int i = 0; i < RIEMANN_STEPS; i++) {
-			Point2D to = evaluate(i / 1000.0);
-			double dxsq = Math.pow(from.getX() - to.getX(), 2);
-			double dysq = Math.pow(from.getY() - to.getY(), 2);
-			length += Math.sqrt(dxsq + dysq);
+		for (int i = 1; i < RIEMANN_STEPS; i++) {
+			Point2D to = evaluate(i / (double) RIEMANN_STEPS);
+			length += from.distance(to);
+			from = to;
 		}
-		length /= RIEMANN_STEPS;
 
 		this.length = length;
 	}
