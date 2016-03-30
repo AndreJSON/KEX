@@ -1,7 +1,5 @@
 package sim.map.track;
 
-import java.awt.geom.Point2D;
-
 public interface AbstractTrack {
 
 	/**
@@ -9,14 +7,14 @@ public interface AbstractTrack {
 	 * 
 	 * @return
 	 */
-	public Point2D getStartPoint();
+	public Vector2D getStartPoint();
 
 	/**
 	 * Ending point of the track.
 	 * 
 	 * @return
 	 */
-	public Point2D getEndPoint();
+	public Vector2D getEndPoint();
 
 	/**
 	 * Length of the track.
@@ -32,5 +30,13 @@ public interface AbstractTrack {
 	 * @return
 	 */
 	public TrackPosition getTrackPosition();
+
+	/**
+	 * Get a position following the track. Starts at distance dist and moves
+	 * along the track.
+	 * 
+	 * @return
+	 */
+	public TrackPosition getTrackPosition(double dist);
 
 }
