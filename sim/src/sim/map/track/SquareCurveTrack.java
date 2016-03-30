@@ -10,18 +10,18 @@ public class SquareCurveTrack implements AbstractTrack {
 
 	public static int RIEMANN_STEPS = 1000; // default value
 
-	private final Vector2D sPoint, cPoint, ePoint;
+	// Control points 1,2,3.
+	private final Vector2D c1, c2, c3;
 	private final double length;
 
-	public SquareCurveTrack(Vector2D startPoint, Vector2D controlPoint,
-			Vector2D endPoint) {
-		this.sPoint = startPoint;
-		this.cPoint = controlPoint;
-		this.ePoint = endPoint;
+	public SquareCurveTrack(Vector2D c1, Vector2D c2, Vector2D c3) {
+		this.c1 = c1;
+		this.c2 = c2;
+		this.c3 = c3;
 
 		// Approximate track length using Riemann sum.
 		double length = 0;
-		Vector2D from = startPoint;
+		Vector2D from = c1;
 		for (int i = 1; i < RIEMANN_STEPS; i++) {
 			Vector2D to = evaluate(i / (double) RIEMANN_STEPS);
 			length += from.distance(to);
@@ -40,17 +40,17 @@ public class SquareCurveTrack implements AbstractTrack {
 	private Vector2D evaluate(double t) {
 		double tm = 1 - t;
 		// A(1-t)^2 + 2B(1-t)t + Ct^2.
-		return sPoint.mult(tm * tm).plus(cPoint.mult(tm * t)).plus(ePoint.mult(t * t));
+		return c1.mult(tm * tm).plus(c2.mult(tm * t)).plus(c3.mult(t * t));
 	}
 
 	@Override
 	public Vector2D getStartPoint() {
-		return sPoint;
+		return c1;
 	}
 
 	@Override
 	public Vector2D getEndPoint() {
-		return ePoint;
+		return c3;
 	}
 
 	@Override
@@ -100,7 +100,6 @@ public class SquareCurveTrack implements AbstractTrack {
 			calcHeading();
 			totDist += dist;
 		}
-		
 
 		@Override
 		public double remaining() {
@@ -108,11 +107,11 @@ public class SquareCurveTrack implements AbstractTrack {
 		}
 
 	}
-	
 
 	@Override
-	public String toString(){
-		return "SquareCurveTrack{["+sPoint.x+", "+sPoint.y+"], ["+cPoint.x+", "+cPoint.y+"], ["+ePoint.x+", "+ePoint.y+"]}";
+	public String toString() {
+		return "SquareCurveTrack{[" + c1.x + ", " + c1.y + "], [" + c2.x + ", "
+				+ c2.y + "], [" + c3.x + ", " + c3.y + "]}";
 	}
 
 	// TEST CODE
@@ -126,6 +125,5 @@ public class SquareCurveTrack implements AbstractTrack {
 		System.out.println(curve);
 		System.out.println(curve.length);
 	}
-
 
 }

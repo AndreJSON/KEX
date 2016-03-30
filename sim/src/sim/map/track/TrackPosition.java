@@ -18,12 +18,14 @@ public interface TrackPosition {
 
 	/**
 	 * Move the position by the distance specified along the track.
+	 * 
 	 * @param dist
 	 */
 	void move(double dist);
-	
+
 	/**
 	 * How much of the track that remains.
+	 * 
 	 * @return
 	 */
 	double remaining();
