@@ -123,7 +123,7 @@ public class SquareCurveTrack implements AbstractTrack {
 				new Vector2D(0, 1), new Vector2D(1, 1));
 
 		System.out.println(curve);
-		System.out.println(curve.length);
+		System.out.println("Curvev length = " + curve.length);
 	}
 
 }

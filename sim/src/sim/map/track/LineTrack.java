@@ -9,7 +9,7 @@ public class LineTrack implements AbstractTrack {
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
 		length = startPoint.distance(endPoint);
-		unit = endPoint.minus(startPoint).unit();
+		unit = (endPoint.minus(startPoint)).unit();
 	}
 
 	@Override
