@@ -4,7 +4,6 @@ public class LineTrack implements AbstractTrack {
 	private final double length;
 	private Vector2D startPoint, endPoint, unit;
 
-
 	public LineTrack(Vector2D startPoint, Vector2D endPoint) {
 		this.startPoint = startPoint;
 		this.endPoint = endPoint;
@@ -68,10 +67,11 @@ public class LineTrack implements AbstractTrack {
 	public Vector2D getEndPoint() {
 		return endPoint;
 	}
-	
+
 	@Override
-	public String toString(){
-		return "LineTrack{["+startPoint.x+", "+startPoint.y+"], ["+endPoint.x+", "+endPoint.y+"]}";
+	public String toString() {
+		return "LineTrack{[" + startPoint.x + ", " + startPoint.y + "], ["
+				+ endPoint.x + ", " + endPoint.y + "]}";
 	}
 
 }
