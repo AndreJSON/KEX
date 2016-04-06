@@ -1,17 +1,25 @@
 package sim;
 
-import math.Vector2D;
+import math.*;
 import sim.map.track.*;
 import sim.vehicle.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class Simulation {
 	private static final int X = 0, Y = 1;
-	private static final int[] windowSize = {800, 600};
+	private static final int[] windowSize = {1000, 800};
 	private JFrame window;
+	private BufferedImage im;
+	private Graphics2D g;
 
 	public Simulation() {
 		init();
+		testDraw();
 		testSquareCurveTrack();
 		testLineTrack();
 		System.out.println("All probably went well, here is a test print.");
@@ -21,6 +29,15 @@ public class Simulation {
 		window = new JFrame("Traffic Simulation");
 		window.setSize(windowSize[X], windowSize[Y]);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		im = new BufferedImage(100, 50, BufferedImage.TYPE_INT_ARGB);
+		g = im.createGraphics();
+		window.add(new JLabel () {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(im, 0, 0, null);
+			}
+		});
 		window.setVisible(true);
 	}
 
@@ -30,6 +47,12 @@ public class Simulation {
 	}
 	
 /************ TEST CODE FROM THIS POINT ON *************/
+
+	// Test drawing
+	public void testDraw () {
+		g.setColor(Color.BLUE);
+		g.fillRect(10,10,100,100);
+	};
 
 	// Testing bezier track.
 	public void testSquareCurveTrack() {
