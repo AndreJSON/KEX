@@ -1,6 +1,6 @@
 package sim.map.track;
 
-import Math.Vector2D;
+import math.Vector2D;
 
 /**
  * Second degree bezier track.

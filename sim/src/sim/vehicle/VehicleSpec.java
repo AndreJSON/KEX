@@ -2,7 +2,7 @@ package sim.vehicle;
 
 import java.awt.Shape;
 
-import Math.Vector2D;
+import math.Vector2D;
 
 public class VehicleSpec {
 	private String name;

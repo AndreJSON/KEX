@@ -1,15 +1,18 @@
 .DEFAULT_GOAL := all
-BASE = sim/src/sim
-VEHICLE = $(BASE)/vehicle
-TRACK = $(BASE)/map/track
+SRC = sim/src
+MATH = $(SRC)/math
+SIM = $(SRC)/sim
+VEHICLE = $(SIM)/vehicle
+TRACK = $(SIM)/map/track
 FILES = \
+$(MATH)/Vector2D.java \
 $(VEHICLE)/VehicleSpec.java \
-$(TRACK)/Vector2D.java \
+$(VEHICLE)/Car.java \
 $(TRACK)/TrackPosition.java \
 $(TRACK)/AbstractTrack.java \
 $(TRACK)/LineTrack.java \
 $(TRACK)/SquareCurveTrack.java \
-$(BASE)/Simulation.java
+$(SIM)/Simulation.java
 
 all:
 	javac -g $(FILES)
@@ -19,4 +22,4 @@ run:
 	cd sim/src && java sim.Simulation
 
 clean:
-	cd sim/src && rm -f sim/vehicle/*.class && rm -f sim/map/track/*.class
+	cd sim/src && rm -f sim/vehicle/*.class && rm -f sim/map/track/*.class && rm -f math/*.class
