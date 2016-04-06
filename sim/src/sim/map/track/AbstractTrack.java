@@ -1,5 +1,7 @@
 package sim.map.track;
 
+import Math.Vector2D;
+
 public interface AbstractTrack {
 
 	/**

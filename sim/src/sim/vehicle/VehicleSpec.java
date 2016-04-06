@@ -1,10 +1,15 @@
 package sim.vehicle;
 
-import java.awt.geom.Point2D;
+import java.awt.Shape;
+
+import Math.Vector2D;
 
 public class VehicleSpec {
 	private String name;
 	private double length, width;
+	// Distance from the center to the front axis and rear axis.
+	// rear_axis + front_axis = length of wheel base
+	private double front_axis, rear_axis;
 
 	/**
 	 * Get the name of the vehicle type.
@@ -34,27 +39,80 @@ public class VehicleSpec {
 	}
 
 	/**
-	 * Get the rear point of the vehicle.
-	 * 
+	 * Converts center to rear.
 	 * @return
 	 */
-	public Point2D getRearPoint(Point2D pos, double heading) {
+	public Vector2D center2rear(Vector2D pos, double heading) {
 		// EJ KONTROLLERAD
-		double rearX = pos.getX() - Math.cos(heading) * length / 2;
-		double rearY = pos.getY() - Math.sin(heading) * length / 2;
-		return new Point2D.Double(rearX, rearY);
+		double x = pos.getX() - Math.cos(heading) * length / 2;
+		double y = pos.getY() - Math.sin(heading) * length / 2;
+		return new Vector2D(x, y);
 	}
 
 	/**
-	 * Get the front point of the vehicle.
+	 * Converts center to rear axis.
 	 * 
+	 * @param pos
+	 * @param heading
 	 * @return
 	 */
-	public Point2D getFrontPoint(Point2D pos, double heading) {
+	public Vector2D center2rearaxis(Vector2D pos, double heading) {
 		// EJ KONTROLLERAD
-		double frontX = pos.getX() + Math.cos(heading) * length / 2;
-		double frontY = pos.getY() + Math.sin(heading) * length / 2;
-		return new Point2D.Double(frontX, frontY);
+		double x = pos.getX() - Math.cos(heading) * rear_axis;
+		double y = pos.getY() - Math.sin(heading) * rear_axis;
+		return new Vector2D(x, y);
+	}
+
+	/**
+	 * Converts center to front
+	 * @return
+	 */
+	public Vector2D center2front(Vector2D pos, double heading) {
+		// EJ KONTROLLERAD
+		double x = pos.getX() + Math.cos(heading) * length / 2;
+		double y = pos.getY() + Math.sin(heading) * length / 2;
+		return new Vector2D(x, y);
+	}
+
+	/**
+	 * Converts center to front axis
+	 * @param pos
+	 * @param heading
+	 * @return
+	 */
+	public Vector2D center2frontaxis(Vector2D pos, double heading) {
+		// EJ KONTROLLERAD
+		double x = pos.getX() + Math.cos(heading) * front_axis;
+		double y = pos.getY() + Math.sin(heading) * front_axis;
+		return new Vector2D(x, y);
+	}
+	
+	/**
+	 * Converts front axis into center.
+	 * @param pos
+	 * @param heading
+	 * @return
+	 */
+	public Vector2D frontaxis2center(Vector2D pos, double heading){
+		double x = pos.getX() - Math.cos(heading) * front_axis;
+		double y = pos.getY() - Math.sin(heading) * front_axis;
+		return new Vector2D(x, y);
+	}
+
+	/**
+	 * Converts rear axis to center.
+	 * @param pos
+	 * @param heading
+	 * @return
+	 */
+	public Vector2D rearaxis2center(Vector2D pos, double heading){
+		double x = pos.getX() - Math.cos(heading) * rear_axis;
+		double y = pos.getY() - Math.sin(heading) * rear_axis;
+		return new Vector2D(x, y);
+	}
+
+	public double getWheelBaseLength() {
+		return rear_axis + front_axis;
 	}
 
 	/**
@@ -62,7 +120,7 @@ public class VehicleSpec {
 	 * 
 	 * @return
 	 */
-	public Point2D getShape(Point2D pos, double heading) {
+	public Shape getShape(Vector2D pos, double heading) {
 		// TODO: hur?
 		return null;
 	}

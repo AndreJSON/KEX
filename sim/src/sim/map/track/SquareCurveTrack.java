@@ -1,5 +1,7 @@
 package sim.map.track;
 
+import Math.Vector2D;
+
 /**
  * Second degree bezier track.
  * 
@@ -110,8 +112,7 @@ public class SquareCurveTrack implements AbstractTrack {
 
 	@Override
 	public String toString() {
-		return "SquareCurveTrack{[" + c1.x + ", " + c1.y + "], [" + c2.x + ", "
-				+ c2.y + "], [" + c3.x + ", " + c3.y + "]}";
+		return "SquareCurveTrack{" + c1 + ", " + c2 + ", " + c3 + "}";
 	}
 
 	// TEST CODE
