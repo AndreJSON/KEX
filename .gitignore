@@ -17,6 +17,7 @@ hs_err_pid*
 .settings
 .classpath
 .project
+.metadata/
 
 # --- gedit ---
 *~
