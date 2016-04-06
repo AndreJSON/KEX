@@ -114,17 +114,4 @@ public class SquareCurveTrack implements AbstractTrack {
 	public String toString() {
 		return "SquareCurveTrack{" + c1 + ", " + c2 + ", " + c3 + "}";
 	}
-
-	// TEST CODE
-
-	public static void main(String[] args) {
-
-		// Testing arc length.
-		SquareCurveTrack curve = new SquareCurveTrack(new Vector2D(0, 0),
-				new Vector2D(0, 1), new Vector2D(1, 1));
-
-		System.out.println(curve);
-		System.out.println("Curvev length = " + curve.length);
-	}
-
 }
