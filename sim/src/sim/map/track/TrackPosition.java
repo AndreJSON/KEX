@@ -1,5 +1,7 @@
 package sim.map.track;
 
+import Math.Vector2D;
+
 public interface TrackPosition {
 
 	/**
@@ -21,7 +23,7 @@ public interface TrackPosition {
 	 * 
 	 * @param dist
 	 */
-	void move(double dist);
+	void move(double distance);
 
 	/**
 	 * How much of the track that remains.

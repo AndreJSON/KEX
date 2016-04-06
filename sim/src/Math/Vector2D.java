@@ -1,4 +1,4 @@
-package sim.map.track;
+package Math;
 
 import java.awt.geom.Point2D;
 
@@ -119,10 +119,8 @@ public class Vector2D extends Point2D.Double {
 		return new Vector2D(x - point.x, y - point.y);
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	public String toString() {
-		return "Vector2D[" + x + ", " + y + "]";
+		return "[" + x + ", " + y + "]";
 	}
 }

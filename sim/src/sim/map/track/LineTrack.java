@@ -1,5 +1,7 @@
 package sim.map.track;
 
+import Math.Vector2D;
+
 public class LineTrack implements AbstractTrack {
 	private final double length;
 	private Vector2D startPoint, endPoint, unit;
@@ -54,8 +56,8 @@ public class LineTrack implements AbstractTrack {
 	}
 
 	@Override
-	public TrackPosition getTrackPosition(double dist) {
-		return new Position(dist);
+	public TrackPosition getTrackPosition(double distance) {
+		return new Position(distance);
 	}
 
 	@Override
@@ -70,8 +72,7 @@ public class LineTrack implements AbstractTrack {
 
 	@Override
 	public String toString() {
-		return "LineTrack{[" + startPoint.x + ", " + startPoint.y + "], ["
-				+ endPoint.x + ", " + endPoint.y + "]}";
+		return "LineTrack{" + startPoint + ", " + endPoint + "}";
 	}
 
 }

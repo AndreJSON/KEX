@@ -1,5 +1,7 @@
 package sim.map.track;
 
+import Math.Vector2D;
+
 /**
  * Second degree bezier track.
  * 
@@ -64,18 +66,20 @@ public class SquareCurveTrack implements AbstractTrack {
 	}
 
 	@Override
-	public TrackPosition getTrackPosition(double dist) {
-		return new Position(dist);
+	public TrackPosition getTrackPosition(double distance) {
+		return new Position(distance);
 	}
 
 	private class Position implements TrackPosition {
+		// TODO: Complete this class.
+		
 		private double t, heading, totDist;
 		private Vector2D point;
 
-		public Position(double dist) {
+		public Position(double distance) {
 			point = new Vector2D();
 			t = 0;
-			move(dist);
+			move(distance);
 		}
 
 		private void calcHeading() {
@@ -95,10 +99,10 @@ public class SquareCurveTrack implements AbstractTrack {
 		}
 
 		@Override
-		public void move(double dist) {
+		public void move(double distance) {
 			// TODO: move algorithm.
 			calcHeading();
-			totDist += dist;
+			totDist += distance;
 		}
 
 		@Override
@@ -110,7 +114,6 @@ public class SquareCurveTrack implements AbstractTrack {
 
 	@Override
 	public String toString() {
-		return "SquareCurveTrack{[" + c1.x + ", " + c1.y + "], [" + c2.x + ", "
-				+ c2.y + "], [" + c3.x + ", " + c3.y + "]}";
+		return "SquareCurveTrack{" + c1 + ", " + c2 + ", " + c3 + "}";
 	}
 }

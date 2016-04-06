@@ -1,5 +1,7 @@
 package sim.map.track;
 
+import Math.Vector2D;
+
 public interface AbstractTrack {
 
 	/**
@@ -37,6 +39,6 @@ public interface AbstractTrack {
 	 * 
 	 * @return
 	 */
-	public TrackPosition getTrackPosition(double dist);
+	public TrackPosition getTrackPosition(double distance);
 
 }
