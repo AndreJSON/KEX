@@ -1,3 +1,4 @@
+.DEFAULT_GOAL := all
 BASE = sim/src/sim
 VEHICLE = $(BASE)/vehicle
 TRACK = $(BASE)/map/track
@@ -7,13 +8,15 @@ $(TRACK)/Vector2D.java \
 $(TRACK)/TrackPosition.java \
 $(TRACK)/AbstractTrack.java \
 $(TRACK)/LineTrack.java \
-$(TRACK)/SquareCurveTrack.java
+$(TRACK)/SquareCurveTrack.java \
+$(BASE)/Simulation.java
 
-default:
+all:
 	javac -g $(FILES)
+	@echo "---Done!---"
 
 run:
-	cd sim/src && java sim.map.track.SquareCurveTrack
+	cd sim/src && java sim.Simulation
 
 clean:
 	cd sim/src && rm -f sim/vehicle/*.class && rm -f sim/map/track/*.class
