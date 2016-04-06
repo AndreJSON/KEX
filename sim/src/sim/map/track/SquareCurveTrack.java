@@ -8,7 +8,7 @@ import math.Vector2D;
  * @author henrik
  * 
  */
-public class SquareCurveTrack implements AbstractTrack {
+public class SquareCurveTrack extends AbstractTrack {
 
 	public static int RIEMANN_STEPS = 1000; // default value
 

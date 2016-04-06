@@ -2,7 +2,7 @@ package sim.map.track;
 
 import math.Vector2D;
 
-public class LineTrack implements AbstractTrack {
+public class LineTrack extends AbstractTrack {
 	private final double length;
 	private Vector2D startPoint, endPoint, unit;
 
