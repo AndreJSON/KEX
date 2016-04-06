@@ -56,8 +56,8 @@ public class LineTrack implements AbstractTrack {
 	}
 
 	@Override
-	public TrackPosition getTrackPosition(double dist) {
-		return new Position(dist);
+	public TrackPosition getTrackPosition(double distance) {
+		return new Position(distance);
 	}
 
 	@Override

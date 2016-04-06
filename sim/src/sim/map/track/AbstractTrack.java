@@ -39,6 +39,6 @@ public interface AbstractTrack {
 	 * 
 	 * @return
 	 */
-	public TrackPosition getTrackPosition(double dist);
+	public TrackPosition getTrackPosition(double distance);
 
 }

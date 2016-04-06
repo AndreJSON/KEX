@@ -119,9 +119,7 @@ public class Vector2D extends Point2D.Double {
 		return new Vector2D(x - point.x, y - point.y);
 	}
 
-	/**
-	 * 
-	 */
+	@Override
 	public String toString() {
 		return "[" + x + ", " + y + "]";
 	}

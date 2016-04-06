@@ -66,18 +66,20 @@ public class SquareCurveTrack implements AbstractTrack {
 	}
 
 	@Override
-	public TrackPosition getTrackPosition(double dist) {
-		return new Position(dist);
+	public TrackPosition getTrackPosition(double distance) {
+		return new Position(distance);
 	}
 
 	private class Position implements TrackPosition {
+		// TODO: Complete this class.
+		
 		private double t, heading, totDist;
 		private Vector2D point;
 
-		public Position(double dist) {
+		public Position(double distance) {
 			point = new Vector2D();
 			t = 0;
-			move(dist);
+			move(distance);
 		}
 
 		private void calcHeading() {
@@ -97,10 +99,10 @@ public class SquareCurveTrack implements AbstractTrack {
 		}
 
 		@Override
-		public void move(double dist) {
+		public void move(double distance) {
 			// TODO: move algorithm.
 			calcHeading();
-			totDist += dist;
+			totDist += distance;
 		}
 
 		@Override

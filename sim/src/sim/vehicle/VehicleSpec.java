@@ -40,6 +40,7 @@ public class VehicleSpec {
 
 	/**
 	 * Converts center to rear.
+	 * 
 	 * @return
 	 */
 	public Vector2D center2rear(Vector2D pos, double heading) {
@@ -65,6 +66,7 @@ public class VehicleSpec {
 
 	/**
 	 * Converts center to front
+	 * 
 	 * @return
 	 */
 	public Vector2D center2front(Vector2D pos, double heading) {
@@ -76,6 +78,7 @@ public class VehicleSpec {
 
 	/**
 	 * Converts center to front axis
+	 * 
 	 * @param pos
 	 * @param heading
 	 * @return
@@ -86,14 +89,15 @@ public class VehicleSpec {
 		double y = pos.getY() + Math.sin(heading) * front_axis;
 		return new Vector2D(x, y);
 	}
-	
+
 	/**
 	 * Converts front axis into center.
+	 * 
 	 * @param pos
 	 * @param heading
 	 * @return
 	 */
-	public Vector2D frontaxis2center(Vector2D pos, double heading){
+	public Vector2D frontaxis2center(Vector2D pos, double heading) {
 		double x = pos.getX() - Math.cos(heading) * front_axis;
 		double y = pos.getY() - Math.sin(heading) * front_axis;
 		return new Vector2D(x, y);
@@ -101,11 +105,12 @@ public class VehicleSpec {
 
 	/**
 	 * Converts rear axis to center.
+	 * 
 	 * @param pos
 	 * @param heading
 	 * @return
 	 */
-	public Vector2D rearaxis2center(Vector2D pos, double heading){
+	public Vector2D rearaxis2center(Vector2D pos, double heading) {
 		double x = pos.getX() - Math.cos(heading) * rear_axis;
 		double y = pos.getY() - Math.sin(heading) * rear_axis;
 		return new Vector2D(x, y);
