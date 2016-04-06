@@ -17,5 +17,6 @@ hs_err_pid*
 .settings
 .classpath
 .project
-# --- MATLAB ---
-*.m~
+
+# --- gedit ---
+*~
