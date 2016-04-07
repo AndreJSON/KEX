@@ -1,8 +1,9 @@
 package sim.map.track;
 
+import sim.Drawable;
 import math.Vector2D;
 
-public interface TrackPosition {
+public interface TrackPosition extends Drawable {
 
 	/**
 	 * Get a double position that is on the track.

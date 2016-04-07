@@ -1,18 +1,19 @@
 package sim.map.track;
 
+import sim.Drawable;
 import math.Vector2D;
 
-public abstract class AbstractTrack {
-	
+public abstract class AbstractTrack implements Drawable {
+	protected final double POINT_STEP = 0.2;
 	private static long idTracker = 0;
-	
+
 	private final long id;
-	
-	public AbstractTrack(){
+
+	public AbstractTrack() {
 		id = ++idTracker;
 	}
-	
-	public final long getId(){
+
+	public final long getId() {
 		return id;
 	}
 
@@ -52,5 +53,7 @@ public abstract class AbstractTrack {
 	 * @return
 	 */
 	public abstract TrackPosition getTrackPosition(double distance);
+
+	public abstract Vector2D[] getPoints();
 
 }

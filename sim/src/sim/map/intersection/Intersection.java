@@ -1,10 +1,13 @@
 package sim.map.intersection;
 
 import math.Vector2D;
+import sim.Drawable;
 import sim.map.track.*;
+
+import java.awt.Graphics2D;
 import java.util.HashMap;
 
-public class Intersection {
+public class Intersection implements Drawable {
 	public static final int straight = 50, turn = 30, buffer = 1, width = 3;
 	public static final int intersectionSize = (straight + turn + buffer) * 2 + width * 3;
 	private Segment[] segments; //Just holds all Segments.
@@ -40,5 +43,11 @@ public class Intersection {
 		//segments[1].linkSegment(3,segments[7]);
 		//segments[7].linkSegment(3,segments[8]);
 		//segments[3].linkSegment(3,null);
+	}
+
+	@Override
+	public void draw(Graphics2D g2d) {
+		// TODO Auto-generated method stub
+		
 	}
 }
