@@ -3,7 +3,9 @@ SRC = sim/src
 MATH = $(SRC)/math
 SIM = $(SRC)/sim
 VEHICLE = $(SIM)/vehicle
-TRACK = $(SIM)/map/track
+MAP = $(SIM)/map
+TRACK = $(MAP)/track
+INTERSECTION = $(MAP)/intersection
 FILES = \
 $(MATH)/Vector2D.java \
 $(VEHICLE)/VehicleSpec.java \
@@ -12,6 +14,7 @@ $(TRACK)/TrackPosition.java \
 $(TRACK)/AbstractTrack.java \
 $(TRACK)/LineTrack.java \
 $(TRACK)/SquareCurveTrack.java \
+$(INTERSECTION)/Intersection.java \
 $(SIM)/Simulation.java
 
 all:
