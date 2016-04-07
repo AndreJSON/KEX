@@ -14,6 +14,7 @@ $(TRACK)/TrackPosition.java \
 $(TRACK)/AbstractTrack.java \
 $(TRACK)/LineTrack.java \
 $(TRACK)/SquareCurveTrack.java \
+$(INTERSECTION)/Segment.java \
 $(INTERSECTION)/Intersection.java \
 $(SIM)/Simulation.java
 
