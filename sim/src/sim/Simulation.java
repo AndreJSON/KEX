@@ -16,12 +16,10 @@ import javax.swing.JFrame;
 public class Simulation {
 	public static boolean DEBUG = true;
 	public static final int X = 0, Y = 1;
-	public static final int[] windowSize = { 800, 800 };
+	public static final int[] windowSize = { 1100, 800 };
+	public static final int HUDSize = windowSize[X] - windowSize[Y];
 	public static final int FPS = 60;
-	public static final int[] PPM = {
-			windowSize[X] / Intersection.intersectionSize,
-			windowSize[Y] / Intersection.intersectionSize }; // Pixles per meter
-	public static final double SCALE = PPM[0];
+	public static final double SCALE = windowSize[Y] / Intersection.intersectionSize;
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 
@@ -41,9 +39,9 @@ public class Simulation {
 	}
 
 	public void init() {
-		in = new Intersection();
-
 		entityHandler = new EntityHandler();
+		in = new Intersection();
+		entityHandler.setIntersection(in);
 		simulationDisplayer = new SimDisplay(this, entityHandler);
 		logic = new Logic(this, entityHandler);
 
@@ -98,31 +96,10 @@ public class Simulation {
 		return drawFps;
 	}
 
-	public void draw(Graphics2D g2d) {
-		// Test drawing stuff.
-		// Test drawing shapes.
-		g2d.setColor(Color.RED);
-		g2d.fillOval(0, 0, 30, 30);
-		g2d.drawOval(0, 50, 30, 30);
-		g2d.fillRect(50, 0, 30, 30);
-		g2d.drawRect(50, 50, 30, 30);
-
-		// Create and draw a SquareCurveTrack
-		AbstractTrack track = new SquareCurveTrack(new Vector2D(0, 0),
-				new Vector2D(0, 300), new Vector2D(300, 300));
-		track.draw(g2d);
-
-		// Create and draw a LineTrack
-		AbstractTrack track2 = new LineTrack(new Vector2D(100, 100),
-				new Vector2D(200, 100));
-		track2.draw(g2d);
-
-	}
-
 	/************ TEST CODE FROM THIS POINT ON *************/
 
 	public void addTestCar() {
-		AbstractTrack track = new SquareCurveTrack(new Vector2D(5, 5),
+		/*AbstractTrack track = new SquareCurveTrack(new Vector2D(5, 5),
 				new Vector2D(5, 75), new Vector2D(55, 75));
 		Car car = new Car(new CarType("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
 		entityHandler.addTrack(track);
@@ -150,17 +127,20 @@ public class Simulation {
 		car = new Car(new CarType());
 		car.setTrackPosition(track.getTrackPosition(10));
 		car.setSpeed(45 / 3.6);
+		car.setVelocity(45 / 3.6);
+		entityHandler.addCar(car);*/
+
+		Car car = new Car(new CarType("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
+		AbstractTrack track = in.getStartPoint(0).getTrack();
+		car.setTrackPosition(track.getTrackPosition());
+		car.setSpeed(track.length()/5);
 		entityHandler.addCar(car);
 	}
 
 	public void testAll() {
 		if (!DEBUG)
 			return;
-
-		testSquareCurveTrack();
-		testLineTrack();
 		addTestCar();
-
 		System.out.println("All probably went well, here is a test print.");
 	}
 

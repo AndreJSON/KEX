@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import sim.map.track.AbstractTrack;
 import sim.vehicle.Car;
+import sim.map.intersection.*;
 
 /**
  * Entity handler manages the collection of Entities in the simulation.
@@ -16,6 +17,7 @@ public class EntityHandler {
 
 	private final HashSet<Car> cars;
 	private final HashSet<AbstractTrack> tracks;
+	private Intersection intersection;
 
 	public EntityHandler() {
 		cars = new HashSet<>();
@@ -40,9 +42,17 @@ public class EntityHandler {
 		}
 	}
 
+	public void setIntersection(Intersection i) {
+		intersection = i;
+	}
+	
 	// v v v May be removed for Intersection. v v v
 	public Collection<AbstractTrack> getTracks() {
 		return tracks;
+	}
+
+	public Segment[] getSegments() {
+		return intersection.getSegments();
 	}
 
 	public void addTrack(AbstractTrack newTrack) {

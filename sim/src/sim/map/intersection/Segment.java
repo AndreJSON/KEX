@@ -30,4 +30,8 @@ public class Segment {
 	public Vector2D[] getPoints() {
 		return track.getPoints();
 	}
+
+	public AbstractTrack getTrack() {
+		return track;
+	}
 }
