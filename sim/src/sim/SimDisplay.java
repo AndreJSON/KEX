@@ -7,7 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferStrategy;
 import java.util.Collection;
 
-import sim.map.intersection.Intersection;
+import sim.map.intersection.*;
 import sim.map.track.AbstractTrack;
 import sim.vehicle.Car;
 
@@ -47,6 +47,7 @@ public class SimDisplay extends Canvas {
 		g2d.fillRect(Simulation.windowSize[Simulation.X] - Simulation.HUDSize, 0, Simulation.HUDSize, Simulation.windowSize[Simulation.Y]);
 
 		sim.drawInterface(g2d);
+		drawSegments(g2d);
 		drawTracks(g2d);
 		drawCars(g2d);
 		
@@ -55,6 +56,12 @@ public class SimDisplay extends Canvas {
 		// flush the buffer to the main graphics
 		strategy.show();
 
+	}
+
+	private void drawSegments(Graphics2D g2d) {
+		for (Segment seg : entityHandler.getSegments()) {
+			seg.getTrack().draw(g2d);
+		}
 	}
 
 	private void drawTracks(Graphics2D g2d) {

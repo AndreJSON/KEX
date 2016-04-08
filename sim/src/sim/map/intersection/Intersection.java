@@ -2,6 +2,7 @@ package sim.map.intersection;
 
 import math.Vector2D;
 import sim.Drawable;
+import sim.EntityHandler;
 import sim.map.track.*;
 
 import java.awt.Graphics2D;
@@ -11,19 +12,24 @@ public class Intersection implements Drawable {
 	public static final int straight = 50, turn = 30, buffer = 1, width = 3;
 	public static final int intersectionSize = (straight + turn + buffer) * 2
 			+ width * 3;
+	public static final int NUMBER_OF_SEGMENTS = 3;
 	private Segment[] segments; // Just holds all Segments.
 	private HashMap<Integer, Segment> startPoints; // Gives the first segment
 													// coming from each of the 4
 													// directions.
 
 	public Intersection() {
-		segments = new Segment[3];
+		segments = new Segment[NUMBER_OF_SEGMENTS];
 		startPoints = new HashMap<>();
 		init();
 	}
 
 	public Segment[] getSegments() {
 		return segments;
+	}
+
+	public Segment getStartPoint(int i) {
+		return startPoints.get(i);
 	}
 
 	private void init() {
@@ -53,7 +59,7 @@ public class Intersection implements Drawable {
 		// segments[0].linkSegment(3,segments[1]);
 		// segments[1].linkSegment(3,segments[7]);
 		// segments[7].linkSegment(3,segments[8]);
-		// segments[3].linkSegment(3,null);
+		// segments[3].linkSegment(3,null);*/
 	}
 
 	@Override

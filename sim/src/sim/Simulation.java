@@ -39,9 +39,9 @@ public class Simulation {
 	}
 
 	public void init() {
-		in = new Intersection();
-
 		entityHandler = new EntityHandler();
+		in = new Intersection();
+		entityHandler.setIntersection(in);
 		simulationDisplayer = new SimDisplay(this, entityHandler);
 		logic = new Logic(this, entityHandler);
 
@@ -51,8 +51,6 @@ public class Simulation {
 		window.setLocationRelativeTo(null); // Centers window
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
-
-		buildMap();
 	}
 
 	public static void main(String[] args) {
@@ -121,7 +119,7 @@ public class Simulation {
 	/************ TEST CODE FROM THIS POINT ON *************/
 
 	public void addTestCar() {
-		AbstractTrack track = new SquareCurveTrack(new Vector2D(5, 5),
+		/*AbstractTrack track = new SquareCurveTrack(new Vector2D(5, 5),
 				new Vector2D(5, 75), new Vector2D(55, 75));
 		Car car = new Car(new VehicleSpec("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
 		entityHandler.addTrack(track);
@@ -149,6 +147,12 @@ public class Simulation {
 		car = new Car(new VehicleSpec());
 		car.setTrackPosition(track.getTrackPosition(10));
 		car.setVelocity(45 / 3.6);
+		entityHandler.addCar(car);*/
+
+		Car car = new Car(new VehicleSpec("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
+		AbstractTrack track = in.getStartPoint(0).getTrack();
+		car.setTrackPosition(track.getTrackPosition());
+		car.setVelocity(track.length()/5);
 		entityHandler.addCar(car);
 	}
 
