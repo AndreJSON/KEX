@@ -6,6 +6,12 @@ import java.util.HashSet;
 import sim.map.track.AbstractTrack;
 import sim.vehicle.Car;
 
+/**
+ * Entity handler manages the collection of Entities in the simulation.
+ * 
+ * @author henrik
+ * 
+ */
 public class EntityHandler {
 
 	private final HashSet<Car> cars;
@@ -22,19 +28,18 @@ public class EntityHandler {
 
 	public void addCar(Car newCar) {
 		cars.add(newCar);
-		if(Simulation.DEBUG){
+		if (Simulation.DEBUG) {
 			System.out.println("Added " + newCar);
 		}
 	}
 
 	public void removeCar(Car oldCar) {
 		cars.remove(oldCar);
-		if(Simulation.DEBUG){
-			
+		if (Simulation.DEBUG) {
+
 		}
 	}
 
-	
 	// v v v May be removed for Intersection. v v v
 	public Collection<AbstractTrack> getTracks() {
 		return tracks;
@@ -42,14 +47,14 @@ public class EntityHandler {
 
 	public void addTrack(AbstractTrack newTrack) {
 		tracks.add(newTrack);
-		if(Simulation.DEBUG){
+		if (Simulation.DEBUG) {
 			System.out.println("Added " + newTrack);
 		}
 	}
 
 	public void removeTrack(AbstractTrack oldTrack) {
 		tracks.remove(oldTrack);
-		if(Simulation.DEBUG){
+		if (Simulation.DEBUG) {
 			System.out.println("Removed " + oldTrack);
 		}
 	}

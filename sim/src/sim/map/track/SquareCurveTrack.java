@@ -2,7 +2,6 @@ package sim.map.track;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
@@ -18,13 +17,35 @@ import math.Vector2D;
  */
 public class SquareCurveTrack extends AbstractTrack {
 
+	/**
+	 * Number of iterations when computing the length of the curve.
+	 */
 	public static int RIEMANN_STEPS = 1000; // default value
 
 	// Control points 1,2,3.
-	private final Vector2D c1, c2, c3, v1, v2;
+	/**
+	 * Curves goes from c1 to c3, with c2 as a control point.
+	 */
+	private final Vector2D c1, c2, c3;
+
+	/**
+	 * Used for stepping through the curve with a certain length.
+	 */
+	private final Vector2D v1, v2;
+
+	/**
+	 * The length of the curve.
+	 */
 	private final double length;
+
+	/**
+	 * The shape of the curve.
+	 */
 	private final Path2D.Double shape;
 
+	/**
+	 * Discretized points of the bezier curve.
+	 */
 	private Vector2D[] points;
 
 	public SquareCurveTrack(Vector2D c1, Vector2D c2, Vector2D c3) {
@@ -54,6 +75,9 @@ public class SquareCurveTrack extends AbstractTrack {
 
 	}
 
+	/**
+	 * Generate the discretized points.
+	 */
 	private void generatePoints() {
 		ArrayList<Vector2D> list = new ArrayList<>();
 
@@ -72,7 +96,7 @@ public class SquareCurveTrack extends AbstractTrack {
 	}
 
 	/**
-	 * Evaluate the bezier curve at point t.
+	 * Evaluate the bezier curve with parameter t.
 	 * 
 	 * @param t
 	 * @return
@@ -161,6 +185,11 @@ public class SquareCurveTrack extends AbstractTrack {
 			calcHeading();
 		}
 
+		/**
+		 * Calculate the new t value when moving with distance.
+		 * 
+		 * @param distance
+		 */
 		private void calcT(double distance) {
 			t += distance * 1. / v1.mult(t).plus(v2).norm();
 

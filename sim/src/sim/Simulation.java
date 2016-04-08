@@ -4,7 +4,7 @@ import math.*;
 import sim.map.track.*;
 import sim.map.intersection.*;
 import sim.vehicle.Car;
-import sim.vehicle.VehicleSpec;
+import sim.vehicle.CarType;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -93,28 +93,9 @@ public class Simulation {
 			}
 		}
 	}
-
-	public void drawInterface(Graphics2D g2d) {
-		
-		// Draw SCALE
-		int width = 25;
-		int length = (int) (100 * SCALE);
-		g2d.drawLine(750 - width / 2, 50, 750 + width / 2, 50);
-		g2d.drawLine(750 - width / 2, 50 + length, 750 + width / 2, 50 + length);
-		g2d.drawLine(750, 50, 750, 50 + length);
-
-		g2d.setFont(new Font("Arial", Font.BOLD, 16));
-		AffineTransform orig = g2d.getTransform();
-		g2d.translate(755, 25 + length / 2);
-		g2d.rotate(Math.PI / 2);
-		g2d.setColor(Color.BLACK);
-		g2d.drawString("100 m", 0, 0);
-		g2d.setTransform(orig);
-
-		if (DEBUG) {
-			// Draw FPS
-			g2d.drawString("FPS: " + drawFps, windowSize[X] - 100, 25);
-		}
+	
+	public int drawFps(){
+		return drawFps;
 	}
 
 	public void draw(Graphics2D g2d) {
@@ -143,32 +124,32 @@ public class Simulation {
 	public void addTestCar() {
 		AbstractTrack track = new SquareCurveTrack(new Vector2D(5, 5),
 				new Vector2D(5, 75), new Vector2D(55, 75));
-		Car car = new Car(new VehicleSpec("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
+		Car car = new Car(new CarType("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
 		entityHandler.addTrack(track);
 		car.setTrackPosition(track.getTrackPosition());
-		car.setVelocity(track.length()/5);
+		car.setSpeed(track.length()/5);
 		entityHandler.addCar(car);
 
 		track = new SquareCurveTrack(new Vector2D(10, 5),
 				new Vector2D(10, 70), new Vector2D(55, 70));
-		car = new Car(new VehicleSpec());
+		car = new Car(new CarType());
 		entityHandler.addTrack(track);
 		car.setTrackPosition(track.getTrackPosition());
-		car.setVelocity(track.length()/5);
+		car.setSpeed(track.length()/5);
 		entityHandler.addCar(car);
 		
 		track = new LineTrack(new Vector2D(150, 10), new Vector2D(150, 160));
-		car = new Car(new VehicleSpec());
+		car = new Car(new CarType());
 		entityHandler.addTrack(track);
 		car.setTrackPosition(track.getTrackPosition());
-		car.setVelocity(50 / 3.6);
+		car.setSpeed(50 / 3.6);
 		entityHandler.addCar(car);
 		
 		track = new LineTrack(new Vector2D(147, 10), new Vector2D(147, 160));
 		entityHandler.addTrack(track);
-		car = new Car(new VehicleSpec());
+		car = new Car(new CarType());
 		car.setTrackPosition(track.getTrackPosition(10));
-		car.setVelocity(45 / 3.6);
+		car.setSpeed(45 / 3.6);
 		entityHandler.addCar(car);
 	}
 
