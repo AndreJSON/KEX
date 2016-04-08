@@ -55,5 +55,9 @@ public abstract class AbstractTrack implements Drawable {
 	public abstract TrackPosition getTrackPosition(double distance);
 
 	public abstract Vector2D[] getPoints();
+	
+	public int hashCode(){
+		return (int) id;
+	}
 
 }

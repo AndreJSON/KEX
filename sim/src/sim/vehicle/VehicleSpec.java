@@ -1,15 +1,32 @@
 package sim.vehicle;
 
+import java.awt.Color;
 import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 
 import math.Vector2D;
 
 public class VehicleSpec {
 	private String name;
-	private double length, width;
-	// Distance from the center to the front axis and rear axis.
-	// rear_axis + front_axis = length of wheel base
-	private double front_axis, rear_axis;
+	private final double length, width;
+	private Shape shape;
+	private Color color;
+
+	public VehicleSpec() {
+		this("Mazda3", 180.3*0.0254, 70.7*0.0254, Color.blue);
+	}
+
+	public VehicleSpec(String name, double length, double width, Color color) {
+		this.setColor(color);
+		this.setName(name);
+		this.length = length;
+		this.width = width;
+		shape = new Rectangle2D.Double(-length / 2, -width / 2, length, width);
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	/**
 	 * Get the name of the vehicle type.
@@ -51,20 +68,6 @@ public class VehicleSpec {
 	}
 
 	/**
-	 * Converts center to rear axis.
-	 * 
-	 * @param pos
-	 * @param heading
-	 * @return
-	 */
-	public Vector2D center2rearaxis(Vector2D pos, double heading) {
-		// EJ KONTROLLERAD
-		double x = pos.getX() - Math.cos(heading) * rear_axis;
-		double y = pos.getY() - Math.sin(heading) * rear_axis;
-		return new Vector2D(x, y);
-	}
-
-	/**
 	 * Converts center to front
 	 * 
 	 * @return
@@ -77,56 +80,19 @@ public class VehicleSpec {
 	}
 
 	/**
-	 * Converts center to front axis
-	 * 
-	 * @param pos
-	 * @param heading
-	 * @return
-	 */
-	public Vector2D center2frontaxis(Vector2D pos, double heading) {
-		// EJ KONTROLLERAD
-		double x = pos.getX() + Math.cos(heading) * front_axis;
-		double y = pos.getY() + Math.sin(heading) * front_axis;
-		return new Vector2D(x, y);
-	}
-
-	/**
-	 * Converts front axis into center.
-	 * 
-	 * @param pos
-	 * @param heading
-	 * @return
-	 */
-	public Vector2D frontaxis2center(Vector2D pos, double heading) {
-		double x = pos.getX() - Math.cos(heading) * front_axis;
-		double y = pos.getY() - Math.sin(heading) * front_axis;
-		return new Vector2D(x, y);
-	}
-
-	/**
-	 * Converts rear axis to center.
-	 * 
-	 * @param pos
-	 * @param heading
-	 * @return
-	 */
-	public Vector2D rearaxis2center(Vector2D pos, double heading) {
-		double x = pos.getX() - Math.cos(heading) * rear_axis;
-		double y = pos.getY() - Math.sin(heading) * rear_axis;
-		return new Vector2D(x, y);
-	}
-
-	public double getWheelBaseLength() {
-		return rear_axis + front_axis;
-	}
-
-	/**
 	 * Get the shape of the vehicle.
 	 * 
 	 * @return
 	 */
-	public Shape getShape(Vector2D pos, double heading) {
-		// TODO: hur?
-		return null;
+	public Shape getShape() {
+		return shape;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }
