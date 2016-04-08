@@ -16,6 +16,8 @@ $(TRACK)/LineTrack.java \
 $(TRACK)/SquareCurveTrack.java \
 $(INTERSECTION)/Segment.java \
 $(INTERSECTION)/Intersection.java \
+$(SIM)/Drawable.java \
+$(SIM)/SimDisplay.java \
 $(SIM)/Simulation.java
 
 all:
