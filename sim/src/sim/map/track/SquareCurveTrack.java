@@ -1,8 +1,12 @@
 package sim.map.track;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
+
+import sim.Simulation;
 
 import math.Vector2D;
 
@@ -17,8 +21,9 @@ public class SquareCurveTrack extends AbstractTrack {
 	public static int RIEMANN_STEPS = 1000; // default value
 
 	// Control points 1,2,3.
-	private final Vector2D c1, c2, c3;
+	private final Vector2D c1, c2, c3, v1, v2;
 	private final double length;
+	private final Path2D.Double shape;
 
 	private Vector2D[] points;
 
@@ -38,7 +43,15 @@ public class SquareCurveTrack extends AbstractTrack {
 
 		this.length = length;
 
+		v1 = (c1.mult(2)).minus(c2.mult(4)).plus(c3.mult(2));
+		v2 = (c2.minus(c1)).mult(2);
+
 		generatePoints();
+
+		shape = new Path2D.Double();
+		shape.moveTo(c1.x, c1.y);
+		shape.quadTo(c2.x, c2.y, c3.x, c3.y);
+
 	}
 
 	private void generatePoints() {
@@ -107,11 +120,8 @@ public class SquareCurveTrack extends AbstractTrack {
 
 	@Override
 	public void draw(Graphics2D g2d) {
-		Path2D.Double s = new Path2D.Double();
-		s.moveTo(c1.x, c1.y);
-		s.quadTo(c2.x, c2.y, c3.x, c3.y);
-		g2d.draw(s);
-
+		g2d.setColor(Color.red);
+		g2d.draw(Simulation.SCALER.createTransformedShape(shape));
 	}
 
 	private class Position implements TrackPosition {
@@ -134,7 +144,7 @@ public class SquareCurveTrack extends AbstractTrack {
 
 		@Override
 		public Vector2D getPoint() {
-			return null;
+			return point;
 		}
 
 		@Override
@@ -144,28 +154,16 @@ public class SquareCurveTrack extends AbstractTrack {
 
 		@Override
 		public void move(double distance) {
-			double movedDistance = 0;
-			double step = 0.2;
-			while (movedDistance + step < distance) { // move by 0.2 at the
-														// time.
-				move2(step);
-				movedDistance += step;
-			}
-			if (distance != movedDistance)
-				move2(distance - movedDistance);
-
+			calcT(distance);
 			totDist += distance;
+
+			point = evaluate(t);
 			calcHeading();
 		}
 
-		private void move2(double distance) {
-			// 1 / norm( 2*(A-2*B+C)*t + (-2*A+2*B) );
-			Vector2D first = c3.plus(c1.minus(c2.mult(2))).mult(2 * t); // =
-																		// 2*(A-2*B+C)*t
-			Vector2D second = c2.minus(c1).mult(2);// = -2*A+2*B
+		private void calcT(double distance) {
+			t += distance * 1. / v1.mult(t).plus(v2).norm();
 
-			t += distance * 1 / first.plus(second).norm();
-			point = evaluate(t);
 		}
 
 		@Override
@@ -175,7 +173,8 @@ public class SquareCurveTrack extends AbstractTrack {
 
 		@Override
 		public void draw(Graphics2D g2d) {
-			g2d.drawOval((int) (point.x - 1), (int) (point.y - 1), 2, 2);
+			Vector2D p = point.mult(Simulation.SCALE);
+			g2d.drawOval((int) (p.x - 1), (int) (p.y - 1), 2, 2);
 		}
 
 	}

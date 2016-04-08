@@ -1,14 +1,19 @@
 package sim.map.track;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+
+import sim.Simulation;
 import math.Vector2D;
 
 public class LineTrack extends AbstractTrack {
 	private final double length;
-	private Vector2D startPoint, endPoint, unit;
+	private final Vector2D startPoint, endPoint, unit;
 
+	private final Line2D.Double shape;
 	private Vector2D[] points;
 
 	public LineTrack(Vector2D startPoint, Vector2D endPoint) {
@@ -17,6 +22,7 @@ public class LineTrack extends AbstractTrack {
 		length = startPoint.distance(endPoint);
 		unit = (endPoint.minus(startPoint)).unit();
 		generatePoints();
+		shape = new Line2D.Double(startPoint, endPoint);
 	}
 
 	private void generatePoints() {
@@ -70,7 +76,8 @@ public class LineTrack extends AbstractTrack {
 
 		@Override
 		public void draw(Graphics2D g2d) {
-			g2d.drawOval((int) (point.x - 1), (int) (point.y - 1), 2, 2);
+			Vector2D p = point.mult(Simulation.SCALE);
+			g2d.drawOval((int) (p.x - 1), (int) (p.y - 1), 2, 2);
 		}
 
 	}
@@ -107,7 +114,8 @@ public class LineTrack extends AbstractTrack {
 
 	@Override
 	public void draw(Graphics2D g2d) {
-		g2d.draw(new Line2D.Double(startPoint, endPoint));
+		g2d.setColor(Color.red);
+		g2d.draw(Simulation.SCALER.createTransformedShape(shape));
 	}
 
 }
