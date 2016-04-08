@@ -146,7 +146,7 @@ public class SquareCurveTrack extends AbstractTrack {
 	public void draw(Graphics2D g2d) {
 		g2d.setColor(Color.RED);
 		g2d.draw(Simulation.SCALER.createTransformedShape(shape));
-		
+
 		g2d.setColor(Color.MAGENTA);
 		Vector2D p;
 		p = c1.mult(Simulation.SCALE);

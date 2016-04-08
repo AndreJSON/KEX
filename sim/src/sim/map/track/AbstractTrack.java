@@ -15,7 +15,7 @@ public abstract class AbstractTrack implements Drawable {
 	 * The distance each point in the discretized representation should have.
 	 */
 	protected final double POINT_STEP = 0.2;
-	
+
 	/**
 	 * Keeps the currently highest id.
 	 */
@@ -32,6 +32,7 @@ public abstract class AbstractTrack implements Drawable {
 
 	/**
 	 * Returns the id of the track.
+	 * 
 	 * @return
 	 */
 	public final long getId() {
@@ -77,6 +78,7 @@ public abstract class AbstractTrack implements Drawable {
 
 	/**
 	 * Returns the discretized representation of the track.
+	 * 
 	 * @return
 	 */
 	public abstract Vector2D[] getPoints();

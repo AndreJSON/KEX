@@ -16,7 +16,7 @@ import sim.map.track.TrackPosition;
 public class Car implements Drawable {
 	private static long trackId = 0;
 	private static DecimalFormat DF;
-	
+
 	private long id;
 	private final CarType specs;
 	private TrackPosition position;
@@ -146,10 +146,10 @@ public class Car implements Drawable {
 			return;
 		g2d.setColor(Color.black);
 		g2d.fillOval((int) p.x - 1, (int) p.y - 1, 3, 3);
-		if(DF == null)
-			 DF = new DecimalFormat("0.0");
-		g2d.drawString(this.toString() + " " + DF.format(speed * 3.6)
-				+ " kph", (int) p.x + 2, (int) p.y - 2);
+		if (DF == null)
+			DF = new DecimalFormat("0.0");
+		g2d.drawString(this.toString() + " " + DF.format(speed * 3.6) + " kph",
+				(int) p.x + 2, (int) p.y - 2);
 
 	}
 
