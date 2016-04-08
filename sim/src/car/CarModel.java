@@ -1,4 +1,4 @@
-package sim.vehicle;
+package car;
 
 import java.awt.Color;
 import java.awt.Shape;
@@ -6,19 +6,11 @@ import java.awt.geom.Rectangle2D;
 
 import math.Vector2D;
 
-public class CarType {
-	private String name;
+public class CarModel {
+	private final String name;
 	private final double length, width;
-	private Shape shape;
-	private Color color;
-	private int destination;
-
-	/**
-	 * Constructs a default car type.
-	 */
-	public CarType() {
-		this("Mazda3", 180.3 * 0.0254, 70.7 * 0.0254, Color.blue);
-	}
+	private final Shape shape;
+	private final Color color;
 
 	/**
 	 * 
@@ -31,22 +23,12 @@ public class CarType {
 	 * @param color
 	 *            the color of the car type
 	 */
-	public CarType(String name, double length, double width, Color color) {
-		this.setColor(color);
-		this.setName(name);
+	public CarModel(String name, double length, double width, Color color) {
+		this.color = color;
+		this.name = name;
 		this.length = length;
 		this.width = width;
 		shape = new Rectangle2D.Double(-length / 2, -width / 2, length, width);
-	}
-
-	/**
-	 * Set a new name for the car type.
-	 * 
-	 * @param name
-	 *            the new name
-	 */
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	/**
@@ -126,13 +108,9 @@ public class CarType {
 		return color;
 	}
 
-	/**
-	 * Set a new color to the car type.
-	 * 
-	 * @param color
-	 *            the new color of the car type.
-	 */
-	public void setColor(Color color) {
-		this.color = color;
+	@Override
+	public String toString() {
+		return "CarType[" + getName() + "]";
 	}
+	
 }

@@ -9,9 +9,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.util.Collection;
 
-import sim.map.intersection.*;
-import sim.map.track.AbstractTrack;
-import sim.vehicle.Car;
+import car.Car;
+
 
 /**
  * SimDisplay handles the rendering of objects in the simulation.
@@ -19,12 +18,11 @@ import sim.vehicle.Car;
  * @author henrik
  * 
  */
+@SuppressWarnings("serial")
 public class SimDisplay extends Canvas {
-	private final EntityHandler entityHandler;
 	private final Simulation sim;
 
-	public SimDisplay(Simulation sim, EntityHandler entityHandler) {
-		this.entityHandler = entityHandler;
+	public SimDisplay(Simulation sim) {
 		this.sim = sim;
 	}
 
@@ -90,11 +88,11 @@ public class SimDisplay extends Canvas {
 	}
 
 	private void drawIntersection(Graphics2D g2d) {
-		entityHandler.getIntersection().draw(g2d);
+		EntityDatabase.getIntersection().draw(g2d);
 	}
 
 	private void drawCars(Graphics2D g2d) {
-		Collection<Car> cars = entityHandler.getCars();
+		Collection<Car> cars = EntityDatabase.getCars();
 		for (Car car : cars) {
 			car.draw(g2d);
 		}

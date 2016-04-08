@@ -1,28 +1,27 @@
-package sim.vehicle;
+package car;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.text.DecimalFormat;
 
+import map.track.TrackPosition;
 import math.Vector2D;
 
 import sim.Drawable;
 import sim.Simulation;
-import sim.map.track.TrackPosition;
 
 public class Car implements Drawable {
 	private static long trackId = 0;
 	private static DecimalFormat DF;
 
 	private long id;
-	private final CarType specs;
+	private final CarModel specs;
 	private TrackPosition position;
 	private double speed;
 
-	public Car(CarType specs) {
+	public Car(CarModel specs) {
 		this.specs = specs;
 		id = ++trackId;
 	}
@@ -45,7 +44,7 @@ public class Car implements Drawable {
 		if (position.remaining() > 0) {
 			position.move(delta * speed);
 		} else {
-			// throw new RuntimeException(this + " is out of track");
+			throw new RuntimeException(this + " is out of track!");
 		}
 	}
 
@@ -111,7 +110,7 @@ public class Car implements Drawable {
 	 * 
 	 * @return
 	 */
-	public CarType getType() {
+	public CarModel getType() {
 		return specs;
 	}
 

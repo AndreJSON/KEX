@@ -1,4 +1,4 @@
-package sim.map.track;
+package map.track;
 
 import sim.Drawable;
 import math.Vector2D;

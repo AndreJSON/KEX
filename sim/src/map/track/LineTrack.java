@@ -1,4 +1,4 @@
-package sim.map.track;
+package map.track;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

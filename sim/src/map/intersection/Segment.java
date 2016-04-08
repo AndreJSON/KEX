@@ -1,13 +1,14 @@
-package sim.map.intersection;
+package map.intersection;
 
-import sim.map.track.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 
+import map.track.*;
 import math.Vector2D;
 
 public class Segment {
 	private AbstractTrack track;
+	@SuppressWarnings("unused")
 	private ArrayList<Segment> siblingSegments; // Holds a list of all segments
 												// that can cause collision with
 												// this one.

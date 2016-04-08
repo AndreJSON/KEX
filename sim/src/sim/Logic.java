@@ -1,8 +1,6 @@
 package sim;
 
-import java.util.Collection;
-
-import sim.vehicle.Car;
+import car.Car;
 
 /**
  * Logic handles all the logic in the simulation. It accesses objects in the
@@ -12,11 +10,10 @@ import sim.vehicle.Car;
  * 
  */
 public class Logic {
-	private final EntityHandler entities;
+	@SuppressWarnings("unused")
 	private final Simulation sim;
 
-	public Logic(Simulation sim, EntityHandler entities) {
-		this.entities = entities;
+	public Logic(Simulation sim) {
 		this.sim = sim;
 	}
 
@@ -29,8 +26,7 @@ public class Logic {
 	}
 
 	public void moveCars(double diff) {
-		Collection<Car> cars = entities.getCars();
-		for (Car car : cars) {
+		for (Car car : EntityDatabase.getCars()) {
 			car.move(diff);
 		}
 	}

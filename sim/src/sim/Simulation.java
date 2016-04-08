@@ -1,17 +1,15 @@
 package sim;
 
+import map.intersection.*;
+import map.track.*;
 import math.*;
-import sim.map.track.*;
-import sim.map.intersection.*;
-import sim.vehicle.Car;
-import sim.vehicle.CarType;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import javax.swing.JFrame;
+
+import car.Car;
+import car.CarModelDatabase;
 
 public class Simulation {
 	public static boolean DEBUG = true;
@@ -19,15 +17,14 @@ public class Simulation {
 	public static final int[] windowSize = { 1100, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
 	public static final int FPS = 60;
-	public static final double SCALE = windowSize[Y] / Intersection.intersectionSize;
+	public static final double SCALE = windowSize[Y]
+			/ Intersection.intersectionSize;
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 
 	private JFrame window;
-	private SimDisplay simulationDisplayer;
+	private SimDisplay simDisp;
 	private Logic logic;
-	private EntityHandler entityHandler;
-	private Intersection in;
 	private int drawFps;
 
 	/************ Just init stuff in this section *************/
@@ -39,14 +36,11 @@ public class Simulation {
 	}
 
 	public void init() {
-		entityHandler = new EntityHandler();
-		in = new Intersection();
-		entityHandler.setIntersection(in);
-		simulationDisplayer = new SimDisplay(this, entityHandler);
-		logic = new Logic(this, entityHandler);
+		simDisp = new SimDisplay(this);
+		logic = new Logic(this);
 
-		window = new JFrame("Traffic Simulation");
-		window.add(simulationDisplayer);
+		window = new JFrame("SAD Project - Traffic Simulation");
+		window.add(simDisp);
 		window.setSize(windowSize[X], windowSize[Y]);
 		window.setLocationRelativeTo(null); // Centers window
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -74,7 +68,7 @@ public class Simulation {
 			// Drawing
 			if (nextTime <= System.nanoTime()) {
 				nextTime += delay;
-				simulationDisplayer.render();
+				simDisp.render();
 				fps++;
 
 			}
@@ -91,50 +85,46 @@ public class Simulation {
 			}
 		}
 	}
-	
-	public int drawFps(){
+
+	public int drawFps() {
 		return drawFps;
 	}
 
 	/************ TEST CODE FROM THIS POINT ON *************/
 
 	public void addTestCar() {
-		/*AbstractTrack track = new SquareCurveTrack(new Vector2D(5, 5),
-				new Vector2D(5, 75), new Vector2D(55, 75));
-		Car car = new Car(new CarType("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
-		entityHandler.addTrack(track);
-		car.setTrackPosition(track.getTrackPosition());
-		car.setSpeed(track.length()/5);
-		entityHandler.addCar(car);
+		/*
+		 * AbstractTrack track = new SquareCurveTrack(new Vector2D(5, 5), new
+		 * Vector2D(5, 75), new Vector2D(55, 75)); Car car = new Car(new
+		 * CarType("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
+		 * entityHandler.addTrack(track);
+		 * car.setTrackPosition(track.getTrackPosition());
+		 * car.setSpeed(track.length()/5); entityHandler.addCar(car);
+		 * 
+		 * track = new SquareCurveTrack(new Vector2D(10, 5), new Vector2D(10,
+		 * 70), new Vector2D(55, 70)); car = new Car(new CarType());
+		 * entityHandler.addTrack(track);
+		 * car.setTrackPosition(track.getTrackPosition());
+		 * car.setSpeed(track.length()/5); entityHandler.addCar(car);
+		 * 
+		 * track = new LineTrack(new Vector2D(150, 10), new Vector2D(150, 160));
+		 * car = new Car(new CarType()); entityHandler.addTrack(track);
+		 * car.setTrackPosition(track.getTrackPosition()); car.setSpeed(50 /
+		 * 3.6); entityHandler.addCar(car);
+		 * 
+		 * track = new LineTrack(new Vector2D(147, 10), new Vector2D(147, 160));
+		 * entityHandler.addTrack(track); car = new Car(new CarType());
+		 * car.setTrackPosition(track.getTrackPosition(10)); car.setSpeed(45 /
+		 * 3.6); car.setVelocity(45 / 3.6); entityHandler.addCar(car);
+		 */
 
-		track = new SquareCurveTrack(new Vector2D(10, 5),
-				new Vector2D(10, 70), new Vector2D(55, 70));
-		car = new Car(new CarType());
-		entityHandler.addTrack(track);
+		AbstractTrack track = EntityDatabase.getIntersection().getStartPoint(0)
+				.getTrack();
+		Car car;
+		car = new Car(CarModelDatabase.getByName("Tesla S"));
 		car.setTrackPosition(track.getTrackPosition());
-		car.setSpeed(track.length()/5);
-		entityHandler.addCar(car);
-		
-		track = new LineTrack(new Vector2D(150, 10), new Vector2D(150, 160));
-		car = new Car(new CarType());
-		entityHandler.addTrack(track);
-		car.setTrackPosition(track.getTrackPosition());
-		car.setSpeed(50 / 3.6);
-		entityHandler.addCar(car);
-		
-		track = new LineTrack(new Vector2D(147, 10), new Vector2D(147, 160));
-		entityHandler.addTrack(track);
-		car = new Car(new CarType());
-		car.setTrackPosition(track.getTrackPosition(10));
-		car.setSpeed(45 / 3.6);
-		car.setVelocity(45 / 3.6);
-		entityHandler.addCar(car);*/
-
-		Car car = new Car(new CarType("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
-		AbstractTrack track = in.getStartPoint(0).getTrack();
-		car.setTrackPosition(track.getTrackPosition());
-		car.setSpeed(track.length()/5);
-		entityHandler.addCar(car);
+		car.setSpeed(30 / 3.6);
+		EntityDatabase.addCar(car);
 	}
 
 	public void testAll() {
@@ -146,7 +136,7 @@ public class Simulation {
 
 	// Testing bezier track.
 	public void testSquareCurveTrack() {
-		AbstractTrack track = new SquareCurveTrack(new Vector2D(0, 0),
+		AbstractTrack track = new Bezier2Track(new Vector2D(0, 0),
 				new Vector2D(0, 30), new Vector2D(30, 30));
 		System.out.println(track);
 		System.out.println("Track length = " + track.length());

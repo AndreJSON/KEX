@@ -1,9 +1,8 @@
-package sim.map.intersection;
+package map.intersection;
 
+import map.track.*;
 import math.Vector2D;
 import sim.Drawable;
-import sim.EntityHandler;
-import sim.map.track.*;
 
 import java.awt.Graphics2D;
 import java.util.HashMap;
@@ -40,7 +39,7 @@ public class Intersection implements Drawable {
 
 		segments[4] = new Segment(new LineTrack(new Vector2D(arm + width * 3 / 2, straight), new Vector2D(arm + width * 3 / 2, straight + turn)));
 		segments[0].linkSegment(1,segments[4]);
-		segments[5] = new Segment(new SquareCurveTrack(new Vector2D(arm + width * 3 / 2, straight + turn), new Vector2D(arm + square / 2, arm + square * 4 / 5), new Vector2D(arm + square + buffer, arm + width * 5 / 2)));
+		segments[5] = new Segment(new Bezier2Track(new Vector2D(arm + width * 3 / 2, straight + turn), new Vector2D(arm + square / 2, arm + square * 4 / 5), new Vector2D(arm + square + buffer, arm + width * 5 / 2)));
 		segments[4].linkSegment(1,segments[5]);
 		segments[6] = new Segment(new LineTrack(new Vector2D(arm + square + buffer, arm + width * 5 / 2), new Vector2D(arm * 2 + square, arm + width * 5 / 2)));
 		segments[5].linkSegment(1,segments[6]);
@@ -48,7 +47,7 @@ public class Intersection implements Drawable {
 
 		segments[1] = new Segment(new LineTrack(new Vector2D(arm + width / 2, straight), new Vector2D(arm + width / 2, straight + turn)));
 		segments[0].linkSegment(3, segments[1]);
-		segments[2] = new Segment(new SquareCurveTrack(new Vector2D(arm + width / 2, straight + turn), new Vector2D(arm + width / 2, arm + width / 2), new Vector2D(straight + turn, arm + width / 2)));
+		segments[2] = new Segment(new Bezier2Track(new Vector2D(arm + width / 2, straight + turn), new Vector2D(arm + width / 2, arm + width / 2), new Vector2D(straight + turn, arm + width / 2)));
 		segments[1].linkSegment(3, segments[2]);
 		segments[3] = new Segment(new LineTrack(new Vector2D(straight + turn, arm + width / 2), new Vector2D(0, arm + width / 2)));
 		segments[2].linkSegment(3,segments[3]);
@@ -67,7 +66,7 @@ public class Intersection implements Drawable {
 
 		segments[10] = new Segment(new LineTrack(new Vector2D(arm + square + buffer + turn, arm + width / 2), new Vector2D(arm + square + buffer, arm + width / 2)));
 		segments[9].linkSegment(0,segments[10]);
-		segments[11] = new Segment(new SquareCurveTrack(new Vector2D(arm + square + buffer, arm + width / 2), new Vector2D(arm + width * 5 / 2, arm + width / 2), new Vector2D(arm + width * 5 / 2, straight + turn)));
+		segments[11] = new Segment(new Bezier2Track(new Vector2D(arm + square + buffer, arm + width / 2), new Vector2D(arm + width * 5 / 2, arm + width / 2), new Vector2D(arm + width * 5 / 2, straight + turn)));
 		segments[10].linkSegment(0,segments[11]);
 		segments[12] = new Segment(new LineTrack(new Vector2D(arm + width * 5 / 2, straight + turn), new Vector2D(arm + width * 5 / 2, 0)));
 		segments[11].linkSegment(0,segments[12]);
@@ -75,7 +74,7 @@ public class Intersection implements Drawable {
 
 		segments[13] = new Segment(new LineTrack(new Vector2D(arm + square + buffer + turn, arm + width * 3 / 2), new Vector2D(arm + square + buffer, arm + width * 3 / 2)));
 		segments[9].linkSegment(2, segments[13]);
-		segments[14] = new Segment(new SquareCurveTrack(new Vector2D(arm + square + buffer, arm + width * 3 / 2), new Vector2D(arm + square / 5, arm + square / 2), new Vector2D(arm + width / 2, arm + square + buffer)));
+		segments[14] = new Segment(new Bezier2Track(new Vector2D(arm + square + buffer, arm + width * 3 / 2), new Vector2D(arm + square / 5, arm + square / 2), new Vector2D(arm + width / 2, arm + square + buffer)));
 		segments[13].linkSegment(2, segments[14]);
 		segments[14].linkSegment(2, segments[8]);
 		segments[8].linkSegment(2, null);

@@ -1,4 +1,4 @@
-package sim.map.track;
+package map.track;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -15,7 +15,7 @@ import math.Vector2D;
  * @author henrik
  * 
  */
-public class SquareCurveTrack extends AbstractTrack {
+public class Bezier2Track extends AbstractTrack {
 
 	/**
 	 * Number of iterations when computing the length of the curve.
@@ -48,7 +48,7 @@ public class SquareCurveTrack extends AbstractTrack {
 	 */
 	private Vector2D[] points;
 
-	public SquareCurveTrack(Vector2D c1, Vector2D c2, Vector2D c3) {
+	public Bezier2Track(Vector2D c1, Vector2D c2, Vector2D c3) {
 		this.c1 = c1;
 		this.c2 = c2;
 		this.c3 = c3;
