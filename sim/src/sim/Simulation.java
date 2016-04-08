@@ -16,12 +16,10 @@ import javax.swing.JFrame;
 public class Simulation {
 	public static boolean DEBUG = true;
 	public static final int X = 0, Y = 1;
-	public static final int[] windowSize = { 800, 800 };
+	public static final int[] windowSize = { 1100, 800 };
+	public static final int HUDSize = windowSize[X] - windowSize[Y];
 	public static final int FPS = 60;
-	public static final int[] PPM = {
-			windowSize[X] / Intersection.intersectionSize,
-			windowSize[Y] / Intersection.intersectionSize }; // Pixles per meter
-	public static final double SCALE = PPM[0];
+	public static final double SCALE = windowSize[Y] / Intersection.intersectionSize;
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 
@@ -53,6 +51,8 @@ public class Simulation {
 		window.setLocationRelativeTo(null); // Centers window
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
+
+		buildMap();
 	}
 
 	public static void main(String[] args) {
@@ -99,13 +99,14 @@ public class Simulation {
 		// Draw SCALE
 		int width = 25;
 		int length = (int) (100 * SCALE);
-		g2d.drawLine(750 - width / 2, 50, 750 + width / 2, 50);
-		g2d.drawLine(750 - width / 2, 50 + length, 750 + width / 2, 50 + length);
-		g2d.drawLine(750, 50, 750, 50 + length);
+		g2d.setColor(Color.BLACK);
+		g2d.drawLine(windowSize[X] - 50, 50, windowSize[X] - 50 - width, 50);
+		g2d.drawLine(windowSize[X] - 50, 50 + length, windowSize[X] - 50 - width, 50 + length);
+		g2d.drawLine(windowSize[X] - 50 - width / 2, 50, windowSize[X] - 50 - width / 2, 50 + length);
 
 		g2d.setFont(new Font("Arial", Font.BOLD, 16));
 		AffineTransform orig = g2d.getTransform();
-		g2d.translate(755, 25 + length / 2);
+		g2d.translate(windowSize[X] - 50, 25 + length / 2);
 		g2d.rotate(Math.PI / 2);
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("100 m", 0, 0);
@@ -115,27 +116,6 @@ public class Simulation {
 			// Draw FPS
 			g2d.drawString("FPS: " + drawFps, windowSize[X] - 100, 25);
 		}
-	}
-
-	public void draw(Graphics2D g2d) {
-		// Test drawing stuff.
-		// Test drawing shapes.
-		g2d.setColor(Color.RED);
-		g2d.fillOval(0, 0, 30, 30);
-		g2d.drawOval(0, 50, 30, 30);
-		g2d.fillRect(50, 0, 30, 30);
-		g2d.drawRect(50, 50, 30, 30);
-
-		// Create and draw a SquareCurveTrack
-		AbstractTrack track = new SquareCurveTrack(new Vector2D(0, 0),
-				new Vector2D(0, 300), new Vector2D(300, 300));
-		track.draw(g2d);
-
-		// Create and draw a LineTrack
-		AbstractTrack track2 = new LineTrack(new Vector2D(100, 100),
-				new Vector2D(200, 100));
-		track2.draw(g2d);
-
 	}
 
 	/************ TEST CODE FROM THIS POINT ON *************/
@@ -175,11 +155,7 @@ public class Simulation {
 	public void testAll() {
 		if (!DEBUG)
 			return;
-
-		testSquareCurveTrack();
-		testLineTrack();
 		addTestCar();
-
 		System.out.println("All probably went well, here is a test print.");
 	}
 

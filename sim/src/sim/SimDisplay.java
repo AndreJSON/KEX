@@ -41,14 +41,14 @@ public class SimDisplay extends Canvas {
 	    g2d.setRenderingHints(rh);
 		
 		
-		g2d.setColor(Color.white);
-		g2d.fill(this.getBounds());
-
-		drawTracks(g2d);
-		drawCars(g2d);
-		
+		g2d.setColor(Color.GREEN);
+		g2d.fillRect(0, 0, Simulation.windowSize[Simulation.X] - Simulation.HUDSize, Simulation.windowSize[Simulation.Y]);
+		g2d.setColor(Color.WHITE);
+		g2d.fillRect(Simulation.windowSize[Simulation.X] - Simulation.HUDSize, 0, Simulation.HUDSize, Simulation.windowSize[Simulation.Y]);
 
 		sim.drawInterface(g2d);
+		drawTracks(g2d);
+		drawCars(g2d);
 		
 		// paint to graphics object here
 		g2d.dispose();
