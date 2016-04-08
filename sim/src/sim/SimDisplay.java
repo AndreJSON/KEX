@@ -64,6 +64,7 @@ public class SimDisplay extends Canvas {
 	}
 
 	public void drawInterface(Graphics2D g2d) {
+		g2d.setColor(Color.black);
 
 		// Draw SCALE
 		int width = (int) (1 * Simulation.SCALE);

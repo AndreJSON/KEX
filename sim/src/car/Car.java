@@ -4,17 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.text.DecimalFormat;
 
 import map.track.TrackPosition;
 import math.Vector2D;
-
 import sim.Drawable;
 import sim.Simulation;
 
 public class Car implements Drawable {
 	private static long trackId = 0;
-	private static DecimalFormat DF;
 
 	private long id;
 	private final CarModel specs;
@@ -145,9 +142,7 @@ public class Car implements Drawable {
 			return;
 		g2d.setColor(Color.black);
 		g2d.fillOval((int) p.x - 1, (int) p.y - 1, 3, 3);
-		if (DF == null)
-			DF = new DecimalFormat("0.0");
-		g2d.drawString(this.toString() + " " + DF.format(speed * 3.6) + " kph",
+		g2d.drawString(this.toString() + " " + (int) (speed * 3.6) + " k/h",
 				(int) p.x + 2, (int) p.y - 2);
 
 	}

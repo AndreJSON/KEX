@@ -1,6 +1,7 @@
 package sim;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import map.intersection.*;
@@ -17,8 +18,18 @@ import car.Car;
  */
 public class EntityDatabase {
 
-	private static final HashSet<Car> cars = new HashSet<>();;
-	private static final HashSet<AbstractTrack> tracks = new HashSet<>();;
+	/**
+	 * All the cars
+	 */
+	private static final HashSet<Car> cars = new HashSet<>();
+
+	/**
+	 * Maps the car to its destination. By the end the collection of TravelData
+	 * will be used for statistics.
+	 */
+	private static final HashMap<Car, TravelData> car2travelData = new HashMap<>();
+	
+	private static final HashSet<AbstractTrack> tracks = new HashSet<>();
 	private static final Intersection intersection = new Intersection();
 
 	private EntityDatabase() {
@@ -28,11 +39,17 @@ public class EntityDatabase {
 		return cars;
 	}
 
-	public static void addCar(Car car) {
+	public static void addCar(Car car, TravelData travelData) {
+		car.setTrackPosition(travelData.currentSegment().getTrack().getTrackPosition());
 		cars.add(car);
+		car2travelData.put(car, travelData);
 		if (Simulation.DEBUG) {
 			System.out.println("Added " + car);
 		}
+	}
+	
+	public static TravelData getTravelData(Car car){
+		return car2travelData.get(car);
 	}
 
 	public static void removeCar(Car car) {

@@ -3,6 +3,7 @@ package map.intersection;
 import map.track.*;
 import math.Vector2D;
 import sim.Drawable;
+import sim.TravelData;
 
 import java.awt.Graphics2D;
 import java.util.HashMap;
@@ -59,6 +60,10 @@ public class Intersection implements Drawable {
 		segments[8] = new Segment(new LineTrack(new Vector2D(arm + width / 2, arm + square + buffer), new Vector2D(arm + width / 2, arm * 2 + square)));
 		segments[7].linkSegment(2,segments[8]);
 		segments[3].linkSegment(2,null);
+
+		TravelData.registerTravelPlan(segments[0], 0, 1);
+		TravelData.registerTravelPlan(segments[0], 0, 2);
+		TravelData.registerTravelPlan(segments[0], 0, 3);
 
 		/***** Startpoint East *****/
 		segments[9] = new Segment(new LineTrack(new Vector2D(arm * 2 + square, arm + width / 2), new Vector2D(arm + square + buffer + turn, arm + width / 2)));

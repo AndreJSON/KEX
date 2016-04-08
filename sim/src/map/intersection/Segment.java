@@ -30,6 +30,10 @@ public class Segment {
 	public void linkSegment(int destination, Segment seg) {
 		split.put(destination, seg);
 	}
+	
+	public Segment nextSegment(int destination){
+		return split.get(destination);
+	}
 
 	public Vector2D[] getPoints() {
 		return track.getPoints();

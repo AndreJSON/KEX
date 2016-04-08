@@ -8,9 +8,6 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.JFrame;
 
-import car.Car;
-import car.CarModelDatabase;
-
 public class Simulation {
 	public static boolean DEBUG = true;
 	public static final int X = 0, Y = 1;
@@ -116,15 +113,14 @@ public class Simulation {
 		 * entityHandler.addTrack(track); car = new Car(new CarType());
 		 * car.setTrackPosition(track.getTrackPosition(10)); car.setSpeed(45 /
 		 * 3.6); car.setVelocity(45 / 3.6); entityHandler.addCar(car);
+		 * 
+		 * 
+		 * AbstractTrack track =
+		 * EntityDatabase.getIntersection().getStartPoint(0) .getTrack(); Car
+		 * car; car = new Car(CarModelDatabase.getByName("Tesla S"));
+		 * car.setTrackPosition(track.getTrackPosition()); car.setSpeed(30 /
+		 * 3.6); EntityDatabase.addCar(car, null);
 		 */
-
-		AbstractTrack track = EntityDatabase.getIntersection().getStartPoint(0)
-				.getTrack();
-		Car car;
-		car = new Car(CarModelDatabase.getByName("Tesla S"));
-		car.setTrackPosition(track.getTrackPosition());
-		car.setSpeed(30 / 3.6);
-		EntityDatabase.addCar(car);
 	}
 
 	public void testAll() {

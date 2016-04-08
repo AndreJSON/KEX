@@ -147,6 +147,8 @@ public class Bezier2Track extends AbstractTrack {
 		g2d.setColor(Color.RED);
 		g2d.draw(Simulation.SCALER.createTransformedShape(shape));
 
+		if (!Simulation.DEBUG)
+			return;
 		g2d.setColor(Color.MAGENTA);
 		Vector2D p;
 		p = c1.mult(Simulation.SCALE);
