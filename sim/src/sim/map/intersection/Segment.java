@@ -23,6 +23,9 @@ public class Segment {
 		split = new HashMap<>();
 	}
 
+	/**
+	 * Make seg the next segment if travelling towards the given destination.
+	 */
 	public void linkSegment(int destination, Segment seg) {
 		split.put(destination, seg);
 	}

@@ -11,6 +11,7 @@ public class VehicleSpec {
 	private final double length, width;
 	private Shape shape;
 	private Color color;
+	private int destination;
 
 	public VehicleSpec() {
 		this("Mazda3", 180.3*0.0254, 70.7*0.0254, Color.blue);

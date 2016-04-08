@@ -48,7 +48,6 @@ public class SimDisplay extends Canvas {
 
 		sim.drawInterface(g2d);
 		drawSegments(g2d);
-		drawTracks(g2d);
 		drawCars(g2d);
 		
 		// paint to graphics object here
@@ -61,12 +60,6 @@ public class SimDisplay extends Canvas {
 	private void drawSegments(Graphics2D g2d) {
 		for (Segment seg : entityHandler.getSegments()) {
 			seg.getTrack().draw(g2d);
-		}
-	}
-
-	private void drawTracks(Graphics2D g2d) {
-		for (AbstractTrack track : entityHandler.getTracks()) {
-			track.draw(g2d);
 		}
 	}
 
