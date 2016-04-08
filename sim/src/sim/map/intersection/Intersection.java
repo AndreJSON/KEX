@@ -9,7 +9,7 @@ import java.awt.Graphics2D;
 import java.util.HashMap;
 
 public class Intersection implements Drawable {
-	public static final int straight = 15, turn = 10, buffer = 1, width = 3;
+	public static final int straight = 30, turn = 10, buffer = 1, width = 3;
 	public static final int arm = straight + turn + buffer;
 	public static final int square = width * 3;
 	public static final int intersectionSize = arm * 2 + square;
@@ -90,7 +90,8 @@ public class Intersection implements Drawable {
 
 	@Override
 	public void draw(Graphics2D g2d) {
-		// TODO Auto-generated method stub
-
+		for (Segment seg : segments) {
+			seg.getTrack().draw(g2d);
+		}
 	}
 }

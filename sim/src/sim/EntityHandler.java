@@ -1,5 +1,6 @@
 package sim;
 
+import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -62,6 +63,10 @@ public class EntityHandler {
 		if (Simulation.DEBUG) {
 			System.out.println("Removed " + oldTrack);
 		}
+	}
+
+	public Intersection getIntersection() {
+		return intersection;
 	}
 
 }

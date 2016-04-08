@@ -45,7 +45,7 @@ public class SimDisplay extends Canvas {
 		g2d.setRenderingHints(rh);
 		
 		drawBackground(g2d);
-		drawSegments(g2d);
+		drawIntersection(g2d);
 		drawCars(g2d);
 		drawInterface(g2d);
 
@@ -68,18 +68,18 @@ public class SimDisplay extends Canvas {
 	public void drawInterface(Graphics2D g2d) {
 
 		// Draw SCALE
-		int width = 25;
-		int length = (int) (100 * Simulation.SCALE);
+		int width = (int) (1 * Simulation.SCALE);
+		int length = (int) (10 * Simulation.SCALE);
 		g2d.drawLine(750 - width / 2, 50, 750 + width / 2, 50);
 		g2d.drawLine(750 - width / 2, 50 + length, 750 + width / 2, 50 + length);
 		g2d.drawLine(750, 50, 750, 50 + length);
 
-		g2d.setFont(new Font("Arial", Font.BOLD, 16));
+		g2d.setFont(new Font("Arial", Font.BOLD, 12));
 		AffineTransform orig = g2d.getTransform();
-		g2d.translate(755, 25 + length / 2);
+		g2d.translate(755, 30 + length / 2);
 		g2d.rotate(Math.PI / 2);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString("100 m", 0, 0);
+		g2d.drawString("10 m", 0, 0);
 		g2d.setTransform(orig);
 
 		if (Simulation.DEBUG) {
@@ -89,10 +89,8 @@ public class SimDisplay extends Canvas {
 		}
 	}
 
-	private void drawSegments(Graphics2D g2d) {
-		for (Segment seg : entityHandler.getSegments()) {
-			seg.getTrack().draw(g2d);
-		}
+	private void drawIntersection(Graphics2D g2d) {
+		entityHandler.getIntersection().draw(g2d);
 	}
 
 	private void drawCars(Graphics2D g2d) {
