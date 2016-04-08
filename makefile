@@ -1,4 +1,4 @@
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := build_and_run
 SRC = sim/src
 MATH = $(SRC)/math
 SIM = $(SRC)/sim
@@ -16,6 +16,8 @@ $(TRACK)/LineTrack.java \
 $(TRACK)/SquareCurveTrack.java \
 $(INTERSECTION)/Segment.java \
 $(INTERSECTION)/Intersection.java \
+$(SIM)/EntityHandler.java \
+$(SIM)/Logic.java \
 $(SIM)/Drawable.java \
 $(SIM)/SimDisplay.java \
 $(SIM)/Simulation.java
@@ -26,6 +28,8 @@ all:
 
 run:
 	cd sim/src && java sim.Simulation
+
+build_and_run: all run
 
 clean:
 	cd sim/src && rm -f sim/vehicle/*.class && rm -f sim/map/track/*.class && rm -f math/*.class
