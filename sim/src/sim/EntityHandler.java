@@ -45,11 +45,6 @@ public class EntityHandler {
 	public void setIntersection(Intersection i) {
 		intersection = i;
 	}
-	
-	// v v v May be removed for Intersection. v v v
-	public Collection<AbstractTrack> getTracks() {
-		return tracks;
-	}
 
 	public Segment[] getSegments() {
 		return intersection.getSegments();

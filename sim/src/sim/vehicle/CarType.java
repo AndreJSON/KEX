@@ -11,6 +11,7 @@ public class CarType {
 	private final double length, width;
 	private Shape shape;
 	private Color color;
+	private int destination;
 
 	/**
 	 * Constructs a default car type.
