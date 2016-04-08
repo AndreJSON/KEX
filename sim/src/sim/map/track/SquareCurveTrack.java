@@ -144,8 +144,15 @@ public class SquareCurveTrack extends AbstractTrack {
 
 	@Override
 	public void draw(Graphics2D g2d) {
-		g2d.setColor(Color.red);
+		g2d.setColor(Color.RED);
 		g2d.draw(Simulation.SCALER.createTransformedShape(shape));
+		
+		g2d.setColor(Color.MAGENTA);
+		Vector2D p;
+		p = c1.mult(Simulation.SCALE);
+		g2d.drawOval((int) (p.x - 1), (int) (p.y - 1), 2, 2);
+		p = c3.mult(Simulation.SCALE);
+		g2d.drawOval((int) (p.x - 1), (int) (p.y - 1), 2, 2);
 	}
 
 	private class Position implements TrackPosition {
