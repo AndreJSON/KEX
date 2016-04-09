@@ -151,13 +151,18 @@ public class Intersection implements Drawable {
 		Vector2D drawPoint;//
 		// Move it to the first intersection pairs.
 		guide = guide.plus(dir.mult(square / 2 + buffer));
-		wayPoints[cardinalDirection][1] = guide;
-		wayPoints[cardinalDirection][2] = guide.plus(dir.rotate(Math.PI/2).mult(width));
-		wayPoints[cardinalDirection][0] = guide.plus(dir.rotate(-Math.PI/2).mult(width));
+		wayPoints[cardinalDirection][LEFT] = guide;
+		wayPoints[cardinalDirection][EXIT] = guide.plus(dir.rotate(Math.PI/2).mult(width));
+		wayPoints[cardinalDirection][RIGHT] = guide.plus(dir.rotate(-Math.PI/2).mult(width));
 
 		guide = guide.plus(dir.mult(turn));
-		wayPoints[cardinalDirection][4] = guide;
-		wayPoints[cardinalDirection][3] = guide.plus(dir.rotate(-Math.PI/2).mult(width));
+		wayPoints[cardinalDirection][SPLIT_LEFT] = guide;
+		wayPoints[cardinalDirection][SPLIT_STRAIGHT] = guide.plus(dir.rotate(-Math.PI/2).mult(width));
+
+		guide = guide.plus(dir.mult(straight));
+		wayPoints[cardinalDirection][MAP_ENTRANCE] = guide.plus(dir.rotate(-Math.PI/2).mult(width));
+		wayPoints[cardinalDirection][MAP_EXIT] = guide.plus(dir.rotate(Math.PI/2).mult(width));
+
 
 		// Move this section to the middle.
 		for (int i = 0; i < 7; i++) {
