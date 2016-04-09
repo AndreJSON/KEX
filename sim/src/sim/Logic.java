@@ -15,15 +15,17 @@ import car.CarModelDatabase;
  * 
  */
 public class Logic {
+	private static final double SPEED_LIMIT = 50 / 3.6;
 
 	public Logic() {
 	}
 
 	public void tick(double diff) {
+		// Call control system here.
+
 		moveCars(diff);
 
-		// TODO: add logic, such as collision detection, intersection manager,
-		// etc.
+		// TODO: add logic, such as collision detection etc.
 	}
 
 	public void moveCars(double diff) {
@@ -51,9 +53,9 @@ public class Logic {
 		}
 	}
 
-	public void spawnCar(String carName, int from, int to, double speed) {
+	public void spawnCar(String carName, int from, int to) {
 		Car car = new Car(CarModelDatabase.getByName(carName));
-		car.setSpeed(speed);
+		car.setSpeed(SPEED_LIMIT);
 		EntityDatabase.addCar(car, TravelData.createTravelData(from, to));
 	}
 }

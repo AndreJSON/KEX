@@ -16,7 +16,8 @@ public class Car implements Drawable {
 	private long id;
 	private final CarModel specs;
 	private TrackPosition position;
-	private double speed, heading = 0;
+	private double speed, heading = 0, breakingDistance;
+	private double magicCoefficient = 13.8; // my * g / 2
 
 	public Car(CarModel specs) {
 		this.specs = specs;
@@ -104,6 +105,7 @@ public class Car implements Drawable {
 	 */
 	public void setSpeed(double speed) {
 		this.speed = speed;
+		breakingDistance = speed * speed / magicCoefficient;
 	}
 
 	/**

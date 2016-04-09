@@ -9,7 +9,7 @@ import java.awt.geom.AffineTransform;
 import javax.swing.JFrame;
 
 public class Simulation {
-	public static boolean DEBUG = true;
+	public static final boolean DEBUG = true;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1100, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
@@ -86,8 +86,7 @@ public class Simulation {
 				// Adding cars
 				if (spawnAccum >= spawnSeparation) {
 					spawnAccum = 0;
-					System.out.println("lol");
-					logic.spawnCar("Mazda3", (int)(Math.random() * 3 + 1), (int)(Math.random() * 3 + 1), 50 / 3.6);
+					logic.spawnCar("Mazda3", Intersection.NORTH/*(int)(Math.random() * 3 + 1)*/, (int)(Math.random() * 3 + 1));
 				}
 			}
 
