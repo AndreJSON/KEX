@@ -35,11 +35,12 @@ public class Logic {
 	public void moveCars(double diff) {
 		// TEST CODE
 		timer += diff;
-		if (timer > 1.2) {
+		if (timer > 0.6) {
 			Car car = new Car(CarModelDatabase.getByName("Mazda3"));
 			car.setSpeed(50 / 3.6);
-			EntityDatabase.addCar(car, TravelData.createTravelData(Intersection.NORTH,
-					(int) (Math.random() * 3 + 1)));
+			int origin = (int)(Math.random() * 4);
+			EntityDatabase.addCar(car, TravelData.createTravelData(origin,
+					(int) (Math.random() * 3 + 1 + origin)%4));
 			timer = 0;
 		}
 		// TEST CODE END
