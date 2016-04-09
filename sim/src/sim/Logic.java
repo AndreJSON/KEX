@@ -16,7 +16,6 @@ import tscs.AbstractTSCS;
  * 
  */
 public class Logic {
-	private static final double SPEED_LIMIT = 50 / 3.6;
 	private AbstractTSCS tscs;
 
 	public Logic(AbstractTSCS tscs) {
@@ -59,7 +58,7 @@ public class Logic {
 
 	public void spawnCar(String carName, int from, int to) {
 		Car car = new Car(CarModelDatabase.getByName(carName));
-		car.setSpeed(SPEED_LIMIT);
+		car.setSpeed(AbstractTSCS.SPEED_LIMIT);
 		EntityDatabase.addCar(car, TravelData.createTravelData(from, to));
 	}
 }

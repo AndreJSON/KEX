@@ -49,7 +49,7 @@ public class Simulation implements ActionListener {
 		simDisp = new SimDisplay(this);
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
 		window.add(simDisp);
-		b1 = new JButton("Brake");
+		b1 = new JButton("BREAK!");
 		b1.setBounds(windowSize[Y] + 20,50, windowSize[X] - windowSize[Y] - 40,50);
 		b1.addActionListener(this);
 		b1.setActionCommand("Brake");
@@ -123,8 +123,11 @@ public class Simulation implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if("Brake".equals(e.getActionCommand())) {
-			currentlySpawning = false;
-			tscs.setEmergencyBreak(true);
+			if(currentlySpawning && !tscs.getEmergencyBreak()) {
+				b2.doClick();
+			}
+			tscs.setEmergencyBreak(!tscs.getEmergencyBreak());
+			b1.setText(tscs.getEmergencyBreak()?  "Move again" : "BREAK!");
 		}
 		else if(("Spawn").equals(e.getActionCommand())) {
 			currentlySpawning = !currentlySpawning;
