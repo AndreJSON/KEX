@@ -20,6 +20,8 @@ public class Logic {
 	public Logic() {
 	}
 
+	double d;
+
 	public void tick(double diff) {
 		// Call control system here.
 

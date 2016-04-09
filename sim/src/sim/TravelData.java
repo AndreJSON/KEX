@@ -29,7 +29,7 @@ public class TravelData {
 	 */
 	public Segment nextSegment() {
 		currentIndex++;
-		if(currentIndex >= travelPlan.segments.size()){
+		if (currentIndex >= travelPlan.segments.size()) {
 			return null;
 		}
 		return travelPlan.segments.get(currentIndex);
@@ -48,9 +48,17 @@ public class TravelData {
 	 * @return
 	 */
 	public static TravelData createTravelData(int origin, int destination) {
-		TravelData travelData = new TravelData(getTravelPlan(origin,
-				destination));
-
+		TravelData travelData;
+		origin %= 4;
+		destination %= 4;
+		System.out.println("Origin: " + origin);
+		System.out.println("Destination: " + destination);
+		try {
+			travelData = new TravelData(getTravelPlan(origin, destination));
+		} catch (NullPointerException e) {
+			System.out.println("TravelData error!");
+			throw e;
+		}
 		return travelData;
 	}
 

@@ -19,7 +19,7 @@ public class Simulation {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	public static final int TICKS_PER_SECOND = 120;
-	public static final double SPAWNS_PER_SECOND = 2.5;
+	public static final double SPAWNS_PER_SECOND = 2;
 	public static final double SCALE_TICK = 1; // 1 = normal speed, 2 = double
 												// speed etc.
 
@@ -86,7 +86,9 @@ public class Simulation {
 				// Adding cars
 				if (spawnAccum >= spawnSeparation) {
 					spawnAccum = 0;
-					logic.spawnCar("Mazda3", Intersection.NORTH/*(int)(Math.random() * 3 + 1)*/, (int)(Math.random() * 3 + 1));
+					int source = (int)(Math.random() * 4);
+					int dest = (int)(Math.random() * 3 + 1) + source;
+					logic.spawnCar("Mazda3", source, dest, 50 / 3.6);
 				}
 			}
 
