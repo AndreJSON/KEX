@@ -2,6 +2,7 @@ package sim;
 
 import java.util.Iterator;
 
+import map.intersection.Intersection;
 import map.intersection.Segment;
 import car.Car;
 import car.CarModelDatabase;
@@ -35,9 +36,9 @@ public class Logic {
 		// TEST CODE
 		timer += diff;
 		if (timer > 1.2) {
-			Car car = new Car(CarModelDatabase.getByName("Tesla S"));
+			Car car = new Car(CarModelDatabase.getByName("Mazda3"));
 			car.setSpeed(50 / 3.6);
-			EntityDatabase.addCar(car, TravelData.createTravelData(0,
+			EntityDatabase.addCar(car, TravelData.createTravelData(Intersection.NORTH,
 					(int) (Math.random() * 3 + 1)));
 			timer = 0;
 		}

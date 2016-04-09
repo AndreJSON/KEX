@@ -43,12 +43,14 @@ public class CarModelDatabase {
 
 	// All cars need UNIQUE names!
 	static {
-		register(new CarModel("Tesla S", 196.0 * 0.0254, 77.3 * 0.0254,
-				Color.cyan));
-		register(new CarModel("Space Wagon", 4.6, 1.775, Color.white));
-		register(new CarModel("Tesla X", 196.0 * 0.0254, 77.3 * 0.0254,
-				Color.blue));
-		register(new CarModel("Mazda3", 180.3 * 0.0254, 70.7 * 0.0254,
-				Color.blue));
+		register(new CarModel("TeslaS", 4.970, 1.964, Color.cyan, 0.86, 3.95)); // Tesla
+																					// Model
+																					// S
+		register(new CarModel("SpaceWagon", 4.680, 1.740, Color.white, 0.930,
+				3.565)); // Mitsubishi Space Wagon
+		register(new CarModel("AudiS5", 4.713, 1.854,
+				Color.blue, .860, .860+2.811)); // Audi S5
+		register(new CarModel("Mazda3", 4.415, 1.755,
+				Color.blue, 0.93, 0.93 + 2.640)); // Mazda 3
 	}
 }

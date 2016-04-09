@@ -16,7 +16,10 @@ public class Car implements Drawable {
 	private long id;
 	private final CarModel specs;
 	private TrackPosition position;
-	private double speed;
+	private double speed, heading = 0;
+	private double maxSpeed = 50/3.6;
+	private double maxAcc = 5;
+	private double maxDec = -45;
 
 	public Car(CarModel specs) {
 		this.specs = specs;
@@ -39,7 +42,24 @@ public class Car implements Drawable {
 					+ " has not been assigned a track!");
 		}
 		if (position.remaining() > 0) {
+
 			position.move(delta * speed);
+			double rotation = speed
+					* (Math.tan(position.getHeading() - heading) / specs
+							.getWheelBase());
+			
+			double maxSpeed = this.maxSpeed;
+			if (Math.abs(Math.tan(position.getHeading() - heading)) > 0.20){
+				maxSpeed *= 1-Math.abs(rotation)/15;
+			} 
+			if(speed < maxSpeed) {
+				speed += maxAcc*delta;
+			} else if (speed > maxSpeed){
+				speed += maxDec*delta;
+			}
+			
+			heading += rotation * delta % (2 * Math.PI);
+
 		} else {
 			throw new RuntimeException(this + " is out of track!");
 		}
@@ -77,11 +97,7 @@ public class Car implements Drawable {
 	 * @return
 	 */
 	public double getHeading() {
-		if (position == null) {
-			throw new NullPointerException(this
-					+ " has not been assigned a track!");
-		}
-		return position.getHeading();
+		return heading;
 	}
 
 	/**
@@ -118,6 +134,9 @@ public class Car implements Drawable {
 	 *            the position to follow.
 	 */
 	public void setTrackPosition(TrackPosition tPosition) {
+		if (position == null) {
+			heading = tPosition.getHeading();
+		}
 		position = tPosition;
 	}
 
@@ -130,16 +149,23 @@ public class Car implements Drawable {
 		Vector2D p = getPosition().mult(Simulation.SCALE);
 
 		// Default heading is to the right
+
 		AffineTransform aF = new AffineTransform();
 		aF.translate(p.x, p.y);
-		aF.rotate(getHeading());
 		aF.scale(Simulation.SCALE, Simulation.SCALE);
+		g2d.setColor(Color.black);
+		aF.rotate(getHeading());
 
+		for (int i = 0; i < 4; i++) {
+			g2d.fill(aF.createTransformedShape(specs.wheels[i]));
+		}
+		g2d.setColor(specs.getColor());
 		Shape shape = aF.createTransformedShape(specs.getShape());
 		g2d.fill(shape);
 
 		if (!Simulation.DEBUG)
 			return;
+		p = specs.getCenterPoint(getPosition(), heading).mult(Simulation.SCALE);
 		g2d.setColor(Color.black);
 		g2d.fillOval((int) p.x - 1, (int) p.y - 1, 3, 3);
 		g2d.drawString(this.toString() + " " + (int) (speed * 3.6) + " k/h",

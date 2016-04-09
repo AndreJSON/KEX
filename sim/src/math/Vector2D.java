@@ -119,6 +119,15 @@ public class Vector2D extends Point2D.Double {
 	public Vector2D minus(Vector2D point) {
 		return new Vector2D(x - point.x, y - point.y);
 	}
+	
+	/**
+	 * 
+	 * @param p
+	 * @return
+	 */
+	public Vector2D rotate(double theta) {
+		return new Vector2D(x * Math.cos(theta) - y * Math.sin(theta), x * Math.sin(theta) + y * Math.cos(theta));
+	}
 
 	@Override
 	public String toString() {

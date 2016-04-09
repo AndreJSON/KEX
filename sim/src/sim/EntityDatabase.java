@@ -59,9 +59,6 @@ public class EntityDatabase {
 		}
 	}
 
-	public static Segment[] getSegments() {
-		return intersection.getSegments();
-	}
 
 	public static void addTrack(AbstractTrack track) {
 		tracks.add(track);
