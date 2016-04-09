@@ -8,6 +8,11 @@ import sim.TravelData;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -212,8 +217,25 @@ public class Intersection implements Drawable {
 		return seg;
 	}
 
+	Area shape;
+	
 	@Override
 	public void draw(Graphics2D g2d) {
+		if (shape == null){
+			shape = new Area();
+			Area a = new Area(new Rectangle2D.Double(intersectionSize/2 - width * 3/2, 0, width * 3, intersectionSize));
+			shape.add(a);
+			a = new Area(new Rectangle2D.Double(0, intersectionSize/2 - width * 3/2, intersectionSize, width * 3));
+			shape.add(a);
+			double damn = square*1.8;
+			Shape rect = new Rectangle2D.Double(-damn/2, -damn/2, damn, damn);
+			AffineTransform aF = new AffineTransform();
+			aF.translate(intersectionSize/2, intersectionSize/2);
+			aF.rotate(Math.PI/4);
+			shape.add(new Area(aF.createTransformedShape(rect)));
+		}
+		g2d.setColor(Color.gray);
+		g2d.fill(Simulation.SCALER.createTransformedShape(shape));
 		
 		g2d.setColor(Color.red);
 		
