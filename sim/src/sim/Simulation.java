@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 public class Simulation {
 	public static final boolean DEBUG = true;
 	public static final int X = 0, Y = 1;
-	public static final int[] windowSize = { 1100, 800 };
+	public static final int[] windowSize = { 1000, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
 	public static final int FPS = 60;
 	public static final double SCALE = windowSize[Y]
@@ -88,7 +88,7 @@ public class Simulation {
 					spawnAccum = 0;
 					int source = (int)(Math.random() * 4);
 					int dest = (int)(Math.random() * 3 + 1) + source;
-					logic.spawnCar("Mazda3", source, dest, 50 / 3.6);
+					logic.spawnCar("Mazda3", source, dest);
 				}
 			}
 
