@@ -2,24 +2,26 @@
 SRC = sim/src
 MATH = $(SRC)/math
 SIM = $(SRC)/sim
-VEHICLE = $(SIM)/vehicle
-MAP = $(SIM)/map
+CAR = $(SRC)/car
+MAP = $(SRC)/map
 TRACK = $(MAP)/track
 INTERSECTION = $(MAP)/intersection
 FILES = \
-$(MATH)/Vector2D.java \
-$(VEHICLE)/VehicleSpec.java \
-$(VEHICLE)/Car.java \
-$(TRACK)/TrackPosition.java \
-$(TRACK)/AbstractTrack.java \
-$(TRACK)/LineTrack.java \
-$(TRACK)/SquareCurveTrack.java \
+$(CAR)/Car.java \
+$(CAR)/CarModel.java \
+$(CAR)/CarModelDatabase.java \
 $(INTERSECTION)/Segment.java \
 $(INTERSECTION)/Intersection.java \
-$(SIM)/EntityHandler.java \
-$(SIM)/Logic.java \
+$(TRACK)/AbstractTrack.java \
+$(TRACK)/Bezier2Track.java \
+$(TRACK)/LineTrack.java \
+$(TRACK)/TrackPosition.java \
+$(MATH)/Vector2D.java \
 $(SIM)/Drawable.java \
+$(SIM)/EntityDatabase.java \
+$(SIM)/Logic.java \
 $(SIM)/SimDisplay.java \
+$(SIM)/TravelData.java \
 $(SIM)/Simulation.java
 
 all:
@@ -30,6 +32,3 @@ run:
 	cd sim/src && java sim.Simulation
 
 build_and_run: all run
-
-clean:
-	cd sim/src && rm -f sim/vehicle/*.class && rm -f sim/map/track/*.class && rm -f math/*.class

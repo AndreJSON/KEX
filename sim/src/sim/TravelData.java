@@ -49,7 +49,8 @@ public class TravelData {
 	 */
 	public static TravelData createTravelData(int origin, int destination) {
 		TravelData travelData;
-
+		origin %= 4;
+		destination %= 4;
 		System.out.println("Origin: " + origin);
 		System.out.println("Destination: " + destination);
 		try {

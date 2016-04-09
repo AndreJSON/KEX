@@ -15,36 +15,20 @@ import car.CarModelDatabase;
  * 
  */
 public class Logic {
-	@SuppressWarnings("unused")
-	private final Simulation sim;
 
-	public Logic(Simulation sim) {
-		this.sim = sim;
+	public Logic() {
 	}
 
-	public void tick(double diff) {
+	double d;
 
+	public void tick(double diff) {
 		moveCars(diff);
 
 		// TODO: add logic, such as collision detection, intersection manager,
 		// etc.
 	}
 
-	double timer = 0;
-
 	public void moveCars(double diff) {
-		// TEST CODE
-		timer += diff;
-		if (timer > 0.6) {
-			Car car = new Car(CarModelDatabase.getByName("Mazda3"));
-			car.setSpeed(50 / 3.6);
-			int origin = (int)(Math.random() * 4);
-			EntityDatabase.addCar(car, TravelData.createTravelData(origin,
-					(int) (Math.random() * 3 + 1 + origin)%4));
-			timer = 0;
-		}
-		// TEST CODE END
-
 		Iterator<Car> it = EntityDatabase.getCars().iterator();
 		while (it.hasNext()) {
 			Car car = it.next();
@@ -67,5 +51,11 @@ public class Logic {
 				car.setTrackPosition(seg.getTrack().getTrackPosition(-rest));
 			}
 		}
+	}
+
+	public void spawnCar(String carName, int from, int to, double speed) {
+		Car car = new Car(CarModelDatabase.getByName(carName));
+		car.setSpeed(speed);
+		EntityDatabase.addCar(car, TravelData.createTravelData(from, to));
 	}
 }
