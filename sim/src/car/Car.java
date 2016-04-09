@@ -17,9 +17,6 @@ public class Car implements Drawable {
 	private final CarModel specs;
 	private TrackPosition position;
 	private double speed, heading = 0;
-	private double maxSpeed = 50/3.6;
-	private double maxAcc = 5;
-	private double maxDec = -45;
 
 	public Car(CarModel specs) {
 		this.specs = specs;
@@ -48,15 +45,6 @@ public class Car implements Drawable {
 					* (Math.tan(position.getHeading() - heading) / specs
 							.getWheelBase());
 			
-			double maxSpeed = this.maxSpeed;
-			if (Math.abs(Math.tan(position.getHeading() - heading)) > 0.20){
-				maxSpeed *= 1-Math.abs(rotation)/15;
-			} 
-			if(speed < maxSpeed) {
-				speed += maxAcc*delta;
-			} else if (speed > maxSpeed){
-				speed += maxDec*delta;
-			}
 			
 			heading += rotation * delta % (2 * Math.PI);
 
