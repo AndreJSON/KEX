@@ -19,6 +19,7 @@ public class Simulation {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	public static final int TICKS_PER_SECOND = 120;
+	public static final int SPAWNS_PER_SECOND = 1;
 	public static final double SCALE_TICK = 1; // 1 = normal speed, 2 = double
 												// speed etc.
 
@@ -56,6 +57,9 @@ public class Simulation {
 	public void run() {
 		System.out.print("\nStarting simulation.\n\n");
 
+		int spawnAccum = 0;
+		int spawnSeparation = SPAWNS_PER_SECOND * TICKS_PER_SECOND;
+
 		long nextTime = System.nanoTime();
 		long delay = (long) 1e9 / FPS;
 		int fps = 0;
@@ -78,6 +82,13 @@ public class Simulation {
 			while (now - tickTime >= 1e9 / TICKS_PER_SECOND) {
 				logic.tick(SCALE_TICK / TICKS_PER_SECOND);
 				tickTime += 1e9 / TICKS_PER_SECOND;
+				spawnAccum++;
+				// Adding cars
+				if (spawnAccum >= spawnSeparation) {
+					spawnAccum = 0;
+					System.out.println("lol");
+					logic.spawnCar("Mazda3", Intersection.NORTH, (int)(Math.random() * 3 + 1), 50 / 3.6);
+				}
 			}
 
 			// FPS
@@ -96,63 +107,9 @@ public class Simulation {
 
 	/************ TEST CODE FROM THIS POINT ON *************/
 
-	public void addTestCar() {
-		/*
-		 * AbstractTrack track = new SquareCurveTrack(new Vector2D(5, 5), new
-		 * Vector2D(5, 75), new Vector2D(55, 75)); Car car = new Car(new
-		 * CarType("Tesla S", 196.0*0.0254, 77.3*0.0254, Color.cyan));
-		 * entityHandler.addTrack(track);
-		 * car.setTrackPosition(track.getTrackPosition());
-		 * car.setSpeed(track.length()/5); entityHandler.addCar(car);
-		 * 
-		 * track = new SquareCurveTrack(new Vector2D(10, 5), new Vector2D(10,
-		 * 70), new Vector2D(55, 70)); car = new Car(new CarType());
-		 * entityHandler.addTrack(track);
-		 * car.setTrackPosition(track.getTrackPosition());
-		 * car.setSpeed(track.length()/5); entityHandler.addCar(car);
-		 * 
-		 * track = new LineTrack(new Vector2D(150, 10), new Vector2D(150, 160));
-		 * car = new Car(new CarType()); entityHandler.addTrack(track);
-		 * car.setTrackPosition(track.getTrackPosition()); car.setSpeed(50 /
-		 * 3.6); entityHandler.addCar(car);
-		 * 
-		 * track = new LineTrack(new Vector2D(147, 10), new Vector2D(147, 160));
-		 * entityHandler.addTrack(track); car = new Car(new CarType());
-		 * car.setTrackPosition(track.getTrackPosition(10)); car.setSpeed(45 /
-		 * 3.6); car.setVelocity(45 / 3.6); entityHandler.addCar(car);
-		 * 
-		 * 
-		 * AbstractTrack track =
-		 * EntityDatabase.getIntersection().getStartPoint(0) .getTrack(); Car
-		 * car; car = new Car(CarModelDatabase.getByName("Tesla S"));
-		 * car.setTrackPosition(track.getTrackPosition()); car.setSpeed(30 /
-		 * 3.6); EntityDatabase.addCar(car, null);
-		 */
-	}
-
 	public void testAll() {
 		if (!DEBUG)
 			return;
-		addTestCar();
 		System.out.println("All probably went well, here is a test print.");
 	}
-
-	// Testing bezier track.
-	public void testSquareCurveTrack() {
-		AbstractTrack track = new Bezier2Track(new Vector2D(0, 0),
-				new Vector2D(0, 30), new Vector2D(30, 30));
-		System.out.println(track);
-		System.out.println("Track length = " + track.length());
-		System.out.println();
-	}
-
-	// Testing line track.
-	public void testLineTrack() {
-		AbstractTrack track = new LineTrack(new Vector2D(10, 10), new Vector2D(
-				20, 10));
-		System.out.println(track);
-		System.out.println("Track length = " + track.length());
-		System.out.println();
-	}
-
 }
