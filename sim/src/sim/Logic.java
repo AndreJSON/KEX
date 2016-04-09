@@ -26,7 +26,7 @@ public class Logic {
 	double d;
 
 	public void tick(double diff) {
-		tscs.tick();
+		tscs.tick(diff);
 		moveCars(diff);
 
 		// TODO: add logic, such as collision detection etc.

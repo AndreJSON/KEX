@@ -108,6 +108,13 @@ public class Car implements Drawable {
 		breakingDistance = speed * speed / magicCoefficient;
 	}
 
+	public double getMaxRetardation(double diff) {
+		double reduction = speed - Math.sqrt(magicCoefficient * (breakingDistance - speed * diff));
+		if(Double.isNaN(reduction))
+			reduction = speed;
+		return reduction;
+	}
+
 	/**
 	 * get the car type.
 	 * 
