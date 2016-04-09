@@ -34,9 +34,9 @@ public class Logic {
 	public void moveCars(double diff) {
 		// TEST CODE
 		timer += diff;
-		if (timer > 0.5) {
+		if (timer > 1.2) {
 			Car car = new Car(CarModelDatabase.getByName("Tesla S"));
-			car.setSpeed(80 / 3.6);
+			car.setSpeed(50 / 3.6);
 			EntityDatabase.addCar(car, TravelData.createTravelData(0,
 					(int) (Math.random() * 3 + 1)));
 			timer = 0;

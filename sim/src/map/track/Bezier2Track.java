@@ -187,7 +187,12 @@ public class Bezier2Track extends AbstractTrack {
 
 		@Override
 		public void move(double distance) {
-			calcT(distance);
+			double cDist = 0;
+			while (distance - cDist > 0.05){
+				calcT(0.05);
+				cDist += 0.05;
+			}
+			calcT(distance - cDist);
 			totDist += distance;
 
 			point = evaluate(t);
