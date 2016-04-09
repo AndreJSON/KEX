@@ -3,6 +3,7 @@ SRC = sim/src
 MATH = $(SRC)/math
 SIM = $(SRC)/sim
 CAR = $(SRC)/car
+TSCS = $(SRC)/tscs
 MAP = $(SRC)/map
 TRACK = $(MAP)/track
 INTERSECTION = $(MAP)/intersection
@@ -17,6 +18,8 @@ $(TRACK)/Bezier2Track.java \
 $(TRACK)/LineTrack.java \
 $(TRACK)/TrackPosition.java \
 $(MATH)/Vector2D.java \
+$(TSCS)/AbstractTSCS.java \
+$(TSCS)/DSCS.java \
 $(SIM)/Drawable.java \
 $(SIM)/EntityDatabase.java \
 $(SIM)/Logic.java \

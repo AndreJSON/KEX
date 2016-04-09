@@ -3,19 +3,21 @@ package sim;
 import map.intersection.*;
 import map.track.*;
 import math.*;
+import tscs.*;
 
 import java.awt.geom.AffineTransform;
+import java.awt.event.*;
 
 import javax.swing.JFrame;
+import javax.swing.JButton;
 
-public class Simulation {
+public class Simulation implements ActionListener {
 	public static final boolean DEBUG = true;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
 	public static final int FPS = 60;
-	public static final double SCALE = windowSize[Y]
-			/ Intersection.intersectionSize;
+	public static final double SCALE = windowSize[Y] / Intersection.intersectionSize;
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	public static final int TICKS_PER_SECOND = 120;
@@ -25,23 +27,32 @@ public class Simulation {
 
 	private JFrame window;
 	private SimDisplay simDisp;
+	private JButton b1;
 	private Logic logic;
+	private AbstractTSCS tscs;
 	private int drawFps;
 
 	/************ Just init stuff in this section *************/
 
 	public Simulation() {
 		init();
-		testAll();
 		run();
 	}
 
 	public void init() {
-		simDisp = new SimDisplay(this);
-		logic = new Logic();
+		tscs = new DSCS();
+		logic = new Logic(tscs);
 
 		window = new JFrame("SAD Project - Traffic Simulation");
+		window.setLayout(null);
+		simDisp = new SimDisplay(this);
+		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
 		window.add(simDisp);
+		b1 = new JButton("Brake");
+		b1.setBounds(windowSize[Y] + 20,50, windowSize[X] - windowSize[Y] - 40,50);
+		b1.addActionListener(this);
+		b1.setActionCommand("Brake");
+		window.add(b1);
 		window.setSize(windowSize[X], windowSize[Y]);
 		window.setLocationRelativeTo(null); // Centers window
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,8 +62,6 @@ public class Simulation {
 	public static void main(String[] args) {
 		new Simulation();
 	}
-
-	/************ Code *************/
 
 	public void run() {
 		System.out.print("\nStarting simulation.\n\n");
@@ -106,11 +115,9 @@ public class Simulation {
 		return drawFps;
 	}
 
-	/************ TEST CODE FROM THIS POINT ON *************/
-
-	public void testAll() {
-		if (!DEBUG)
-			return;
-		System.out.println("All probably went well, here is a test print.");
+	public void actionPerformed(ActionEvent e) {
+		if("Brake".equals(e.getActionCommand())) {
+			tscs.setEmergencyBreak(true);
+		}
 	}
 }
