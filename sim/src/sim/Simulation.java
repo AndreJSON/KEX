@@ -19,7 +19,7 @@ public class Simulation {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	public static final int TICKS_PER_SECOND = 120;
-	public static final int SPAWNS_PER_SECOND = 1;
+	public static final double SPAWNS_PER_SECOND = 2.5;
 	public static final double SCALE_TICK = 1; // 1 = normal speed, 2 = double
 												// speed etc.
 
@@ -38,7 +38,7 @@ public class Simulation {
 
 	public void init() {
 		simDisp = new SimDisplay(this);
-		logic = new Logic(this);
+		logic = new Logic();
 
 		window = new JFrame("SAD Project - Traffic Simulation");
 		window.add(simDisp);
@@ -58,7 +58,7 @@ public class Simulation {
 		System.out.print("\nStarting simulation.\n\n");
 
 		int spawnAccum = 0;
-		int spawnSeparation = SPAWNS_PER_SECOND * TICKS_PER_SECOND;
+		int spawnSeparation = (int) ((double)TICKS_PER_SECOND / SPAWNS_PER_SECOND);
 
 		long nextTime = System.nanoTime();
 		long delay = (long) 1e9 / FPS;
@@ -87,7 +87,7 @@ public class Simulation {
 				if (spawnAccum >= spawnSeparation) {
 					spawnAccum = 0;
 					System.out.println("lol");
-					logic.spawnCar("Mazda3", Intersection.NORTH, (int)(Math.random() * 3 + 1), 50 / 3.6);
+					logic.spawnCar("Mazda3", (int)(Math.random() * 3 + 1), (int)(Math.random() * 3 + 1), 50 / 3.6);
 				}
 			}
 

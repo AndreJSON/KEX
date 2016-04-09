@@ -16,11 +16,7 @@ import car.CarModelDatabase;
  */
 public class Logic {
 
-	@SuppressWarnings("unused")
-	private final Simulation sim;
-
-	public Logic(Simulation sim) {
-		this.sim = sim;
+	public Logic() {
 	}
 
 	public void tick(double diff) {
