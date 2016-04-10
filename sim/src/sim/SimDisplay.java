@@ -11,7 +11,6 @@ import java.util.Collection;
 
 import car.Car;
 
-
 /**
  * SimDisplay handles the rendering of objects in the simulation.
  * 
@@ -41,7 +40,7 @@ public class SimDisplay extends Canvas {
 				RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHints(rh);
-		
+
 		drawBackground(g2d);
 		drawIntersection(g2d);
 		drawCars(g2d);

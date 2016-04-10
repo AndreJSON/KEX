@@ -17,7 +17,8 @@ public class Simulation implements ActionListener {
 	public static final int[] windowSize = { 1000, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
 	public static final int FPS = 60;
-	public static final double SCALE = windowSize[Y] / Intersection.intersectionSize;
+	public static final double SCALE = windowSize[Y]
+			/ Intersection.intersectionSize;
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	public static final int TICKS_PER_SECOND = 120;
@@ -50,12 +51,14 @@ public class Simulation implements ActionListener {
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
 		window.add(simDisp);
 		b1 = new JButton("BREAK!");
-		b1.setBounds(windowSize[Y] + 20,50, windowSize[X] - windowSize[Y] - 40,50);
+		b1.setBounds(windowSize[Y] + 20, 50,
+				windowSize[X] - windowSize[Y] - 40, 50);
 		b1.addActionListener(this);
 		b1.setActionCommand("Brake");
 		window.add(b1);
 		b2 = new JButton("Stop spawning");
-		b2.setBounds(windowSize[Y] + 20,150, windowSize[X] - windowSize[Y] - 40,50);
+		b2.setBounds(windowSize[Y] + 20, 150, windowSize[X] - windowSize[Y]
+				- 40, 50);
 		b2.addActionListener(this);
 		b2.setActionCommand("Spawn");
 		window.add(b2);
@@ -110,7 +113,7 @@ public class Simulation implements ActionListener {
 	public String timeElapsed() {
 		return new DecimalFormat("#.0").format(timeElapsed);
 	}
-	
+
 	public int drawFps() {
 		return drawFps;
 	}
@@ -120,17 +123,16 @@ public class Simulation implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		if("Brake".equals(e.getActionCommand())) {
-			if(currentlySpawning && !tscs.getEmergencyBreak()) {
+		if ("Brake".equals(e.getActionCommand())) {
+			if (currentlySpawning && !tscs.getEmergencyBreak()) {
 				b2.doClick();
 			}
 			tscs.setEmergencyBreak(!tscs.getEmergencyBreak());
-			b1.setText(tscs.getEmergencyBreak()?  "Move again" : "BREAK!");
-		}
-		else if(("Spawn").equals(e.getActionCommand())) {
+			b1.setText(tscs.getEmergencyBreak() ? "Move again" : "BREAK!");
+		} else if (("Spawn").equals(e.getActionCommand())) {
 			currentlySpawning = !currentlySpawning;
 			logic.setSpawnerOn(currentlySpawning);
-			b2.setText(currentlySpawning? "Stop spawning" : "Start spawning");
+			b2.setText(currentlySpawning ? "Stop spawning" : "Start spawning");
 		}
 	}
 }

@@ -12,10 +12,10 @@ public class CarModel {
 	private final Shape shape;
 	public final Shape[] wheels;
 	private final Color color;
-	
+
 	private final double frontAxleDisplacement;
 	private final double rearAxleDisplacement;
-	
+
 	private final double maxAcceleration;
 	private final double maxRetardation;
 	private final double topSpeed;
@@ -32,7 +32,8 @@ public class CarModel {
 	 *            the color of the car type
 	 */
 	public CarModel(String name, double length, double width, Color color,
-			double frontAxleDisplacement, double rearAxleDisplacement, double maxAcceleration, double maxRetardation, double topSpeed) {
+			double frontAxleDisplacement, double rearAxleDisplacement,
+			double maxAcceleration, double maxRetardation, double topSpeed) {
 		this.topSpeed = topSpeed;
 		this.maxAcceleration = maxAcceleration;
 		this.maxRetardation = maxRetardation;

@@ -25,18 +25,18 @@ public class TravelData {
 		addToSeg();
 		// realTime = 0;
 	}
-	
+
 	public static LinkedList<Car> getCarsOnSegment(Segment seg) {
 		LinkedList<Car> cars = segment2cars.get(seg);
-		if(cars != null){
+		if (cars != null) {
 			return cars;
 		}
 		cars = new LinkedList<Car>();
 		segment2cars.put(seg, cars);
 		return cars;
 	}
-	
-	private void addToSeg(){
+
+	private void addToSeg() {
 		LinkedList<Car> cars = segment2cars.get(currentSegment());
 		if (cars == null) {
 			cars = new LinkedList<>();
@@ -64,16 +64,16 @@ public class TravelData {
 	public Segment currentSegment() {
 		return travelPlan.segments.get(currentIndex);
 	}
-	
-	public TravelPlan getTravelPlan(){
+
+	public TravelPlan getTravelPlan() {
 		return travelPlan;
 	}
-	
-	public int getDestination(){
+
+	public int getDestination() {
 		return travelPlan.destinaion;
 	}
 
-	public int getOrigin(){
+	public int getOrigin() {
 		return travelPlan.origin;
 	}
 
@@ -85,7 +85,8 @@ public class TravelData {
 	 * @param destination
 	 * @return
 	 */
-	public static TravelData createTravelData(Car car, int origin, int destination) {
+	public static TravelData createTravelData(Car car, int origin,
+			int destination) {
 		TravelData travelData;
 		try {
 			travelData = new TravelData(getTravelPlan(origin, destination), car);
@@ -134,12 +135,12 @@ public class TravelData {
 		public int hashCode() {
 			return travelplanhash(origin, destinaion);
 		}
-		
-		
+
 	}
 
 	/**
 	 * Get the travel plan from origin to destination.
+	 * 
 	 * @param origin
 	 * @param destination
 	 * @return

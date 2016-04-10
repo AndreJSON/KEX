@@ -76,7 +76,8 @@ public class EntityDatabase {
 		passedSelf = false;
 		searchSegment = tD.currentSegment();
 		while (true) {
-			carsOnSegment = TravelData.getCarsOnSegment(searchSegment).descendingIterator();
+			carsOnSegment = TravelData.getCarsOnSegment(searchSegment)
+					.descendingIterator();
 			while (carsOnSegment.hasNext()) {
 				Car nextCar = carsOnSegment.next();
 				if (nextCar.equals(car)) {

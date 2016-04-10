@@ -36,7 +36,6 @@ public class Logic {
 				new PoissonSpawner(this, WEST, 4), };
 	}
 
-
 	public void tick(double diff, double timeElapsed) {
 		tscs.tick(diff, timeElapsed);
 		moveCars(diff);

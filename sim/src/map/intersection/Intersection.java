@@ -153,7 +153,7 @@ public class Intersection implements Drawable {
 	public static Segment getWaitingSegment(int from, int to) {
 		int split = SPLIT_STRAIGHT;
 		int direction = STRAIGHT;
-		if((to - from + 4)% 4 == 1) { //Going left
+		if ((to - from + 4) % 4 == 1) { // Going left
 			split = SPLIT_LEFT;
 			direction = LEFT;
 		}
