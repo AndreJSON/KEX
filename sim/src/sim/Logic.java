@@ -101,7 +101,6 @@ public class Logic {
 			shape = aF.createTransformedShape(car.getModel().getShape());
 			carShapes.add(shape);
 		}
-		int collisions = 0;
 		for (int i = 0; i < carShapes.size(); i++) {
 			for (int j = i + 1; j < carShapes.size(); j++) {
 				boolean collided = collision(carShapes.get(i), carShapes.get(j));
@@ -112,6 +111,8 @@ public class Logic {
 			}
 		}
 	}
+	
+	
 
 	private boolean collision(Shape shape1, Shape shape2) {
 		Vector2D shapeCoords[][] = new Vector2D[2][4];

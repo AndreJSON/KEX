@@ -17,11 +17,14 @@ public class Segment {
 												// as key. Null instead of a
 												// Segment if destination is
 												// reached.
+	private int id;
+	private static int trackId = 0;
 
 	public Segment(AbstractTrack t) {
 		track = t;
 		siblingSegments = new ArrayList<>();
 		split = new HashMap<>();
+		id = ++trackId;
 	}
 
 	/**
@@ -41,5 +44,9 @@ public class Segment {
 
 	public AbstractTrack getTrack() {
 		return track;
+	}
+	
+	public int hashCode(){
+		return id;
 	}
 }

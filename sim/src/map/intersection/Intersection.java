@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import car.Car;
+
 public class Intersection implements Drawable {
 	/*** Access waypoints ***/
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
