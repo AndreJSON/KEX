@@ -97,7 +97,7 @@ public class Logic {
 			for (int j = i + 1; j < carShapes.size(); j++) {
 				boolean collided = collision(carShapes.get(i), carShapes.get(j));
 				if (collided){
-					// TODO: Collision event.
+					System.out.println("Collision");
 				}
 			}
 		}
