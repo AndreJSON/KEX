@@ -1,25 +1,40 @@
 package sim;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+
+import car.Car;
 
 import map.intersection.Segment;
 
 public class TravelData {
 	private final static HashMap<Integer, TravelPlan> travelPlans = new HashMap<>();
+	private final static HashMap<Segment, LinkedList<Car>> segment2cars = new HashMap<>();
 
 	private final TravelPlan travelPlan;
 	private Segment currentSegment;
-
+	private Car car;
 	private int currentIndex;
 
 	// private int realTime; // Time it took in simulation.
 
-	private TravelData(TravelPlan travelPlan) {
+	private TravelData(TravelPlan travelPlan, Car car) {
 		this.travelPlan = travelPlan;
 		currentIndex = 0;
 		currentSegment = travelPlan.segments.get(0);
 		// realTime = 0;
+	}
+	
+	public static LinkedList<Car> getCarsOnSegment(Segment seg) {
+		LinkedList<Car> cars = segment2cars.get(seg);
+		if(cars != null){
+			return cars;
+		}
+		cars = new LinkedList<Car>();
+		segment2cars.put(seg, cars);
+		return cars;
 	}
 
 	/**
@@ -28,15 +43,32 @@ public class TravelData {
 	 * @return
 	 */
 	public Segment nextSegment() {
+		getCarsOnSegment(currentSegment).remove(car);
 		currentIndex++;
 		if (currentIndex >= travelPlan.segments.size()) {
+			car = null;
 			return null;
 		}
+		currentSegment = travelPlan.segments.get(currentIndex);
+		if(getCarsOnSegment(currentSegment) == null)
+		getCarsOnSegment(currentSegment).add(car);
 		return travelPlan.segments.get(currentIndex);
 	}
 
 	public Segment currentSegment() {
 		return currentSegment;
+	}
+	
+	public TravelPlan getTravelPlan(){
+		return travelPlan;
+	}
+	
+	public int getDestination(){
+		return travelPlan.destinaion;
+	}
+
+	public int getOrigin(){
+		return travelPlan.origin;
 	}
 
 	/**
@@ -47,10 +79,10 @@ public class TravelData {
 	 * @param destination
 	 * @return
 	 */
-	public static TravelData createTravelData(int origin, int destination) {
+	public static TravelData createTravelData(Car car, int origin, int destination) {
 		TravelData travelData;
 		try {
-			travelData = new TravelData(getTravelPlan(origin, destination));
+			travelData = new TravelData(getTravelPlan(origin, destination), car);
 		} catch (NullPointerException e) {
 			System.out.println("Origin: " + origin);
 			System.out.println("Destination: " + destination);
@@ -74,9 +106,9 @@ public class TravelData {
 	 * 
 	 */
 	private static class TravelPlan {
-		final ArrayList<Segment> segments;
-		final int origin, destinaion;
-		final double optimalTime;
+		private final ArrayList<Segment> segments;
+		private final int origin, destinaion;
+		private final double optimalTime;
 
 		public TravelPlan(Segment seg, int origin, int destination) {
 			this.origin = origin;
@@ -95,10 +127,18 @@ public class TravelData {
 		public int hashCode() {
 			return travelplanhash(origin, destinaion);
 		}
+		
+		
 	}
 
-	private static TravelPlan getTravelPlan(int org, int dest) {
-		return travelPlans.get(travelplanhash(org, dest));
+	/**
+	 * Get the travel plan from origin to destination.
+	 * @param origin
+	 * @param destination
+	 * @return
+	 */
+	private static TravelPlan getTravelPlan(int origin, int destination) {
+		return travelPlans.get(travelplanhash(origin, destination));
 	}
 
 	private static int travelplanhash(int org, int dest) {

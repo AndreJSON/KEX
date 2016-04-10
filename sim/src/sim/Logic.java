@@ -7,7 +7,6 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import map.intersection.Intersection;
 import map.intersection.Segment;
 import math.Vector2D;
 import car.Car;
@@ -37,10 +36,8 @@ public class Logic {
 				new PoissonSpawner(this, WEST, 4), };
 	}
 
-	double d;
 
 	public void tick(double diff) {
-		d += diff;
 		tscs.tick(diff);
 		moveCars(diff);
 
@@ -51,6 +48,18 @@ public class Logic {
 		checkCollision();
 
 		// TODO: add logic, such as collision detection etc.
+	}
+	
+	public void setSpawnerOn(boolean on){
+		if(on){
+			for (Spawner spawer : spawners) {
+				spawer.on();
+			}
+		} else {
+			for (Spawner spawer : spawners) {
+				spawer.off();
+			}
+		}
 	}
 
 	private void moveCars(double diff) {
@@ -97,7 +106,8 @@ public class Logic {
 			for (int j = i + 1; j < carShapes.size(); j++) {
 				boolean collided = collision(carShapes.get(i), carShapes.get(j));
 				if (collided){
-					System.out.println("Collision");
+					// TODO: Collision event.
+					System.out.println("Collision!");
 				}
 			}
 		}
@@ -144,6 +154,6 @@ public class Logic {
 	public void spawnCar(String carName, int from, int to) {
 		Car car = new Car(CarModelDatabase.getByName(carName));
 		car.setSpeed(AbstractTSCS.SPEED_LIMIT);
-		EntityDatabase.addCar(car, TravelData.createTravelData(from, to));
+		EntityDatabase.addCar(car, TravelData.createTravelData(car, from, to));
 	}
 }

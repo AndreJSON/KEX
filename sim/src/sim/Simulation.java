@@ -132,6 +132,7 @@ public class Simulation implements ActionListener {
 		}
 		else if(("Spawn").equals(e.getActionCommand())) {
 			currentlySpawning = !currentlySpawning;
+			logic.setSpawnerOn(currentlySpawning);
 			b2.setText(currentlySpawning? "Stop spawning" : "Start spawning");
 		}
 	}

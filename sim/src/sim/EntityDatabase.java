@@ -1,8 +1,10 @@
 package sim;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import map.intersection.*;
 import map.track.AbstractTrack;
@@ -28,8 +30,6 @@ public class EntityDatabase {
 	 * will be used for statistics.
 	 */
 	private static final HashMap<Car, TravelData> car2travelData = new HashMap<>();
-	
-	private static final HashSet<AbstractTrack> tracks = new HashSet<>();
 	private static final Intersection intersection = new Intersection();
 
 	private EntityDatabase() {
@@ -40,15 +40,16 @@ public class EntityDatabase {
 	}
 
 	public static void addCar(Car car, TravelData travelData) {
-		car.setTrackPosition(travelData.currentSegment().getTrack().getTrackPosition());
+		car.setTrackPosition(travelData.currentSegment().getTrack()
+				.getTrackPosition());
 		cars.add(car);
 		car2travelData.put(car, travelData);
 		if (Simulation.DEBUG) {
 			System.out.println("Added " + car);
 		}
 	}
-	
-	public static TravelData getTravelData(Car car){
+
+	public static TravelData getTravelData(Car car) {
 		return car2travelData.get(car);
 	}
 
@@ -59,19 +60,11 @@ public class EntityDatabase {
 		}
 	}
 
-
-	public static void addTrack(AbstractTrack track) {
-		tracks.add(track);
-		if (Simulation.DEBUG) {
-			System.out.println("Added " + track);
-		}
-	}
-
-	public static void removeTrack(AbstractTrack track) {
-		tracks.remove(track);
-		if (Simulation.DEBUG) {
-			System.out.println("Removed " + track);
-		}
+	public static double nextCar(Car car) {
+		TravelData tD = getTravelData(car);
+		Segment tDSegment = tD.currentSegment();
+		int destination = tD.getDestination();
+		return 0;
 	}
 
 	public static Intersection getIntersection() {
