@@ -14,7 +14,6 @@ public class TravelData {
 	private final static HashMap<Segment, LinkedList<Car>> segment2cars = new HashMap<>();
 
 	private final TravelPlan travelPlan;
-	private Segment currentSegment;
 	private Car car;
 	private int currentIndex;
 
@@ -23,7 +22,8 @@ public class TravelData {
 	private TravelData(TravelPlan travelPlan, Car car) {
 		this.travelPlan = travelPlan;
 		currentIndex = 0;
-		currentSegment = travelPlan.segments.get(0);
+		this.car = car;
+		addToSeg();
 		// realTime = 0;
 	}
 	
@@ -36,6 +36,15 @@ public class TravelData {
 		segment2cars.put(seg, cars);
 		return cars;
 	}
+	
+	private void addToSeg(){
+		LinkedList<Car> cars = segment2cars.get(currentSegment());
+		if (cars == null) {
+			cars = new LinkedList<>();
+			segment2cars.put(currentSegment(), cars);
+		}
+		cars.add(car);
+	}
 
 	/**
 	 * Returns null if last segment has been passed.
@@ -43,20 +52,18 @@ public class TravelData {
 	 * @return
 	 */
 	public Segment nextSegment() {
-		getCarsOnSegment(currentSegment).remove(car);
+		getCarsOnSegment(currentSegment()).remove(car);
 		currentIndex++;
 		if (currentIndex >= travelPlan.segments.size()) {
 			car = null;
 			return null;
 		}
-		currentSegment = travelPlan.segments.get(currentIndex);
-		if(getCarsOnSegment(currentSegment) == null)
-		getCarsOnSegment(currentSegment).add(car);
+		addToSeg();
 		return travelPlan.segments.get(currentIndex);
 	}
 
 	public Segment currentSegment() {
-		return currentSegment;
+		return travelPlan.segments.get(currentIndex);
 	}
 	
 	public TravelPlan getTravelPlan(){
