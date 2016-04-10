@@ -11,13 +11,12 @@ import sim.Drawable;
 import sim.Simulation;
 
 public class Car implements Drawable {
-	private static long trackId = 0;
-
-	private long id;
+	private static final double magicCoefficient = 13.8; // my * g / 2
 	private final CarModel specs;
+	private static long trackId = 0;
+	private long id;
 	private TrackPosition position;
 	private double speed, heading = 0, breakingDistance;
-	private double magicCoefficient = 13.8; // my * g / 2
 	private boolean autonomous = true;
 
 	public Car(CarModel specs) {
@@ -112,8 +111,12 @@ public class Car implements Drawable {
 		breakingDistance = speed * speed / magicCoefficient;
 	}
 
-	public void toggleAutonomous(boolean value) {
+	public void setAutonomy(boolean value) {
 		autonomous = value;
+	}
+
+	public boolean getAutonomy() {
+		return autonomous;
 	}
 
 	/**
@@ -121,7 +124,7 @@ public class Car implements Drawable {
 	 * given time diff.
 	 */
 	public double getMaxAcceleration(double diff) {
-		return 3 * diff; // TODO: Actually have a decent value here.
+		return diff * specs.getMaxAcceleration(); // TODO: Actually have a decent value here.
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.ListIterator;
 
+import sim.Logic;
 import sim.TravelData;
 import car.Car;
 import math.Pair;
@@ -49,13 +50,13 @@ public class DSCS extends AbstractTSCS {
 				cars = TravelData.getCarsOnSegment(segment).listIterator();
 				while(cars.hasNext()) {
 					car = cars.next();
-					if(car.remainingOnTrack() >= car.getBreakingDistance() * COMFORT_COEFFICIENT) {
-						car.toggleAutonomous(false);
-						if(car.remainingOnTrack() >= car.getBreakingDistance() * COMFORT_COEFFICIENT * 2) {
-							reduceSpeed(car, car.getMaxRetardation(diff / (3 * COMFORT_COEFFICIENT)));
+					if(car.remainingOnTrack() >= car.getBreakingDistance() * Logic.BREAKING_COEFFICIENT) {
+						car.setAutonomy(false);
+						if(car.remainingOnTrack() >= Math.max(car.getBreakingDistance() * Logic.BREAKING_COEFFICIENT * 2, 2)) {
+							reduceSpeed(car, car.getMaxRetardation(diff / (3 * Logic.BREAKING_COEFFICIENT)));
 							break;
 						}
-						reduceSpeed(car, car.getMaxRetardation(diff / COMFORT_COEFFICIENT));
+						reduceSpeed(car, car.getMaxRetardation(diff / Logic.BREAKING_COEFFICIENT));
 						break;
 					}
 				}

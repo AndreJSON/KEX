@@ -23,6 +23,8 @@ import tscs.AbstractTSCS;
  * 
  */
 public class Logic {
+	public static final double BREAKING_COEFFICIENT = 2.5; // Factor slower comfortable breaking should compared to the maximum retardation.
+	public static final double ACCELERATION_COEFFICIENT = 2;
 	private AbstractTSCS tscs;
 	private Spawner[] spawners;
 
@@ -64,8 +66,27 @@ public class Logic {
 	}
 
 	private void handleAutonomy(double diff) {
-
-		//car.toggleAutonomous(true); //This should always be the last thing to happen in handleAutonomy.
+		Iterator<Car> it = EntityDatabase.getCars().iterator();
+		while (it.hasNext()) {
+			Car car = it.next();
+			if(!car.getAutonomy()) {
+				car.setAutonomy(true);
+				continue;
+			}
+			Car inFront = EntityDatabase.nextCar(car);
+			if(inFront == null) {
+				if(car.getSpeed() < AbstractTSCS.SPEED_LIMIT) {
+					AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff) / ACCELERATION_COEFFICIENT);
+				}
+				continue;
+			}
+			else if(inFront.getSpeed() > car.getSpeed()) {
+				AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff) / ACCELERATION_COEFFICIENT);
+			}
+			else { // The car ahead is driving slower.
+				AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / BREAKING_COEFFICIENT);
+			}
+		}
 	}
 
 	private void moveCars(double diff) {
@@ -159,7 +180,7 @@ public class Logic {
 		Car car = new Car(CarModelDatabase.getByName(carName));
 		car.setSpeed(AbstractTSCS.SPEED_LIMIT);
 		EntityDatabase.addCar(car, TravelData.createTravelData(car, from, to));
-		double dist = EntityDatabase.nextCar(car);
+		double dist = EntityDatabase.distNextCar(car);
 		System.out.println("Dist: " + dist);
 	}
 }

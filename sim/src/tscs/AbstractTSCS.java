@@ -7,7 +7,6 @@ import car.Car;
 
 public abstract class AbstractTSCS {
 	public static final double SPEED_LIMIT = 50 / 3.6;
-	protected static final double COMFORT_COEFFICIENT = 2.5; // Factor slower comfortable breaking should compared to the maximum retardation.
 	protected boolean emergencyBreak = false;
 
 	public AbstractTSCS() {
@@ -33,14 +32,14 @@ public abstract class AbstractTSCS {
 		return emergencyBreak;
 	}
 
-	protected void reduceSpeed(Car car, double amount) {
+	public static void reduceSpeed(Car car, double amount) {
 		if(amount < 0) {
 			System.out.println("TRYING TO REDUCE SPEED BY A NEGATIVE VALUE");
 		}
 		car.setSpeed(car.getSpeed() - amount);
 	}
 
-	protected void increaseSpeed(Car car, double amount) {
+	public static void increaseSpeed(Car car, double amount) {
 		if(amount < 0) {
 			System.out.println("TRYING TO INCREASE SPEED BY A NEGATIVE VALUE");
 		}
