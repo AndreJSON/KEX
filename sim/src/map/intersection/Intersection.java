@@ -154,7 +154,7 @@ public class Intersection implements Drawable {
 		
 		int split = SPLIT_STRAIGHT;
 		int direction = STRAIGHT;
-		if((to - from + 4)% 4 == 1) { //Going left
+		if ((to - from + 4) % 4 == 1) { // Going left
 			split = SPLIT_LEFT;
 			direction = LEFT;
 		}

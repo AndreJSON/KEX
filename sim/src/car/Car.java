@@ -17,7 +17,7 @@ public class Car implements Drawable {
 	private long id;
 	private TrackPosition position;
 	private double speed, heading = 0, breakingDistance;
-	private boolean autonomous = true;
+	private boolean isAutonomous = true;
 
 	public Car(CarModel specs) {
 		this.specs = specs;
@@ -112,11 +112,11 @@ public class Car implements Drawable {
 	}
 
 	public void setAutonomy(boolean value) {
-		autonomous = value;
+		isAutonomous = value;
 	}
 
 	public boolean getAutonomy() {
-		return autonomous;
+		return isAutonomous;
 	}
 
 	/**
@@ -217,5 +217,13 @@ public class Car implements Drawable {
 	@Override
 	public int hashCode() {
 		return (int) id;
+	}
+
+	public boolean isAutonomous() {
+		return isAutonomous;
+	}
+
+	public void setAutonomous(boolean isAutonomous) {
+		this.isAutonomous = isAutonomous;
 	}
 }

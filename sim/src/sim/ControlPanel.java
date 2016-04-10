@@ -4,12 +4,12 @@ import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
 public class ControlPanel extends JPanel {
-	public ControlPanel(){
-		
+	public ControlPanel() {
+
 	}
-	
-	public void init(){
-		
+
+	public void init() {
+
 	}
 
 }

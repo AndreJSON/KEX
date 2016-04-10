@@ -188,7 +188,7 @@ public class Bezier2Track extends AbstractTrack {
 		@Override
 		public void move(double distance) {
 			double cDist = 0;
-			while (distance - cDist > 0.05){
+			while (distance - cDist > 0.05) {
 				calcT(0.05);
 				cDist += 0.05;
 			}

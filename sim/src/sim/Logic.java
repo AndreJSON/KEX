@@ -38,7 +38,6 @@ public class Logic {
 				new PoissonSpawner(this, WEST, 4), };
 	}
 
-
 	public void tick(double diff) {
 		tscs.tick(diff);
 		handleAutonomy(diff);
