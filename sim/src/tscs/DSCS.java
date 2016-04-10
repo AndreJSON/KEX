@@ -2,11 +2,14 @@ package tscs;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 import sim.EntityDatabase;
+import sim.TravelData;
 import car.Car;
 import math.Pair;
-import map.intersection.Intersection;
+import map.intersection.*;
 
 public class DSCS extends AbstractTSCS {
 	private static final int NORTH = Intersection.NORTH, EAST = Intersection.EAST, SOUTH = Intersection.SOUTH, WEST = Intersection.WEST;
@@ -32,7 +35,21 @@ public class DSCS extends AbstractTSCS {
 			currentPhaseTime = 0;
 			currentPhase = (currentPhase + 1) % 4;
 		}
-		//Do stuff specific to DSCS.
+
+		//The turn segment of the traveldirection.
+		Segment segment;
+		for(Pair p : phases.get(currentPhase)) {
+			segment = Intersection.getWaitingSegment(p.getFrom(), p.getTo());
+			ListIterator<Car> cars = TravelData.getCarsOnSegment(segment).listIterator();
+			Car car;
+			while(cars.hasNext()) {
+				car = cars.next();
+				if(car.remainingOnTrack() >= car.getBreakingDistance() * COMFORT_COEFFICIENT) {
+					//Break this car. else look for another one.
+					break;
+				}
+			}
+		}
 	}
 
 	public String drawPhase() {

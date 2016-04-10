@@ -26,14 +26,14 @@ public class Intersection implements Drawable {
 	public static final int MAP_ENTRANCE = 5, MAP_EXIT = 6;
 	/******/
 
-	public static final double straight = 50, turn = 20, buffer = 1.5,
+	public static final double straight = 20, turn = 50, buffer = 1.5,
 			width = 3.1;
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;
 	public static final double intersectionSize = arm * 2 + square;
 	
 	// Used in building of intersection.
-	public HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment;
+	public static HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment;
 	// For drawing the segments.
 	public ArrayList<Segment> segments;
 
@@ -41,7 +41,7 @@ public class Intersection implements Drawable {
 													// coming from each of the 4
 													// directions.
 
-	private Vector2D wayPoints[][];
+	private static Vector2D wayPoints[][];
 
 	public Intersection() {
 		points2segment = new HashMap<>();
@@ -145,8 +145,18 @@ public class Intersection implements Drawable {
 		point2segment.put(v2, s);
 	}
 
-	private Segment getByPoints(Vector2D v1, Vector2D v2) {
+	private static Segment getByPoints(Vector2D v1, Vector2D v2) {
 		return points2segment.get(v1).get(v2);
+	}
+
+	public static Segment getWaitingSegment(int from, int to) {
+		int split = 3;
+		int direction = 0;
+		if((to - from + 4)% 4 == 1) { //Going left
+			split = 4;
+			direction = 1;
+		}
+		return getByPoints(wayPoints[from][split], wayPoints[to][direction]);
 	}
 
 	private void generateWayPoints() {
