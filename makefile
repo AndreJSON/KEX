@@ -18,6 +18,7 @@ $(TRACK)/Bezier2Track.java \
 $(TRACK)/LineTrack.java \
 $(TRACK)/TrackPosition.java \
 $(MATH)/Vector2D.java \
+$(MATH)/Pair.java \
 $(TSCS)/AbstractTSCS.java \
 $(TSCS)/DSCS.java \
 $(SIM)/Drawable.java \

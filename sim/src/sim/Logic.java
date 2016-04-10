@@ -31,7 +31,7 @@ public class Logic {
 		// TODO: add logic, such as collision detection etc.
 	}
 
-	public void moveCars(double diff) {
+	private void moveCars(double diff) {
 		Iterator<Car> it = EntityDatabase.getCars().iterator();
 		while (it.hasNext()) {
 			Car car = it.next();
