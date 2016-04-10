@@ -121,6 +121,10 @@ public class Simulation implements ActionListener {
 		return drawFps;
 	}
 
+	public String drawPhase() {
+		return tscs.drawPhase();
+	}
+
 	public void actionPerformed(ActionEvent e) {
 		if("Brake".equals(e.getActionCommand())) {
 			if(currentlySpawning && !tscs.getEmergencyBreak()) {

@@ -1,17 +1,20 @@
 package tscs;
 
+import java.text.DecimalFormat;
+import java.util.HashMap;
+
 import sim.EntityDatabase;
 import car.Car;
-import java.util.HashMap;
 import math.Pair;
 import map.intersection.Intersection;
 
 public class DSCS extends AbstractTSCS {
 	private static final int NORTH = Intersection.NORTH, EAST = Intersection.EAST, SOUTH = Intersection.SOUTH, WEST = Intersection.WEST;
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3;
-	private static final double MAX_PHASE_LENGTH = 20;
+	private static final double[] MAX_PHASE_LENGTH = {14,8,14,8};
 	private HashMap<Integer,Pair[]> phases;
 	private int currentPhase = NORTH;
+	private double currentPhaseTime = 0;
 
 
 	public DSCS() {
@@ -24,6 +27,15 @@ public class DSCS extends AbstractTSCS {
 
 	public void tick(double diff) {
 		super.tick(diff);
+		currentPhaseTime+=diff;
+		if(currentPhaseTime >= MAX_PHASE_LENGTH[currentPhase]) {
+			currentPhaseTime = 0;
+			currentPhase = (currentPhase + 1) % 4;
+		}
 		//Do stuff specific to DSCS.
+	}
+
+	public String drawPhase() {
+		return "Phase: " + currentPhase + " Time left: " + new DecimalFormat("#.#").format(MAX_PHASE_LENGTH[currentPhase] - currentPhaseTime);
 	}
 }

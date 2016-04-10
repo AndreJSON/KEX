@@ -83,8 +83,9 @@ public class SimDisplay extends Canvas {
 
 		if (Simulation.DEBUG) {
 			// Draw FPS
-			g2d.drawString("FPS: " + sim.drawFps(),
-					Simulation.windowSize[Simulation.Y] - 50, 25);
+			g2d.drawString("FPS: " + sim.drawFps(), 25, 25);
+			// Draw current phase
+			g2d.drawString(sim.drawPhase(), 25, 50);
 		}
 	}
 
@@ -98,5 +99,4 @@ public class SimDisplay extends Canvas {
 			car.draw(g2d);
 		}
 	}
-
 }
