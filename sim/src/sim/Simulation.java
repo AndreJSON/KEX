@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 
 public class Simulation implements ActionListener {
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
@@ -31,7 +31,7 @@ public class Simulation implements ActionListener {
 	private Logic logic;
 	private AbstractTSCS tscs;
 	private int drawFps;
-	private boolean currentlySpawning = true;
+	private boolean currentlySpawning = false;
 
 	/************ Just init stuff in this section *************/
 
@@ -54,7 +54,7 @@ public class Simulation implements ActionListener {
 		b1.addActionListener(this);
 		b1.setActionCommand("Brake");
 		window.add(b1);
-		b2 = new JButton("Stop spawning");
+		b2 = new JButton("Start spawning");
 		b2.setBounds(windowSize[Y] + 20,150, windowSize[X] - windowSize[Y] - 40,50);
 		b2.addActionListener(this);
 		b2.setActionCommand("Spawn");
@@ -137,6 +137,7 @@ public class Simulation implements ActionListener {
 		}
 		else if(("Spawn").equals(e.getActionCommand())) {
 			currentlySpawning = !currentlySpawning;
+			logic.setSpawnerOn(currentlySpawning);
 			b2.setText(currentlySpawning? "Stop spawning" : "Start spawning");
 		}
 	}

@@ -26,7 +26,7 @@ public class Intersection implements Drawable {
 	public static final int MAP_ENTRANCE = 5, MAP_EXIT = 6;
 	/******/
 
-	public static final double straight = 100, turn = 10, buffer = 1.5,
+	public static final double straight = 50, turn = 10, buffer = 1.5,
 			width = 3.1;
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;

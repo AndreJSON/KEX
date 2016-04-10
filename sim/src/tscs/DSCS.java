@@ -36,6 +36,6 @@ public class DSCS extends AbstractTSCS {
 	}
 
 	public String drawPhase() {
-		return "Phase: " + currentPhase + " Time left: " + new DecimalFormat("#.#").format(MAX_PHASE_LENGTH[currentPhase] - currentPhaseTime);
+		return "Phase: " + currentPhase + " Time left: " + new DecimalFormat("#.0").format(MAX_PHASE_LENGTH[currentPhase] - currentPhaseTime);
 	}
 }
