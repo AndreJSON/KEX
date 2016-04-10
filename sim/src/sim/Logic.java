@@ -26,20 +26,19 @@ public class Logic {
 	private AbstractTSCS tscs;
 	private Spawner[] spawners;
 
-	@SuppressWarnings("unused")
 	private static int NORTH = 0, SOUTH = 2, EAST = 1, WEST = 3;
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new Spawner[] {
-		// new PoissonSpawner(this, NORTH, 4),
-		// new PoissonSpawner(this, SOUTH, 4),
-		// new PoissonSpawner(this, EAST, 4),
-		new PoissonSpawner(this, WEST, 4), };
+		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 4),
+				new PoissonSpawner(this, SOUTH, 2),
+				new PoissonSpawner(this, EAST, 2),
+				new PoissonSpawner(this, WEST, 4), };
 	}
 
-	public void tick(double diff) {
-		tscs.tick(diff);
+
+	public void tick(double diff, double timeElapsed) {
+		tscs.tick(diff, timeElapsed);
 		moveCars(diff);
 
 		for (Spawner spawer : spawners) {

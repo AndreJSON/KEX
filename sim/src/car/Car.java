@@ -29,6 +29,10 @@ public class Car implements Drawable {
 		return "Car" + id + "[" + specs.getName() + "]";
 	}
 
+	public long getID() {
+		return id;
+	}
+
 	/**
 	 * Move, act on delta time.
 	 * 

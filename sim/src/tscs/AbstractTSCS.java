@@ -7,7 +7,7 @@ import car.Car;
 
 public abstract class AbstractTSCS {
 	public static final double SPEED_LIMIT = 50 / 3.6;
-	protected static final double COMFORT_COEFFICIENT = 1.5; // Factor saying how much longer a comfortable breaking distance is compared to the minimum breaking distance.
+	protected static final double COMFORT_COEFFICIENT = 1; // Factor slower comfortable breaking should compared to the maximum retardation.
 	protected boolean emergencyBreak = false;
 
 	public AbstractTSCS() {
@@ -15,7 +15,7 @@ public abstract class AbstractTSCS {
 
 	public abstract String drawPhase();
 
-	public void tick(double diff) {
+	public void tick(double diff, double timeElapsed) {
 		Iterator<Car> it = EntityDatabase.getCars().iterator();
 		while (it.hasNext()) {
 			Car car = it.next();
