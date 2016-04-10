@@ -49,4 +49,10 @@ public class Segment {
 	public int hashCode(){
 		return id;
 	}
+
+	public double length() {
+		return track.length();
+	}
+	
+
 }

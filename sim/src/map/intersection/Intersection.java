@@ -8,16 +8,12 @@ import sim.TravelData;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
-
-import car.Car;
 
 public class Intersection implements Drawable {
 	/*** Access waypoints ***/
@@ -33,7 +29,7 @@ public class Intersection implements Drawable {
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;
 	public static final double intersectionSize = arm * 2 + square;
-	
+
 	// Used in building of intersection.
 	public static HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment;
 	// For drawing the segments.
@@ -70,57 +66,60 @@ public class Intersection implements Drawable {
 			lineSegment(wayPoints[i][SPLIT_STRAIGHT], wayPoints[i][STRAIGHT]);
 			lineSegment(wayPoints[i][SPLIT_LEFT], wayPoints[i][LEFT]);
 			lineSegment(wayPoints[i][EXIT], wayPoints[i][MAP_EXIT]);
-			
+
 			boolean vertical = i == NORTH || i == SOUTH;
-			curveSegment(wayPoints[i][LEFT], wayPoints[(i+1)%4][EXIT], vertical);
-			curveSegment(wayPoints[i][RIGHT], wayPoints[(i+3)%4][EXIT], vertical);
-			curveSegment(wayPoints[i][STRAIGHT], wayPoints[(i+2)%4][EXIT], vertical);
+			curveSegment(wayPoints[i][LEFT], wayPoints[(i + 1) % 4][EXIT],
+					vertical);
+			curveSegment(wayPoints[i][RIGHT], wayPoints[(i + 3) % 4][EXIT],
+					vertical);
+			curveSegment(wayPoints[i][STRAIGHT], wayPoints[(i + 2) % 4][EXIT],
+					vertical);
 
 		}
-		
+
 		segments = new ArrayList<>();
-		
-		for (HashMap<Vector2D, Segment> map : points2segment.values()){
-			for (Segment seg : map.values()){
+
+		for (HashMap<Vector2D, Segment> map : points2segment.values()) {
+			for (Segment seg : map.values()) {
 				segments.add(seg);
 			}
 		}
 
 	}
-	
-	private void linkAllSegments(){
+
+	private void linkAllSegments() {
 		for (int i = 0; i < 4; i++) {
 			Segment seg, left, rs, exit;
 			seg = getByPoints(wayPoints[i][MAP_ENTRANCE],
 					wayPoints[i][SPLIT_STRAIGHT]);
 			rs = getByPoints(wayPoints[i][SPLIT_STRAIGHT],
 					wayPoints[i][STRAIGHT]); // Straight and right
-			left = getByPoints(wayPoints[i][SPLIT_LEFT],
-					wayPoints[i][LEFT]); // to the left
-			seg.linkSegment((i+1)%4, left);
-			seg.linkSegment((i+2)%4, rs);
-			seg.linkSegment((i+3)%4, rs);
+			left = getByPoints(wayPoints[i][SPLIT_LEFT], wayPoints[i][LEFT]); // to
+																				// the
+																				// left
+			seg.linkSegment((i + 1) % 4, left);
+			seg.linkSegment((i + 2) % 4, rs);
+			seg.linkSegment((i + 3) % 4, rs);
 
 			seg = getByPoints(wayPoints[i][STRAIGHT],
-					wayPoints[(i+2)%4][EXIT]);
-			rs.linkSegment((i+2)%4, seg);
-			exit = getByPoints(wayPoints[(i+2)%4][EXIT],
-					wayPoints[(i+2)%4][MAP_EXIT]);
-			seg.linkSegment((i+2)%4, exit);
+					wayPoints[(i + 2) % 4][EXIT]);
+			rs.linkSegment((i + 2) % 4, seg);
+			exit = getByPoints(wayPoints[(i + 2) % 4][EXIT],
+					wayPoints[(i + 2) % 4][MAP_EXIT]);
+			seg.linkSegment((i + 2) % 4, exit);
 
-			seg = getByPoints(wayPoints[i][LEFT],
-					wayPoints[(i+1)%4][EXIT]);
-			left.linkSegment((i+1)%4, seg);
-			exit = getByPoints(wayPoints[(i+1)%4][EXIT],
-					wayPoints[(i+1)%4][MAP_EXIT]);
-			seg.linkSegment((i+1)%4, exit);
+			seg = getByPoints(wayPoints[i][LEFT], wayPoints[(i + 1) % 4][EXIT]);
+			left.linkSegment((i + 1) % 4, seg);
+			exit = getByPoints(wayPoints[(i + 1) % 4][EXIT],
+					wayPoints[(i + 1) % 4][MAP_EXIT]);
+			seg.linkSegment((i + 1) % 4, exit);
 
 			seg = getByPoints(wayPoints[i][STRAIGHT],
-					wayPoints[(i+3)%4][EXIT]);
-			rs.linkSegment((i+3)%4, seg);
-			exit = getByPoints(wayPoints[(i+3)%4][EXIT],
-					wayPoints[(i+3)%4][MAP_EXIT]);
-			seg.linkSegment((i+3)%4, exit);
+					wayPoints[(i + 3) % 4][EXIT]);
+			rs.linkSegment((i + 3) % 4, seg);
+			exit = getByPoints(wayPoints[(i + 3) % 4][EXIT],
+					wayPoints[(i + 3) % 4][MAP_EXIT]);
+			seg.linkSegment((i + 3) % 4, exit);
 		}
 	}
 
@@ -154,7 +153,7 @@ public class Intersection implements Drawable {
 	public static Segment getWaitingSegment(int from, int to) {
 		int split = 3;
 		int direction = 0;
-		if((to - from + 4)% 4 == 1) { //Going left
+		if ((to - from + 4) % 4 == 1) { // Going left
 			split = 4;
 			direction = 1;
 		}
@@ -180,7 +179,6 @@ public class Intersection implements Drawable {
 		// them last.
 		Vector2D guide = new Vector2D(); // this is now at the center of the
 											// intersection.
-		Vector2D drawPoint;//
 		// Move it to the first intersection pairs.
 		guide = guide.plus(dir.mult(square / 2 + buffer));
 		wayPoints[cardinalDirection][LEFT] = guide;
@@ -227,28 +225,31 @@ public class Intersection implements Drawable {
 	}
 
 	Area shape;
-	
+
 	@Override
 	public void draw(Graphics2D g2d) {
-		if (shape == null){
+		if (shape == null) {
 			shape = new Area();
-			Area a = new Area(new Rectangle2D.Double(intersectionSize/2 - width * 3/2, 0, width * 3, intersectionSize));
+			Area a = new Area(new Rectangle2D.Double(intersectionSize / 2
+					- width * 3 / 2, 0, width * 3, intersectionSize));
 			shape.add(a);
-			a = new Area(new Rectangle2D.Double(0, intersectionSize/2 - width * 3/2, intersectionSize, width * 3));
+			a = new Area(new Rectangle2D.Double(0, intersectionSize / 2 - width
+					* 3 / 2, intersectionSize, width * 3));
 			shape.add(a);
-			double damn = square*1.8;
-			Shape rect = new Rectangle2D.Double(-damn/2, -damn/2, damn, damn);
+			double damn = square * 1.8;
+			Shape rect = new Rectangle2D.Double(-damn / 2, -damn / 2, damn,
+					damn);
 			AffineTransform aF = new AffineTransform();
-			aF.translate(intersectionSize/2, intersectionSize/2);
-			aF.rotate(Math.PI/4);
+			aF.translate(intersectionSize / 2, intersectionSize / 2);
+			aF.rotate(Math.PI / 4);
 			shape.add(new Area(aF.createTransformedShape(rect)));
 		}
 		g2d.setColor(Color.gray);
 		g2d.fill(Simulation.SCALER.createTransformedShape(shape));
-		
+
 		g2d.setColor(Color.red);
-		
-		for (Segment seg : segments){
+
+		for (Segment seg : segments) {
 			seg.getTrack().draw(g2d);
 		}
 	}

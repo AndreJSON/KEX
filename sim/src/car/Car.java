@@ -45,8 +45,7 @@ public class Car implements Drawable {
 			double rotation = speed
 					* (Math.tan(position.getHeading() - heading) / specs
 							.getWheelBase());
-			
-			
+
 			heading += rotation * delta % (2 * Math.PI);
 
 		} else {
@@ -109,18 +108,22 @@ public class Car implements Drawable {
 	}
 
 	/**
-	 * Gives the maximum acceleration the vehicle is able to perform in the given time diff.
+	 * Gives the maximum acceleration the vehicle is able to perform in the
+	 * given time diff.
 	 */
 	public double getMaxAcceleration(double diff) {
-		return 3 * diff; //TODO: Actually have a decent value here.
+		return 3 * diff; // TODO: Actually have a decent value here.
 	}
 
 	/**
-	 * Gives the maximum retardation the vehicle is able to perform in the given time diff.
+	 * Gives the maximum retardation the vehicle is able to perform in the given
+	 * time diff.
 	 */
 	public double getMaxRetardation(double diff) {
-		double reduction = speed - Math.sqrt(magicCoefficient * (breakingDistance - speed * diff));
-		if(Double.isNaN(reduction))
+		double reduction = speed
+				- Math.sqrt(magicCoefficient
+						* (breakingDistance - speed * diff));
+		if (Double.isNaN(reduction))
 			reduction = speed;
 		return reduction;
 	}
@@ -183,9 +186,20 @@ public class Car implements Drawable {
 				(int) p.x + 2, (int) p.y - 2);
 
 	}
-	
-	public CarModel getModel(){
+
+	public CarModel getModel() {
 		return specs;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		} else if (obj instanceof Car) {
+			Car c = (Car) obj;
+			return c.id == id;
+		}
+		return false;
 	}
 
 	@Override

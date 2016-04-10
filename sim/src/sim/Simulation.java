@@ -1,8 +1,6 @@
 package sim;
 
 import map.intersection.*;
-import map.track.*;
-import math.*;
 import tscs.*;
 
 import java.text.DecimalFormat;

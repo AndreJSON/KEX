@@ -26,16 +26,17 @@ public class Logic {
 	private AbstractTSCS tscs;
 	private Spawner[] spawners;
 
+	@SuppressWarnings("unused")
 	private static int NORTH = 0, SOUTH = 2, EAST = 1, WEST = 3;
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 4),
-				new PoissonSpawner(this, SOUTH, 4),
-				new PoissonSpawner(this, EAST, 4),
-				new PoissonSpawner(this, WEST, 4), };
+		spawners = new Spawner[] {
+		// new PoissonSpawner(this, NORTH, 4),
+		// new PoissonSpawner(this, SOUTH, 4),
+		// new PoissonSpawner(this, EAST, 4),
+		new PoissonSpawner(this, WEST, 4), };
 	}
-
 
 	public void tick(double diff) {
 		tscs.tick(diff);
@@ -49,9 +50,9 @@ public class Logic {
 
 		// TODO: add logic, such as collision detection etc.
 	}
-	
-	public void setSpawnerOn(boolean on){
-		if(on){
+
+	public void setSpawnerOn(boolean on) {
+		if (on) {
 			for (Spawner spawer : spawners) {
 				spawer.on();
 			}
@@ -86,7 +87,7 @@ public class Logic {
 			}
 		}
 	}
-	
+
 	private void checkCollision() {
 		ArrayList<Shape> carShapes = new ArrayList<>();
 		AffineTransform aF;// = new AffineTransform();
@@ -104,15 +105,13 @@ public class Logic {
 		for (int i = 0; i < carShapes.size(); i++) {
 			for (int j = i + 1; j < carShapes.size(); j++) {
 				boolean collided = collision(carShapes.get(i), carShapes.get(j));
-				if (collided){
+				if (collided) {
 					// TODO: Collision event.
 					System.out.println("Collision!");
 				}
 			}
 		}
 	}
-	
-	
 
 	private boolean collision(Shape shape1, Shape shape2) {
 		Vector2D shapeCoords[][] = new Vector2D[2][4];
@@ -143,7 +142,7 @@ public class Logic {
 			for (int j = 0; j < 4; j++) {
 				Line2D.Double line2 = new Line2D.Double(shapeCoords[1][j],
 						shapeCoords[1][(j + 1) % 4]);
-				if (line1.intersectsLine(line2)){
+				if (line1.intersectsLine(line2)) {
 					return true;
 				}
 			}
@@ -151,10 +150,11 @@ public class Logic {
 		return false;
 	}
 
-
 	public void spawnCar(String carName, int from, int to) {
 		Car car = new Car(CarModelDatabase.getByName(carName));
 		car.setSpeed(AbstractTSCS.SPEED_LIMIT);
 		EntityDatabase.addCar(car, TravelData.createTravelData(car, from, to));
+		double dist = EntityDatabase.nextCar(car);
+		System.out.println("Dist: " + dist);
 	}
 }
