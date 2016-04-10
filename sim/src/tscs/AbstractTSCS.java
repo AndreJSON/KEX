@@ -7,6 +7,7 @@ import car.Car;
 
 public abstract class AbstractTSCS {
 	public static final double SPEED_LIMIT = 50 / 3.6;
+	protected static final double COMFORT_COEFFICIENT = 1.5; // Factor saying how much longer a comfortable breaking distance is compared to the minimum breaking distance.
 	protected boolean emergencyBreak = false;
 
 	public AbstractTSCS() {

@@ -125,6 +125,10 @@ public class Car implements Drawable {
 		return reduction;
 	}
 
+	public double getBreakingDistance() {
+		return breakingDistance;
+	}
+
 	/**
 	 * get the car type.
 	 * 
