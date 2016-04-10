@@ -12,6 +12,8 @@ public abstract class AbstractTSCS {
 	public AbstractTSCS() {
 	}
 
+	public abstract String drawPhase();
+
 	public void tick(double diff) {
 		Iterator<Car> it = EntityDatabase.getCars().iterator();
 		while (it.hasNext()) {
