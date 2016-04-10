@@ -51,6 +51,15 @@ public class EntityDatabase {
 		return car2travelData.get(car);
 	}
 
+	/**
+	 * Get the segment the car is on. Return null if the car is not on a segment.
+	 * @param car
+	 * @return
+	 */
+	public static Segment getSegmentByCar(Car car) {
+		return car2travelData.get(car).currentSegment();
+	}
+
 	public static void removeCar(Car car) {
 		cars.remove(car);
 		if (Simulation.DEBUG) {

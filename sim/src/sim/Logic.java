@@ -36,8 +36,9 @@ public class Logic {
 				new PoissonSpawner(this, WEST, 4), };
 	}
 
-	public void tick(double diff, double timeElapsed) {
-		tscs.tick(diff, timeElapsed);
+	public void tick(double diff) {
+		tscs.tick(diff);
+		handleAutonomy(diff);
 		moveCars(diff);
 
 		for (Spawner spawer : spawners) {
@@ -59,6 +60,12 @@ public class Logic {
 				spawer.off();
 			}
 		}
+	}
+
+	private void handleAutonomy(double diff) {
+
+		// car.toggleAutonomous(true); //This should always be the last thing to
+		// happen in handleAutonomy.
 	}
 
 	private void moveCars(double diff) {
