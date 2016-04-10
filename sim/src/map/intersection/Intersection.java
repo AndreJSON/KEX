@@ -150,13 +150,13 @@ public class Intersection implements Drawable {
 	}
 
 	public static Segment getWaitingSegment(int from, int to) {
-		int split = 3;
-		int direction = 0;
+		int split = SPLIT_STRAIGHT;
+		int direction = STRAIGHT;
 		if((to - from + 4)% 4 == 1) { //Going left
-			split = 4;
-			direction = 1;
+			split = SPLIT_LEFT;
+			direction = LEFT;
 		}
-		return getByPoints(wayPoints[from][split], wayPoints[to][direction]);
+		return getByPoints(wayPoints[from][split], wayPoints[from][direction]);
 	}
 
 	private void generateWayPoints() {

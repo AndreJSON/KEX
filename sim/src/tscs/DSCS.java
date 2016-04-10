@@ -36,16 +36,16 @@ public class DSCS extends AbstractTSCS {
 			currentPhase = (currentPhase + 1) % 4;
 		}
 
-		//The turn segment of the traveldirection.
 		Segment segment;
+		ListIterator<Car> cars;
+		Car car;	
 		for(Pair p : phases.get(currentPhase)) {
 			segment = Intersection.getWaitingSegment(p.getFrom(), p.getTo());
-			ListIterator<Car> cars = TravelData.getCarsOnSegment(segment).listIterator();
-			Car car;
+			cars = TravelData.getCarsOnSegment(segment).listIterator();
 			while(cars.hasNext()) {
 				car = cars.next();
+				System.out.println("Targetting " + car.getID());
 				if(car.remainingOnTrack() >= car.getBreakingDistance() * COMFORT_COEFFICIENT) {
-					//Break this car. else look for another one.
 					break;
 				}
 			}
