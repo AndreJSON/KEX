@@ -1,7 +1,6 @@
 package sim;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -115,6 +114,7 @@ public class TravelData {
 	private static class TravelPlan {
 		private final ArrayList<Segment> segments;
 		private final int origin, destinaion;
+		@SuppressWarnings("unused")
 		private final double optimalTime;
 
 		public TravelPlan(Segment seg, int origin, int destination) {

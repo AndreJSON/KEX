@@ -1,13 +1,11 @@
 package sim;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import map.intersection.*;
-import map.track.AbstractTrack;
 
 import car.Car;
 
@@ -61,10 +59,44 @@ public class EntityDatabase {
 	}
 
 	public static double nextCar(Car car) {
-		TravelData tD = getTravelData(car);
-		Segment tDSegment = tD.currentSegment();
-		int destination = tD.getDestination();
-		return 0;
+		// If the car has passed itself during the search.
+		boolean passedSelf = false;
+		// Get the travel data of the car.
+		TravelData tD;
+		// Get the current segment the car is on.
+		Segment searchSegment;
+		// Iterator to check all cars on this segment.
+		Iterator<Car> carsOnSegment;
+		// The distance to next car.
+		double distance;
+		//
+
+		distance = 0;
+		tD = getTravelData(car);
+		passedSelf = false;
+		searchSegment = tD.currentSegment();
+		while (true) {
+			carsOnSegment = TravelData.getCarsOnSegment(searchSegment).descendingIterator();
+			while (carsOnSegment.hasNext()) {
+				Car nextCar = carsOnSegment.next();
+				if (nextCar.equals(car)) {
+					passedSelf = true;
+				} else if (passedSelf) {
+					distance += -nextCar.remainingOnTrack()
+							+ car.remainingOnTrack();
+					return distance;
+				}
+			}
+			searchSegment = searchSegment.nextSegment(tD.getDestination());
+			if (searchSegment == null)
+				break;
+			distance += searchSegment.length();
+		}
+		while (searchSegment != null)
+			;
+
+		// Return -1 if no car is in front of this car.
+		return -1;
 	}
 
 	public static Intersection getIntersection() {

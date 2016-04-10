@@ -2,10 +2,8 @@ package tscs;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.ListIterator;
 
-import sim.EntityDatabase;
 import sim.TravelData;
 import car.Car;
 import math.Pair;
