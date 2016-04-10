@@ -17,7 +17,7 @@ public class PoissonSpawner implements Spawner {
 		this.origin = origin;
 		this.mean = mean;
 		statTimer = Math.random() * 10;
-		on = false;
+		on = true;
 	}
 
 	@Override

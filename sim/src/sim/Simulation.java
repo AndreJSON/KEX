@@ -5,6 +5,8 @@ import map.track.*;
 import math.*;
 import tscs.*;
 
+import java.text.DecimalFormat;
+
 import java.awt.geom.AffineTransform;
 import java.awt.event.*;
 
@@ -31,7 +33,8 @@ public class Simulation implements ActionListener {
 	private Logic logic;
 	private AbstractTSCS tscs;
 	private int drawFps;
-	private boolean currentlySpawning = false;
+	private boolean currentlySpawning = true;
+	double timeElapsed = 0;
 
 	/************ Just init stuff in this section *************/
 
@@ -54,7 +57,7 @@ public class Simulation implements ActionListener {
 		b1.addActionListener(this);
 		b1.setActionCommand("Brake");
 		window.add(b1);
-		b2 = new JButton("Start spawning");
+		b2 = new JButton("Stop spawning");
 		b2.setBounds(windowSize[Y] + 20,150, windowSize[X] - windowSize[Y] - 40,50);
 		b2.addActionListener(this);
 		b2.setActionCommand("Spawn");
@@ -71,9 +74,6 @@ public class Simulation implements ActionListener {
 
 	public void run() {
 		System.out.print("\nStarting simulation.\n\n");
-
-		int spawnAccum = 0;
-		int spawnSeparation = (int) ((double)TICKS_PER_SECOND / SPAWNS_PER_SECOND);
 
 		long nextTime = System.nanoTime();
 		long delay = (long) 1e9 / FPS;
@@ -96,16 +96,8 @@ public class Simulation implements ActionListener {
 			long now = System.nanoTime();
 			while (now - tickTime >= 1e9 / TICKS_PER_SECOND) {
 				logic.tick(SCALE_TICK / TICKS_PER_SECOND);
+				timeElapsed += SCALE_TICK / TICKS_PER_SECOND;
 				tickTime += 1e9 / TICKS_PER_SECOND;
-				/*
-				spawnAccum++;
-				// Adding cars
-				if (spawnAccum >= spawnSeparation && currentlySpawning) {
-					spawnAccum = 0;
-					int source = (int)(Math.random() * 4);
-					int dest = (int)(Math.random() * 3 + 1) + source;
-					logic.spawnCar("Mazda3", source, dest);
-				}*/
 			}
 
 			// FPS
@@ -118,6 +110,9 @@ public class Simulation implements ActionListener {
 		}
 	}
 
+	public String timeElapsed() {
+		return new DecimalFormat("#.0").format(timeElapsed);
+	}
 	
 	public int drawFps() {
 		return drawFps;
