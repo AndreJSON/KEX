@@ -30,15 +30,15 @@ public class Logic {
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 4),
-				new PoissonSpawner(this, SOUTH, 4),
-				new PoissonSpawner(this, EAST, 4),
-				new PoissonSpawner(this, WEST, 4), };
+		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 0),
+				new PoissonSpawner(this, SOUTH, 2),
+				new PoissonSpawner(this, EAST, 2),
+				new PoissonSpawner(this, WEST, 0), };
 	}
 
 
-	public void tick(double diff) {
-		tscs.tick(diff);
+	public void tick(double diff, double timeElapsed) {
+		tscs.tick(diff, timeElapsed);
 		moveCars(diff);
 
 		for (Spawner spawer : spawners) {

@@ -22,8 +22,7 @@ public class Simulation implements ActionListener {
 	public static final double SCALE = windowSize[Y] / Intersection.intersectionSize;
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
-	public static final int TICKS_PER_SECOND = 60;
-	public static final double SPAWNS_PER_SECOND = 2;
+	public static final int TICKS_PER_SECOND = 120;
 	public static final double SCALE_TICK = 1; // 1 = normal speed, 2 = double
 												// speed etc.
 
@@ -95,7 +94,7 @@ public class Simulation implements ActionListener {
 			// ticking
 			long now = System.nanoTime();
 			while (now - tickTime >= 1e9 / TICKS_PER_SECOND) {
-				logic.tick(SCALE_TICK / TICKS_PER_SECOND);
+				logic.tick(SCALE_TICK / TICKS_PER_SECOND, timeElapsed);
 				timeElapsed += SCALE_TICK / TICKS_PER_SECOND;
 				tickTime += 1e9 / TICKS_PER_SECOND;
 			}
