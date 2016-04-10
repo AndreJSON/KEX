@@ -15,7 +15,6 @@ public class DSCS extends AbstractTSCS {
 	private static final int NORTH = Intersection.NORTH, EAST = Intersection.EAST, SOUTH = Intersection.SOUTH, WEST = Intersection.WEST;
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3;
 	private static final double[] MAX_PHASE_LENGTH = {14,8,14,8};
-	private static final double CUT_COEFFICIENT = 2;
 	private HashMap<Integer,Pair[]> phases;
 	private int currentPhase = NORTH;
 	private double currentPhaseTime = 0;
@@ -29,8 +28,8 @@ public class DSCS extends AbstractTSCS {
 		phases.put(PHASE3, new Pair[]{new Pair(SOUTH,WEST), new Pair(NORTH,EAST)});
 	}
 
-	public void tick(double diff, double timeElapsed) {
-		//super.tick(diff);
+	public void tick(double diff) {
+		super.tick(diff);
 		currentPhaseTime+=diff;
 		if(currentPhaseTime >= MAX_PHASE_LENGTH[currentPhase]) {
 			currentPhaseTime = 0;
@@ -41,22 +40,25 @@ public class DSCS extends AbstractTSCS {
 		ListIterator<Car> cars;
 		Car car;
 		for(int phase = PHASE0; phase <= PHASE3; phase++) {
-			System.out.println(timeElapsed);
-			/*if(phase == currentPhase) {
+			if(phase == currentPhase) {
 				continue; //These cars shouldnt be stopped. They belong to the currently driving phase.
-			}*/
-			for(Pair pair : phases.get(currentPhase)) {
-				/*if((pair.getFrom() - pair.getTo() + 4) % 4 == 1) { //The right turns should be skipped since they are duplicates of the straights.
+			}
+			for(Pair pair : phases.get(phase)) {
+				if((pair.getFrom() - pair.getTo() + 4) % 4 == 1) { //The right turns should be skipped since they are duplicates of the straights.
 					continue;
-				}*/
+				}
 				segment = Intersection.getWaitingSegment(pair.getFrom(), pair.getTo());
-				System.out.println(TravelData.getCarsOnSegment(segment).size());
 				cars = TravelData.getCarsOnSegment(segment).listIterator();
 				while(cars.hasNext()) {
 					car = cars.next();
-					if(car.remainingOnTrack() >= car.getBreakingDistance() * CUT_COEFFICIENT) {
+					if(car.remainingOnTrack() >= car.getBreakingDistance() * COMFORT_COEFFICIENT) {
+						car.toggleAutonomous(false);
+						if(car.remainingOnTrack() >= car.getBreakingDistance() * COMFORT_COEFFICIENT * 2) {
+							reduceSpeed(car, car.getMaxRetardation(diff / (3 * COMFORT_COEFFICIENT)));
+							break;
+						}
 						reduceSpeed(car, car.getMaxRetardation(diff / COMFORT_COEFFICIENT));
-						//break;
+						break;
 					}
 				}
 			}

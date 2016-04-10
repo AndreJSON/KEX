@@ -18,6 +18,7 @@ public class Car implements Drawable {
 	private TrackPosition position;
 	private double speed, heading = 0, breakingDistance;
 	private double magicCoefficient = 13.8; // my * g / 2
+	private boolean autonomous = true;
 
 	public Car(CarModel specs) {
 		this.specs = specs;
@@ -110,6 +111,10 @@ public class Car implements Drawable {
 	public void setSpeed(double speed) {
 		this.speed = speed;
 		breakingDistance = speed * speed / magicCoefficient;
+	}
+
+	public void toggleAutonomous(boolean value) {
+		autonomous = value;
 	}
 
 	/**

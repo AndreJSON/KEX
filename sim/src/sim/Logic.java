@@ -30,15 +30,16 @@ public class Logic {
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 0),
-				new PoissonSpawner(this, SOUTH, 2),
-				new PoissonSpawner(this, EAST, 2),
-				new PoissonSpawner(this, WEST, 0), };
+		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 4),
+				new PoissonSpawner(this, SOUTH, 4),
+				new PoissonSpawner(this, EAST, 4),
+				new PoissonSpawner(this, WEST, 4), };
 	}
 
 
-	public void tick(double diff, double timeElapsed) {
-		tscs.tick(diff, timeElapsed);
+	public void tick(double diff) {
+		tscs.tick(diff);
+		handleAutonomy(diff);
 		moveCars(diff);
 
 		for (Spawner spawer : spawners) {
@@ -60,6 +61,11 @@ public class Logic {
 				spawer.off();
 			}
 		}
+	}
+
+	private void handleAutonomy(double diff) {
+
+		//car.toggleAutonomous(true); //This should always be the last thing to happen in handleAutonomy.
 	}
 
 	private void moveCars(double diff) {
