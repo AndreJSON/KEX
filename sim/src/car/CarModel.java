@@ -179,22 +179,42 @@ public class CarModel {
 		return "CarType[" + getName() + "]";
 	}
 
+	/**
+	 * Get the distance from the front to the front axle.
+	 * @return
+	 */
 	public double getFrontAxleDisplacement() {
 		return frontAxleDisplacement;
 	}
 
+	/**
+	 * Get the distance from the front to the rear axle.
+	 * @return
+	 */
 	public double getRearAxleDisplacement() {
 		return rearAxleDisplacement;
 	}
 
+	/**
+	 * Get the maximum acceleration.
+	 * @return
+	 */
 	public double getMaxAcceleration() {
 		return maxAcceleration;
 	}
 
+	/**
+	 * Get the maximum retardation.
+	 * @return
+	 */
 	public double getMaxRetardation() {
 		return maxRetardation;
 	}
 
+	/**
+	 * Get the top speed.
+	 * @return
+	 */
 	public double getTopSpeed() {
 		return topSpeed;
 	}

@@ -11,25 +11,49 @@ import sim.Drawable;
 import sim.Simulation;
 
 public class Car implements Drawable {
+	// Hold track of the currently highest id.
 	private static long trackId = 0;
 
-	private long id;
-	private final CarModel specs;
+	//The car id.
+	private final long id;
+	// The car model this car is of.
+	private final CarModel carModel;
+	// The position and movement data of the car.
 	private TrackPosition position;
-	private double speed, heading = 0, breakingDistance;
+	// The speed of the car.
+	private double speed; 
+	// The heading of the car chassi.
+	private double heading = 0;
+	// ?
+	private double breakingDistance;
+	// ?
 	private double magicCoefficient = 13.8; // my * g / 2
-	private boolean isAutonomous = true;
+	// If the car is autonomous or not.
+	private boolean isAutonomous;
 
-	public Car(CarModel specs) {
-		this.specs = specs;
+	/**
+	 * Create a new car of the specified car model.
+	 * @param carModel
+	 */
+	public Car(CarModel carModel) {
+		this.carModel = carModel;
 		id = ++trackId;
+		isAutonomous = true;
 	}
 
-	@Override
+	
+	/**
+	 * The to string has the form
+	 * "Car" + id + "[" + Car model name + "]". 
+	 */
 	public String toString() {
-		return "Car" + id + "[" + specs.getName() + "]";
+		return "Car" + id + "[" + carModel.getName() + "]";
 	}
 
+	/**
+	 * Get the id of the car.
+	 * @return
+	 */
 	public long getID() {
 		return id;
 	}
@@ -48,7 +72,7 @@ public class Car implements Drawable {
 
 			position.move(delta * speed);
 			double rotation = speed
-					* (Math.tan(position.getHeading() - heading) / specs
+					* (Math.tan(position.getHeading() - heading) / carModel
 							.getWheelBase());
 
 			heading += rotation * delta % (2 * Math.PI);
@@ -147,7 +171,7 @@ public class Car implements Drawable {
 	 * @return
 	 */
 	public CarModel getType() {
-		return specs;
+		return carModel;
 	}
 
 	/**
@@ -168,7 +192,7 @@ public class Car implements Drawable {
 		if (position == null)
 			return;
 
-		g2d.setColor(specs.getColor());
+		g2d.setColor(carModel.getColor());
 		Vector2D p = getPosition().mult(Simulation.SCALE);
 
 		// Default heading is to the right
@@ -180,15 +204,15 @@ public class Car implements Drawable {
 		aF.rotate(getHeading());
 
 		for (int i = 0; i < 4; i++) {
-			g2d.fill(aF.createTransformedShape(specs.wheels[i]));
+			g2d.fill(aF.createTransformedShape(carModel.wheels[i]));
 		}
-		g2d.setColor(specs.getColor());
-		Shape shape = aF.createTransformedShape(specs.getShape());
+		g2d.setColor(carModel.getColor());
+		Shape shape = aF.createTransformedShape(carModel.getShape());
 		g2d.fill(shape);
 
 		if (!Simulation.DEBUG)
 			return;
-		p = specs.getCenterPoint(getPosition(), heading).mult(Simulation.SCALE);
+		p = carModel.getCenterPoint(getPosition(), heading).mult(Simulation.SCALE);
 		g2d.setColor(Color.black);
 		g2d.fillOval((int) p.x - 1, (int) p.y - 1, 3, 3);
 		g2d.drawString(this.toString() + " " + (int) (speed * 3.6) + " k/h",
@@ -196,8 +220,11 @@ public class Car implements Drawable {
 
 	}
 
+	/**
+	 * Get the model of the car.
+	 */
 	public CarModel getModel() {
-		return specs;
+		return carModel;
 	}
 
 	@Override
@@ -216,10 +243,16 @@ public class Car implements Drawable {
 		return (int) id;
 	}
 
+	/**
+	 * Return true if the car is autonomous.
+	 */
 	public boolean isAutonomous() {
 		return isAutonomous;
 	}
 
+	/**
+	 * Set the car autonomous state to the specified value.
+	 */
 	public void setAutonomous(boolean isAutonomous) {
 		this.isAutonomous = isAutonomous;
 	}

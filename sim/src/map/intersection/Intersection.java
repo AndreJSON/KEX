@@ -31,9 +31,9 @@ public class Intersection implements Drawable {
 	public static final double intersectionSize = arm * 2 + square;
 
 	// Used in building of intersection.
-	public static HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment;
+	private static HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment;
 	// For drawing the segments.
-	public ArrayList<Segment> segments;
+	private ArrayList<Segment> segments;
 
 	private HashMap<Integer, Segment> startPoints; // Gives the first segment
 													// coming from each of the 4

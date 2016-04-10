@@ -32,7 +32,7 @@ public class CarModelDatabase {
 	}
 
 	/**
-	 * Get a car by name.
+	 * Get a car model by the car model name.
 	 * 
 	 * @param name
 	 * @return
