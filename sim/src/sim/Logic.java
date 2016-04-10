@@ -6,6 +6,7 @@ import map.intersection.Intersection;
 import map.intersection.Segment;
 import car.Car;
 import car.CarModelDatabase;
+import tscs.AbstractTSCS;
 
 /**
  * Logic handles all the logic in the simulation. It accesses objects in the
@@ -15,16 +16,16 @@ import car.CarModelDatabase;
  * 
  */
 public class Logic {
-	private static final double SPEED_LIMIT = 50 / 3.6;
+	private AbstractTSCS tscs;
 
-	public Logic() {
+	public Logic(AbstractTSCS tscs) {
+		this.tscs = tscs;
 	}
 
 	double d;
 
 	public void tick(double diff) {
-		// Call control system here.
-
+		tscs.tick(diff);
 		moveCars(diff);
 
 		// TODO: add logic, such as collision detection etc.
@@ -57,7 +58,7 @@ public class Logic {
 
 	public void spawnCar(String carName, int from, int to) {
 		Car car = new Car(CarModelDatabase.getByName(carName));
-		car.setSpeed(SPEED_LIMIT);
+		car.setSpeed(AbstractTSCS.SPEED_LIMIT);
 		EntityDatabase.addCar(car, TravelData.createTravelData(from, to));
 	}
 }

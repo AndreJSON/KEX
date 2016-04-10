@@ -109,6 +109,23 @@ public class Car implements Drawable {
 	}
 
 	/**
+	 * Gives the maximum acceleration the vehicle is able to perform in the given time diff.
+	 */
+	public double getMaxAcceleration(double diff) {
+		return 3 * diff; //TODO: Actually have a decent value here.
+	}
+
+	/**
+	 * Gives the maximum retardation the vehicle is able to perform in the given time diff.
+	 */
+	public double getMaxRetardation(double diff) {
+		double reduction = speed - Math.sqrt(magicCoefficient * (breakingDistance - speed * diff));
+		if(Double.isNaN(reduction))
+			reduction = speed;
+		return reduction;
+	}
+
+	/**
 	 * get the car type.
 	 * 
 	 * @return

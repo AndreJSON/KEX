@@ -84,7 +84,7 @@ public class SimDisplay extends Canvas {
 		if (Simulation.DEBUG) {
 			// Draw FPS
 			g2d.drawString("FPS: " + sim.drawFps(),
-					Simulation.windowSize[0] - 100, 25);
+					Simulation.windowSize[Simulation.Y] - 50, 25);
 		}
 	}
 
