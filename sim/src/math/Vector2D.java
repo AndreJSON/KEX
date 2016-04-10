@@ -93,6 +93,15 @@ public class Vector2D extends Point2D.Double {
 		return Math.sqrt(this.dot(this));
 	}
 
+
+	/**
+	 * 
+	 * @return
+	 */
+	public double normSq() {
+		return this.dot(this);
+	}
+	
 	/**
 	 * 
 	 * @param factor

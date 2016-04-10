@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 
 public class Simulation implements ActionListener {
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
@@ -97,6 +97,7 @@ public class Simulation implements ActionListener {
 			while (now - tickTime >= 1e9 / TICKS_PER_SECOND) {
 				logic.tick(SCALE_TICK / TICKS_PER_SECOND);
 				tickTime += 1e9 / TICKS_PER_SECOND;
+				/*
 				spawnAccum++;
 				// Adding cars
 				if (spawnAccum >= spawnSeparation && currentlySpawning) {
@@ -104,7 +105,7 @@ public class Simulation implements ActionListener {
 					int source = (int)(Math.random() * 4);
 					int dest = (int)(Math.random() * 3 + 1) + source;
 					logic.spawnCar("Mazda3", source, dest);
-				}
+				}*/
 			}
 
 			// FPS
@@ -117,6 +118,7 @@ public class Simulation implements ActionListener {
 		}
 	}
 
+	
 	public int drawFps() {
 		return drawFps;
 	}

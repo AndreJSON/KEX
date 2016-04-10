@@ -26,7 +26,7 @@ public class Intersection implements Drawable {
 	public static final int MAP_ENTRANCE = 5, MAP_EXIT = 6;
 	/******/
 
-	public static final double straight = 30, turn = 10, buffer = 1.5,
+	public static final double straight = 100, turn = 10, buffer = 1.5,
 			width = 3.1;
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;
@@ -124,12 +124,9 @@ public class Intersection implements Drawable {
 
 	private void createTravelPlans(Segment start, int cardinalDirection) {
 		int i = cardinalDirection;
-		i = (i + 1) % 4;
-		TravelData.registerTravelPlan(start, cardinalDirection, i);
-		i = (i + 1) % 4;
-		TravelData.registerTravelPlan(start, cardinalDirection, i);
-		i = (i + 1) % 4;
-		TravelData.registerTravelPlan(start, cardinalDirection, i);
+		TravelData.registerTravelPlan(start, i, (i + 1) % 4);
+		TravelData.registerTravelPlan(start, i, (i + 2) % 4);
+		TravelData.registerTravelPlan(start, i, (i + 3) % 4);
 	}
 
 	/**
@@ -241,16 +238,6 @@ public class Intersection implements Drawable {
 		
 		for (Segment seg : segments){
 			seg.getTrack().draw(g2d);
-		}
-		
-		g2d.setColor(Color.yellow);
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 7; j++) {
-				if (wayPoints[i][j] != null) {
-					Vector2D v = wayPoints[i][j].mult(Simulation.SCALE);
-					g2d.fillOval((int) v.x - 2, (int) v.y - 2, 4, 4);
-				}
-			}
 		}
 	}
 

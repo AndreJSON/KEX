@@ -179,6 +179,10 @@ public class Car implements Drawable {
 				(int) p.x + 2, (int) p.y - 2);
 
 	}
+	
+	public CarModel getModel(){
+		return specs;
+	}
 
 	@Override
 	public int hashCode() {

@@ -44,7 +44,7 @@ public class CarModel {
 		this.width = width;
 		shape = new Rectangle2D.Double(-length, -width / 2, length, width);
 
-		double wheelDiameter = 0.61, wheelWidth = 0.25;
+		double wheelDiameter = 0.61, wheelWidth = 0.4;
 		wheels = new Shape[4];
 		wheels[0] = new Rectangle2D.Double(-frontAxleDisplacement
 				- wheelDiameter / 2, -width / 2 - wheelWidth / 2,

@@ -49,13 +49,11 @@ public class TravelData {
 	 */
 	public static TravelData createTravelData(int origin, int destination) {
 		TravelData travelData;
-		origin %= 4;
-		destination %= 4;
-		System.out.println("Origin: " + origin);
-		System.out.println("Destination: " + destination);
 		try {
 			travelData = new TravelData(getTravelPlan(origin, destination));
 		} catch (NullPointerException e) {
+			System.out.println("Origin: " + origin);
+			System.out.println("Destination: " + destination);
 			System.out.println("TravelData error!");
 			throw e;
 		}
@@ -86,8 +84,6 @@ public class TravelData {
 			segments = new ArrayList<>();
 			// Bygga upp segments listan.
 			while (seg != null) {
-				System.out.println("Travelplan:[" + origin + "," + destination
-						+ "]");
 				segments.add(seg);
 				seg = seg.nextSegment(destination);
 			}
