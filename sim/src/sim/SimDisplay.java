@@ -85,14 +85,12 @@ public class SimDisplay extends Canvas {
 		// Draw current phase
 		g2d.drawString(sim.drawPhase(), 25, 55);
 
-		g2d.drawString("Median Lost Time: " + TravelData.medianLostTime(), 25, 75);
-		g2d.drawString("Median Lost Time^2: " + TravelData.medianLostTimeSq(), 25, 90);
-		
+		g2d.drawString("Median Lost Time: " + TravelData.medianLostTime(), 25,
+				75);
+		g2d.drawString("Median Lost Time^2: " + TravelData.medianLostTimeSq(),
+				25, 90);
 
-		if (Simulation.DEBUG) {
-			// Draw FPS
-			g2d.drawString("FPS: " + sim.drawFps(), 700, 25);
-		}
+		g2d.drawString("FPS: " + sim.drawFps(), 700, 25);
 	}
 
 	private void drawIntersection(Graphics2D g2d) {

@@ -45,10 +45,10 @@ public class Logic {
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
 		spawners = new SpawnerInterface[] {
-				new PoissonSpawner(this, NORTH, 3),
-				new PoissonSpawner(this, SOUTH, 3),
-				new PoissonSpawner(this, EAST, 3),
-				new PoissonSpawner(this, WEST, 3) };
+				new PoissonSpawner(this, NORTH, 4),
+				new PoissonSpawner(this, SOUTH, 4),
+				new PoissonSpawner(this, EAST, 4),
+				new PoissonSpawner(this, WEST, 4) };
 	}
 
 	public void tick(double diff) {
@@ -138,8 +138,8 @@ public class Logic {
 	}
 
 	private QuadTree qT = new QuadTree(0, new Rectangle(0, 0,
-			(int) Intersection.intersectionSize,
-			(int) Intersection.intersectionSize));
+			(int) Intersection.intersectionSize+20,
+			(int) Intersection.intersectionSize+20));
 	private void checkCollision() {
 		ArrayList<Shape> carShapes = new ArrayList<>();
 		AffineTransform aF;// = new AffineTransform();
@@ -162,6 +162,7 @@ public class Logic {
 		for (int i = 0; i < carShapes.size(); i++) {
 			returnObjects.clear();
 			returnObjects = qT.retrieve(returnObjects, carShapes.get(i));
+			System.out.println(returnObjects.size());
 			for (int x = 0; x < returnObjects.size(); x++) {
 				if(carShapes.get(i).equals(carShapes.get(x)))
 						continue;
