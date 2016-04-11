@@ -31,7 +31,7 @@ public class PoissonSpawner implements Spawner {
 			statTimer -= Statistics.getBellRandom(10, 3);
 		}
 
-		if (spawnQueue > 0 && spawnTimer > 0.6) {
+		if (spawnQueue > 0 && spawnTimer > 1) {
 			spawnQueue--;
 			spawnTimer = 0;
 			spawn();

@@ -24,7 +24,7 @@ public class Intersection implements Drawable {
 	public static final int MAP_ENTRANCE = 5, MAP_EXIT = 6;
 	/******/
 
-	public static final double straight = 30, turn = 60, buffer = 1.5,
+	public static final double straight = 50, turn = 70, buffer = 3,
 			width = 3.1;
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;
@@ -154,7 +154,7 @@ public class Intersection implements Drawable {
 		
 		int split = SPLIT_STRAIGHT;
 		int direction = STRAIGHT;
-		if ((to - from + 4) % 4 == 1) { // Going left
+		if (to== (from + 1) % 4) { // Going left
 			split = SPLIT_LEFT;
 			direction = LEFT;
 		}

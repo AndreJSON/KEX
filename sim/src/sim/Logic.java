@@ -23,6 +23,13 @@ import tscs.AbstractTSCS;
  * 
  */
 public class Logic {
+	public static final double BREAKING_COEFFICIENT = 2.5; // Factor slower
+															// comfortable
+															// breaking should
+															// compared to the
+															// maximum
+															// retardation.
+	public static final double ACCELERATION_COEFFICIENT = 2;
 	private AbstractTSCS tscs;
 	private Spawner[] spawners;
 
@@ -30,10 +37,10 @@ public class Logic {
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 4),
-				new PoissonSpawner(this, SOUTH, 2),
-				new PoissonSpawner(this, EAST, 2),
-				new PoissonSpawner(this, WEST, 4), };
+		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 2),
+				new PoissonSpawner(this, SOUTH, 3.5),
+				new PoissonSpawner(this, EAST, 3),
+				new PoissonSpawner(this, WEST, 3), };
 	}
 
 	public void tick(double diff) {
@@ -63,9 +70,37 @@ public class Logic {
 	}
 
 	private void handleAutonomy(double diff) {
+		Iterator<Car> it = EntityDatabase.getCars().iterator();
+		while (it.hasNext()) {
+			Car car = it.next();
 
-		// car.toggleAutonomous(true); //This should always be the last thing to
-		// happen in handleAutonomy.
+			if (!car.getAutonomy()) {
+				car.setAutonomy(true);
+				continue;
+			}
+			Car inFront = EntityDatabase.nextCar(car);
+			double d = EntityDatabase.distNextCar(car);
+			
+			
+			
+			if (d!= -1 && car.getBreakingDistance() > inFront.getSpeed() + d - 1) {
+					AbstractTSCS.reduceSpeed(car, car.getModel().getMaxRetardation() * diff);
+				
+			} else if (d!= -1 && car.getBreakingDistance()*1.2 > inFront.getSpeed() + d - 1){
+				AbstractTSCS.reduceSpeed(car, car.getModel().getMaxRetardation() / 1.5 * diff);
+				
+			}else if (inFront == null) {
+				if (car.getSpeed() < AbstractTSCS.SPEED_LIMIT) {
+					AbstractTSCS.increaseSpeed(car,
+							car.getMaxAcceleration(diff)
+									);
+				}
+				continue;
+			} else if (car.getSpeed() < AbstractTSCS.SPEED_LIMIT) {
+				AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff)
+						);
+			} 
+		}
 	}
 
 	private void moveCars(double diff) {
@@ -111,8 +146,7 @@ public class Logic {
 			for (int j = i + 1; j < carShapes.size(); j++) {
 				boolean collided = collision(carShapes.get(i), carShapes.get(j));
 				if (collided) {
-					// TODO: Collision event.
-					System.out.println("Collision!");
+					//throw new RuntimeException("Collision!");
 				}
 			}
 		}
@@ -159,7 +193,6 @@ public class Logic {
 		Car car = new Car(CarModelDatabase.getByName(carName));
 		car.setSpeed(AbstractTSCS.SPEED_LIMIT);
 		EntityDatabase.addCar(car, TravelData.createTravelData(car, from, to));
-		double dist = EntityDatabase.nextCar(car);
-		System.out.println("Dist: " + dist);
+		double dist = EntityDatabase.distNextCar(car);
 	}
 }

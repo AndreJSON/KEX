@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import car.Car;
+
+
 import map.intersection.*;
 
-import car.Car;
 
 /**
  * EntityDatabase manages the collection of Entities that are IN the simulator
@@ -67,7 +69,40 @@ public class EntityDatabase {
 		}
 	}
 
-	public static double nextCar(Car car) {
+	public static Segment currentSegment(Car car) {
+		return car2travelData.get(car).currentSegment();
+	}
+
+	public static Car nextCar(Car car) {
+		TravelData tD;
+		Segment searchSegment;
+		Iterator<Car> carsOnSegment;
+		boolean passedSelf = false;
+
+		tD = getTravelData(car);
+		passedSelf = false;
+		searchSegment = tD.currentSegment();
+		while (true) {
+			carsOnSegment = TravelData.getCarsOnSegment(searchSegment).descendingIterator();
+			while (carsOnSegment.hasNext()) {
+				Car nextCar = carsOnSegment.next();
+				if (nextCar.equals(car)) {
+					passedSelf = true;
+				} else if (passedSelf) {
+					return nextCar;
+				}
+			}
+			searchSegment = searchSegment.nextSegment(tD.getDestination());
+			if (searchSegment == null) {
+				break;
+			}
+		}
+
+		// Return null if no car is in front of this car.
+		return null;
+	}
+
+	public static double distNextCar(Car car) {
 		// If the car has passed itself during the search.
 		boolean passedSelf = false;
 		// Get the travel data of the car.
@@ -79,6 +114,7 @@ public class EntityDatabase {
 		// The distance to next car.
 		double distance;
 		//
+		
 
 		distance = 0;
 		tD = getTravelData(car);
@@ -93,7 +129,7 @@ public class EntityDatabase {
 					passedSelf = true;
 				} else if (passedSelf) {
 					distance += -nextCar.remainingOnTrack()
-							+ car.remainingOnTrack();
+							+ car.remainingOnTrack() - car.getModel().getLength();
 					return distance;
 				}
 			}
@@ -102,8 +138,6 @@ public class EntityDatabase {
 				break;
 			distance += searchSegment.length();
 		}
-		while (searchSegment != null)
-			;
 
 		// Return -1 if no car is in front of this car.
 		return -1;

@@ -79,14 +79,14 @@ public class SimDisplay extends Canvas {
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("10 m", 0, 0);
 		g2d.setTransform(orig);
+		// Draw time elapsed
+		g2d.drawString("Time: " + sim.timeElapsed(), 77, 25);
+		// Draw current phase
+		g2d.drawString(sim.drawPhase(), 25, 50);
 
 		if (Simulation.DEBUG) {
 			// Draw FPS
 			g2d.drawString("FPS: " + sim.drawFps(), 25, 25);
-			// Draw time elapsed
-			g2d.drawString("Time: " + sim.timeElapsed(), 77, 25);
-			// Draw current phase
-			g2d.drawString(sim.drawPhase(), 25, 50);
 		}
 	}
 

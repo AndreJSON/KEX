@@ -6,9 +6,7 @@ import sim.EntityDatabase;
 import car.Car;
 
 public abstract class AbstractTSCS {
-	public static final double SPEED_LIMIT = 50 / 3.6;
-	protected static final double COMFORT_COEFFICIENT = 2.5; // Factor slower comfortable breaking should compared to the maximum retardation.
-
+	public static final double SPEED_LIMIT = 60 / 3.6;
 	protected boolean emergencyBreak = false;
 
 	public AbstractTSCS() {
@@ -34,15 +32,22 @@ public abstract class AbstractTSCS {
 		return emergencyBreak;
 	}
 
-	protected void reduceSpeed(Car car, double amount) {
-		if (amount < 0) {
+	public static void reduceSpeed(Car car, double amount) {
+		if(amount < 0) {
 			System.out.println("TRYING TO REDUCE SPEED BY A NEGATIVE VALUE");
 		}
-		car.setSpeed(car.getSpeed() - amount);
+		if (car.getSpeed() - amount < 0){
+			car.setSpeed(0);
+		} else {
+			car.setSpeed(car.getSpeed() - amount);
+			if(car.getSpeed() < 0.5){
+				car.setSpeed(0);
+			}
+		}
 	}
 
-	protected void increaseSpeed(Car car, double amount) {
-		if (amount < 0) {
+	public static void increaseSpeed(Car car, double amount) {
+		if(amount < 0) {
 			System.out.println("TRYING TO INCREASE SPEED BY A NEGATIVE VALUE");
 		}
 		car.setSpeed(car.getSpeed() + amount);

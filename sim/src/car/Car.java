@@ -11,28 +11,29 @@ import sim.Drawable;
 import sim.Simulation;
 
 public class Car implements Drawable {
+	// my * g / 2
+	private static final double magicCoefficient = 13.8; //
 	// Hold track of the currently highest id.
 	private static long trackId = 0;
 
-	//The car id.
+	// The car id.
 	private final long id;
 	// The car model this car is of.
 	private final CarModel carModel;
 	// The position and movement data of the car.
 	private TrackPosition position;
 	// The speed of the car.
-	private double speed; 
+	private double speed;
 	// The heading of the car chassi.
 	private double heading = 0;
 	// ?
 	private double breakingDistance;
-	// ?
-	private double magicCoefficient = 13.8; // my * g / 2
 	// If the car is autonomous or not.
 	private boolean isAutonomous;
 
 	/**
 	 * Create a new car of the specified car model.
+	 * 
 	 * @param carModel
 	 */
 	public Car(CarModel carModel) {
@@ -41,10 +42,8 @@ public class Car implements Drawable {
 		isAutonomous = true;
 	}
 
-	
 	/**
-	 * The to string has the form
-	 * "Car" + id + "[" + Car model name + "]". 
+	 * The to string has the form "Car" + id + "[" + Car model name + "]".
 	 */
 	public String toString() {
 		return "Car" + id + "[" + carModel.getName() + "]";
@@ -52,6 +51,7 @@ public class Car implements Drawable {
 
 	/**
 	 * Get the id of the car.
+	 * 
 	 * @return
 	 */
 	public long getID() {
@@ -133,11 +133,14 @@ public class Car implements Drawable {
 	 */
 	public void setSpeed(double speed) {
 		this.speed = speed;
-		breakingDistance = speed * speed / magicCoefficient;
 	}
 
-	public void toggleAutonomous(boolean value) {
+	public void setAutonomy(boolean value) {
 		isAutonomous = value;
+	}
+
+	public boolean getAutonomy() {
+		return isAutonomous;
 	}
 
 	/**
@@ -145,7 +148,8 @@ public class Car implements Drawable {
 	 * given time diff.
 	 */
 	public double getMaxAcceleration(double diff) {
-		return 3 * diff; // TODO: Actually have a decent value here.
+		return diff * carModel.getMaxAcceleration(); // TODO: Actually have a
+														// decent value here.
 	}
 
 	/**
@@ -153,16 +157,11 @@ public class Car implements Drawable {
 	 * time diff.
 	 */
 	public double getMaxRetardation(double diff) {
-		double reduction = speed
-				- Math.sqrt(magicCoefficient
-						* (breakingDistance - speed * diff));
-		if (Double.isNaN(reduction))
-			reduction = speed;
-		return reduction;
+		return carModel.getMaxRetardation() * diff;
 	}
 
 	public double getBreakingDistance() {
-		return breakingDistance;
+		return Math.pow(speed*3.6/10,2);
 	}
 
 	/**
@@ -212,7 +211,8 @@ public class Car implements Drawable {
 
 		if (!Simulation.DEBUG)
 			return;
-		p = carModel.getCenterPoint(getPosition(), heading).mult(Simulation.SCALE);
+		p = carModel.getCenterPoint(getPosition(), heading).mult(
+				Simulation.SCALE);
 		g2d.setColor(Color.black);
 		g2d.fillOval((int) p.x - 1, (int) p.y - 1, 3, 3);
 		g2d.drawString(this.toString() + " " + (int) (speed * 3.6) + " k/h",
