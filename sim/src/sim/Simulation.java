@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 
 public class Simulation implements ActionListener {
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];

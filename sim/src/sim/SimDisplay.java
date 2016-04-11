@@ -83,11 +83,11 @@ public class SimDisplay extends Canvas {
 		if (Simulation.DEBUG) {
 			// Draw FPS
 			g2d.drawString("FPS: " + sim.drawFps(), 25, 25);
-			// Draw time elapsed
-			g2d.drawString("Time: " + sim.timeElapsed(), 77, 25);
-			// Draw current phase
-			g2d.drawString(sim.drawPhase(), 25, 50);
 		}
+		// Draw time elapsed
+		g2d.drawString("Time: " + sim.timeElapsed(), 77, 25);
+		// Draw current phase
+		g2d.drawString(sim.drawPhase(), 25, 50);
 	}
 
 	private void drawIntersection(Graphics2D g2d) {
