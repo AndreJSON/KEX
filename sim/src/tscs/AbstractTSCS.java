@@ -6,7 +6,7 @@ import sim.EntityDb;
 import car.Car;
 
 public abstract class AbstractTSCS {
-	public static final double SPEED_LIMIT = 40 / 3.6;
+	public static final double SPEED_LIMIT = 50 / 3.6;
 	protected boolean emergencyBreak = false;
 
 	public AbstractTSCS() {

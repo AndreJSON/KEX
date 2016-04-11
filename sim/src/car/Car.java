@@ -216,7 +216,7 @@ public class Car implements Drawable {
 	}
 
 	public double getBreakingDistance() {
-		return Math.pow(getSpeed() * 3.6 / 10, 2);
+		return Math.pow(getSpeed() * 3.6 / 9, 2);
 	}
 
 	/**
@@ -256,10 +256,10 @@ public class Car implements Drawable {
 		aF.scale(Simulation.SCALE, Simulation.SCALE);
 		g2d.setColor(Color.black);
 		aF.rotate(getHeading());
-
+		/*
 		for (int i = 0; i < 4; i++) {
 			g2d.fill(aF.createTransformedShape(carModel.wheels[i]));
-		}
+		}*/
 		g2d.setColor(carModel.getColor());
 		Shape shape = aF.createTransformedShape(carModel.getShape());
 		g2d.fill(shape);

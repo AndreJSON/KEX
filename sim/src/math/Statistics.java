@@ -23,5 +23,13 @@ public class Statistics {
 		double k = r.nextGaussian();
 		return k * Math.sqrt(variance) + mean;
 	}
+	public static int getBinomial(int n, double p) {
+		  int x = 0;
+		  for(int i = 0; i < n; i++) {
+		    if(Math.random() < p)
+		      x++;
+		  }
+		  return x;
+		}
 
 }

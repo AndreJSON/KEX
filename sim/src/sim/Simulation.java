@@ -22,7 +22,7 @@ public class Simulation implements ActionListener {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 10; 
+	public static final double SCALE_TICK = 20; 
 	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
 
 	private JFrame window;
@@ -44,7 +44,7 @@ public class Simulation implements ActionListener {
 	public void init() {
 		tscs = new DSCS();
 		logic = new Logic(tscs);
-		window = new JFrame("SAD Project - Traffic Simulation");
+		window = new JFrame("SAD Project - Autonomous Vehicle Intersection Controller");
 		window.setLayout(null);
 		simDisp = new SimDisplay(this);
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
@@ -81,7 +81,7 @@ public class Simulation implements ActionListener {
 		long fpsTime = nextTime;
 
 		long tickTime = System.nanoTime();
-
+		boolean pause = false;
 		while (true) {
 
 			// Drawing
@@ -94,8 +94,13 @@ public class Simulation implements ActionListener {
 
 			// ticking
 			long now = System.nanoTime();
-			while (now - tickTime >= 1e9 / TICKS_PER_SECOND) {
+			while (now - tickTime >= 1e9 / TICKS_PER_SECOND && !pause) {
+				try{
 				logic.tick(SCALE_TICK / TICKS_PER_SECOND);
+				} catch (Exception e){
+					pause = true;
+					System.out.println("COLLISION");
+				}
 				timeElapsed += SCALE_TICK / TICKS_PER_SECOND;
 				tickTime += 1e9 / TICKS_PER_SECOND;
 			}

@@ -12,7 +12,7 @@ import map.intersection.*;
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 8, 6, 8, 6, 2.5 };
+	private static final double[] MAX_PHASE_LENGTH = { 9, 7, 9, 7, 1.5 };
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
@@ -57,7 +57,7 @@ public class DSCS extends AbstractTSCS {
 		}
 
 		if (currentPhaseTime >= MAX_PHASE_LENGTH[currentPhase]
-				|| (gapOut > 1 && currentPhase != IDLE)) {
+				|| (gapOut > 0.5 && currentPhase != IDLE)) {
 			currentPhaseTime = 0;
 			if (currentPhase == IDLE) {
 				currentPhase = lastPhase;
@@ -91,11 +91,7 @@ public class DSCS extends AbstractTSCS {
 						pair.getTo());
 				car = TravelData.getCarsOnSegment(segment).getFirst();
 				car.setAutonomous(false);
-				if (car.remainingOnTrack() < car
-						.getBreakingDistance()) {
-					// Have to break hard!
-					car.setAcceleration(-car.getMaxDeceleration()*2);
-				} else if (car.remainingOnTrack() - 3 < car
+				if (car.remainingOnTrack() - 3< car
 						.getBreakingDistance()) {
 					// Have to break hard!
 					car.setAcceleration(-car.getMaxDeceleration());

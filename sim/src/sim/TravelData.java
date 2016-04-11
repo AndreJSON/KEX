@@ -44,21 +44,18 @@ public class TravelData {
 		return cars;
 	}
 
-	public static String medianLostTime() {
+	public static String meanTimeLoss() {
 		if (carsCompleted == 0)
 			return "NAN";
 		else
 			return new DecimalFormat("0.0").format(totLostTime / carsCompleted);
 	}
-	
 
-	public static String medianLostTimeSq() {
+	public static String sqrtMeanSqTimeLoss() {
 		if (carsCompleted == 0)
 			return "NAN";
-		else
-			return ""
-					+ new DecimalFormat("0.0").format(totLostTimeSq
-							/ carsCompleted);
+		return new DecimalFormat("0.0").format(Math.sqrt(totLostTimeSq
+				/ carsCompleted));
 	}
 
 	private void addToSeg() {
@@ -84,7 +81,7 @@ public class TravelData {
 			double lostTime = Math.max(0, realTime - travelPlan.optimalTime);
 			totLostTime += lostTime;
 			carsCompleted++;
-			totLostTimeSq += Math.pow(lostTime, 2);
+			totLostTimeSq += lostTime*lostTime;
 			return null;
 		}
 		addToSeg();

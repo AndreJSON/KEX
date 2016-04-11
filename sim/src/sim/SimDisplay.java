@@ -85,9 +85,9 @@ public class SimDisplay extends Canvas {
 		// Draw current phase
 		g2d.drawString(sim.drawPhase(), 25, 55);
 
-		g2d.drawString("Average Time Lost: " + TravelData.medianLostTime(), 25,
+		g2d.drawString("Mean Time Lost: " + TravelData.meanTimeLoss(), 25,
 				75);
-		g2d.drawString("Average Time Lost^2: " + TravelData.medianLostTimeSq(),
+		g2d.drawString("Sqrt of Mean Sq Time Lost: " + TravelData.sqrtMeanSqTimeLoss(),
 				25, 90);
 
 
