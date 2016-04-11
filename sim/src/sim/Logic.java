@@ -25,6 +25,7 @@ import tscs.AbstractTSCS;
 public class Logic {
 	public static final double BREAKING_COEFFICIENT = 2.5; // Factor slower comfortable breaking should compared to the maximum retardation.
 	public static final double ACCELERATION_COEFFICIENT = 2;
+	public static final double COLUMN_DISTANCE = 1.5; //How close to each other vehicles will strive to drive when cruising.
 	private AbstractTSCS tscs;
 	private Spawner[] spawners;
 
@@ -32,10 +33,10 @@ public class Logic {
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 4),
-				new PoissonSpawner(this, SOUTH, 2),
-				new PoissonSpawner(this, EAST, 2),
-				new PoissonSpawner(this, WEST, 4), };
+		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 0),
+				new PoissonSpawner(this, SOUTH, 5),
+				new PoissonSpawner(this, EAST, 0),
+				new PoissonSpawner(this, WEST, 0), };
 	}
 
 	public void tick(double diff) {
@@ -74,17 +75,30 @@ public class Logic {
 			}
 			Car inFront = EntityDatabase.nextCar(car);
 			if(inFront == null) {
-				if(car.getSpeed() < AbstractTSCS.SPEED_LIMIT) {
-					AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff) / ACCELERATION_COEFFICIENT);
-				}
-				continue;
+				AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff) / ACCELERATION_COEFFICIENT);
 			}
 			else if(inFront.getSpeed() > car.getSpeed()) {
 				AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff) / ACCELERATION_COEFFICIENT);
 			}
 			else { // The car ahead is driving slower.
-				AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / BREAKING_COEFFICIENT);
+				double dist = EntityDatabase.distNextCar(car) - inFront.getLength() - COLUMN_DISTANCE;
+				if(dist <= 0) {
+					AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / BREAKING_COEFFICIENT);
+				} 
+				else if (car.getSpeed() - inFront.getSpeed() < 0.5) {
+					//Keep on rollin.
+				}
+				else if(car.getSpeed() - inFront.getSpeed() < 2){ //Their relative speed isnt that large.
+					AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / (BREAKING_COEFFICIENT * Math.min(1 + dist, 1.5)));
+				}
+				else if(dist < car.getBreakingDistance() * BREAKING_COEFFICIENT * 1.5){ //Large relative speed.
+					AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / (BREAKING_COEFFICIENT * 1.3));
+				}
+				else if(dist < car.getBreakingDistance() * BREAKING_COEFFICIENT * 3){ //Large relative speed.
+					AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / (BREAKING_COEFFICIENT * 2.5));
+				}
 			}
+			car.setSpeed(Math.min(AbstractTSCS.SPEED_LIMIT, car.getSpeed()));
 		}
 	}
 
@@ -180,6 +194,5 @@ public class Logic {
 		car.setSpeed(AbstractTSCS.SPEED_LIMIT);
 		EntityDatabase.addCar(car, TravelData.createTravelData(car, from, to));
 		double dist = EntityDatabase.distNextCar(car);
-		System.out.println("Dist: " + dist);
 	}
 }

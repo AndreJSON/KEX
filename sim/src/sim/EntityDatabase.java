@@ -42,9 +42,6 @@ public class EntityDatabase {
 				.getTrackPosition());
 		cars.add(car);
 		car2travelData.put(car, travelData);
-		if (Simulation.DEBUG) {
-			System.out.println("Added " + car);
-		}
 	}
 
 	public static TravelData getTravelData(Car car) {

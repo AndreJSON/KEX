@@ -103,7 +103,6 @@ public class Simulation implements ActionListener {
 			// FPS
 			if (fpsTime <= System.nanoTime() && DEBUG) {
 				fpsTime += 1e9;
-				System.out.println("FPS: " + fps);
 				drawFps = fps;
 				fps = 0;
 			}

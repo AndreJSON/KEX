@@ -203,6 +203,10 @@ public class Car implements Drawable {
 		return specs;
 	}
 
+	public double getLength() {
+		return this.getModel().getLength();
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
