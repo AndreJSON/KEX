@@ -11,7 +11,7 @@ INTERSECTION = $(MAP)/intersection
 FILES = \
 $(CAR)/Car.java \
 $(CAR)/CarModel.java \
-$(CAR)/CarModelDatabase.java \
+$(CAR)/CarModelDb.java \
 $(INTERSECTION)/Segment.java \
 $(INTERSECTION)/Intersection.java \
 $(TRACK)/AbstractTrack.java \
@@ -24,12 +24,13 @@ $(MATH)/Statistics.java \
 $(TSCS)/AbstractTSCS.java \
 $(TSCS)/DSCS.java \
 $(SPAWNER)/PoissonSpawner.java \
-$(SPAWNER)/Spawner.java \
+$(SPAWNER)/SpawnerInterface.java \
 $(SIM)/Drawable.java \
-$(SIM)/EntityDatabase.java \
+$(SIM)/EntityDb.java \
 $(SIM)/Logic.java \
 $(SIM)/SimDisplay.java \
 $(SIM)/TravelData.java \
+$(SIM)/Const.java \
 $(SIM)/Simulation.java
 
 all:
