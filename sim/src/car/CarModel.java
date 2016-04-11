@@ -17,7 +17,7 @@ public class CarModel {
 	private final double rearAxleDisplacement;
 
 	private final double maxAcceleration;
-	private final double maxRetardation;
+	private final double maxDeceleration;
 	private final double topSpeed;
 
 	/**
@@ -36,7 +36,7 @@ public class CarModel {
 			double maxAcceleration, double maxRetardation, double topSpeed) {
 		this.topSpeed = topSpeed;
 		this.maxAcceleration = maxAcceleration;
-		this.maxRetardation = maxRetardation;
+		this.maxDeceleration = maxRetardation;
 		this.frontAxleDisplacement = frontAxleDisplacement;
 		this.rearAxleDisplacement = rearAxleDisplacement;
 		this.color = color;
@@ -207,8 +207,8 @@ public class CarModel {
 	 * Get the maximum retardation.
 	 * @return
 	 */
-	public double getMaxRetardation() {
-		return maxRetardation;
+	public double getMaxDeceleration() {
+		return maxDeceleration;
 	}
 
 	/**

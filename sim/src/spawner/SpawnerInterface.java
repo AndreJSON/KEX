@@ -1,6 +1,6 @@
 package spawner;
 
-public interface Spawner {
+public interface SpawnerInterface {
 	public void tick(double diff);
 
 	public void on();

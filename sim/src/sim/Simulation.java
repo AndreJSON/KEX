@@ -12,7 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 
 public class Simulation implements ActionListener {
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
@@ -22,7 +22,7 @@ public class Simulation implements ActionListener {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	public static final int TICKS_PER_SECOND = 120;
-	public static final double SCALE_TICK = 1; // 1 = normal speed, 2 = double
+	public static final double SCALE_TICK = 3; // 1 = normal speed, 2 = double
 												// speed etc.
 
 	private JFrame window;
@@ -44,7 +44,6 @@ public class Simulation implements ActionListener {
 	public void init() {
 		tscs = new DSCS();
 		logic = new Logic(tscs);
-
 		window = new JFrame("SAD Project - Traffic Simulation");
 		window.setLayout(null);
 		simDisp = new SimDisplay(this);
@@ -66,6 +65,7 @@ public class Simulation implements ActionListener {
 		window.setLocationRelativeTo(null); // Centers window
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
+		window.setResizable(false);
 	}
 
 	public static void main(String[] args) {
@@ -103,7 +103,6 @@ public class Simulation implements ActionListener {
 			// FPS
 			if (fpsTime <= System.nanoTime() && DEBUG) {
 				fpsTime += 1e9;
-				System.out.println("FPS: " + fps);
 				drawFps = fps;
 				fps = 0;
 			}

@@ -2,6 +2,7 @@ package map.intersection;
 
 import map.track.*;
 import math.Vector2D;
+import sim.Const;
 import sim.Drawable;
 import sim.Simulation;
 import sim.TravelData;
@@ -16,15 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Intersection implements Drawable {
-	/*** Access waypoints ***/
-	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 
-	public static final int STRAIGHT = 0, RIGHT = 0, LEFT = 1, EXIT = 2;
-	public static final int SPLIT_STRAIGHT = 3, SPLIT_LEFT = 4;
-	public static final int MAP_ENTRANCE = 5, MAP_EXIT = 6;
-	/******/
-
-	public static final double straight = 50, turn = 70, buffer = 3,
+	public static final double straight = 50, turn = 50, buffer = 3,
 			width = 3.1;
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;
@@ -51,29 +45,31 @@ public class Intersection implements Drawable {
 		generateWayPoints();
 		generateSegments();
 		linkAllSegments();
-		createTravelPlans(getEntry(NORTH), NORTH);
-		createTravelPlans(getEntry(EAST), EAST);
-		createTravelPlans(getEntry(WEST), WEST);
-		createTravelPlans(getEntry(SOUTH), SOUTH);
+		createTravelPlans(getEntry(Const.NORTH), Const.NORTH);
+		createTravelPlans(getEntry(Const.EAST), Const.EAST);
+		createTravelPlans(getEntry(Const.WEST), Const.WEST);
+		createTravelPlans(getEntry(Const.SOUTH), Const.SOUTH);
 	}
 
 	private void generateSegments() {
 
 		for (int i = 0; i < 4; i++) {
-			Segment seg = lineSegment(wayPoints[i][MAP_ENTRANCE],
-					wayPoints[i][SPLIT_STRAIGHT]);
+			Segment seg = lineSegment(wayPoints[i][Const.MAP_ENTRANCE],
+					wayPoints[i][Const.SPLIT_STRAIGHT]);
 			startPoints.put(i, seg);
-			lineSegment(wayPoints[i][SPLIT_STRAIGHT], wayPoints[i][STRAIGHT]);
-			lineSegment(wayPoints[i][SPLIT_LEFT], wayPoints[i][LEFT]);
-			lineSegment(wayPoints[i][EXIT], wayPoints[i][MAP_EXIT]);
+			lineSegment(wayPoints[i][Const.SPLIT_STRAIGHT],
+					wayPoints[i][Const.STRAIGHT]);
+			lineSegment(wayPoints[i][Const.SPLIT_LEFT],
+					wayPoints[i][Const.LEFT]);
+			lineSegment(wayPoints[i][Const.EXIT], wayPoints[i][Const.MAP_EXIT]);
 
-			boolean vertical = i == NORTH || i == SOUTH;
-			curveSegment(wayPoints[i][LEFT], wayPoints[(i + 1) % 4][EXIT],
-					vertical);
-			curveSegment(wayPoints[i][RIGHT], wayPoints[(i + 3) % 4][EXIT],
-					vertical);
-			curveSegment(wayPoints[i][STRAIGHT], wayPoints[(i + 2) % 4][EXIT],
-					vertical);
+			boolean vertical = i == Const.NORTH || i == Const.SOUTH;
+			curveSegment(wayPoints[i][Const.LEFT],
+					wayPoints[(i + 1) % 4][Const.EXIT], vertical);
+			curveSegment(wayPoints[i][Const.RIGHT],
+					wayPoints[(i + 3) % 4][Const.EXIT], vertical);
+			curveSegment(wayPoints[i][Const.STRAIGHT],
+					wayPoints[(i + 2) % 4][Const.EXIT], vertical);
 
 		}
 
@@ -90,35 +86,37 @@ public class Intersection implements Drawable {
 	private void linkAllSegments() {
 		for (int i = 0; i < 4; i++) {
 			Segment seg, left, rs, exit;
-			seg = getByPoints(wayPoints[i][MAP_ENTRANCE],
-					wayPoints[i][SPLIT_STRAIGHT]);
-			rs = getByPoints(wayPoints[i][SPLIT_STRAIGHT],
-					wayPoints[i][STRAIGHT]); // Straight and right
-			left = getByPoints(wayPoints[i][SPLIT_LEFT], wayPoints[i][LEFT]); // to
-																				// the
-																				// left
+			seg = getByPoints(wayPoints[i][Const.MAP_ENTRANCE],
+					wayPoints[i][Const.SPLIT_STRAIGHT]);
+			rs = getByPoints(wayPoints[i][Const.SPLIT_STRAIGHT],
+					wayPoints[i][Const.STRAIGHT]); // Straight and right
+			left = getByPoints(wayPoints[i][Const.SPLIT_LEFT],
+					wayPoints[i][Const.LEFT]); // to
+			// the
+			// left
 			seg.linkSegment((i + 1) % 4, left);
 			seg.linkSegment((i + 2) % 4, rs);
 			seg.linkSegment((i + 3) % 4, rs);
 
-			seg = getByPoints(wayPoints[i][STRAIGHT],
-					wayPoints[(i + 2) % 4][EXIT]);
+			seg = getByPoints(wayPoints[i][Const.STRAIGHT],
+					wayPoints[(i + 2) % 4][Const.EXIT]);
 			rs.linkSegment((i + 2) % 4, seg);
-			exit = getByPoints(wayPoints[(i + 2) % 4][EXIT],
-					wayPoints[(i + 2) % 4][MAP_EXIT]);
+			exit = getByPoints(wayPoints[(i + 2) % 4][Const.EXIT],
+					wayPoints[(i + 2) % 4][Const.MAP_EXIT]);
 			seg.linkSegment((i + 2) % 4, exit);
 
-			seg = getByPoints(wayPoints[i][LEFT], wayPoints[(i + 1) % 4][EXIT]);
+			seg = getByPoints(wayPoints[i][Const.LEFT],
+					wayPoints[(i + 1) % 4][Const.EXIT]);
 			left.linkSegment((i + 1) % 4, seg);
-			exit = getByPoints(wayPoints[(i + 1) % 4][EXIT],
-					wayPoints[(i + 1) % 4][MAP_EXIT]);
+			exit = getByPoints(wayPoints[(i + 1) % 4][Const.EXIT],
+					wayPoints[(i + 1) % 4][Const.MAP_EXIT]);
 			seg.linkSegment((i + 1) % 4, exit);
 
-			seg = getByPoints(wayPoints[i][STRAIGHT],
-					wayPoints[(i + 3) % 4][EXIT]);
+			seg = getByPoints(wayPoints[i][Const.STRAIGHT],
+					wayPoints[(i + 3) % 4][Const.EXIT]);
 			rs.linkSegment((i + 3) % 4, seg);
-			exit = getByPoints(wayPoints[(i + 3) % 4][EXIT],
-					wayPoints[(i + 3) % 4][MAP_EXIT]);
+			exit = getByPoints(wayPoints[(i + 3) % 4][Const.EXIT],
+					wayPoints[(i + 3) % 4][Const.MAP_EXIT]);
 			seg.linkSegment((i + 3) % 4, exit);
 		}
 	}
@@ -151,12 +149,12 @@ public class Intersection implements Drawable {
 	}
 
 	public static Segment getWaitingSegment(int from, int to) {
-		
-		int split = SPLIT_STRAIGHT;
-		int direction = STRAIGHT;
-		if (to== (from + 1) % 4) { // Going left
-			split = SPLIT_LEFT;
-			direction = LEFT;
+
+		int split = Const.SPLIT_STRAIGHT;
+		int direction = Const.STRAIGHT;
+		if (to == (from + 1) % 4) { // Going left
+			split = Const.SPLIT_LEFT;
+			direction = Const.LEFT;
 		}
 		return getByPoints(wayPoints[from][split], wayPoints[from][direction]);
 	}
@@ -167,11 +165,12 @@ public class Intersection implements Drawable {
 		/**
 		 * Send the index to fill and the cardinal direction as a vector.
 		 */
-		generateWayPoints2(NORTH, new Vector2D(0, -1)); // Note that the vector
-														// points to north.
-		generateWayPoints2(EAST, new Vector2D(1, 0));
-		generateWayPoints2(SOUTH, new Vector2D(0, 1));
-		generateWayPoints2(WEST, new Vector2D(-1, 0));
+		generateWayPoints2(Const.NORTH, new Vector2D(0, -1)); // Note that the
+																// vector
+		// points to north.
+		generateWayPoints2(Const.EAST, new Vector2D(1, 0));
+		generateWayPoints2(Const.SOUTH, new Vector2D(0, 1));
+		generateWayPoints2(Const.WEST, new Vector2D(-1, 0));
 	}
 
 	private void generateWayPoints2(int cardinalDirection, Vector2D dir) {
@@ -182,21 +181,21 @@ public class Intersection implements Drawable {
 											// intersection.
 		// Move it to the first intersection pairs.
 		guide = guide.plus(dir.mult(square / 2 + buffer));
-		wayPoints[cardinalDirection][LEFT] = guide;
-		wayPoints[cardinalDirection][EXIT] = guide.plus(dir.rotate(Math.PI / 2)
-				.mult(width));
-		wayPoints[cardinalDirection][RIGHT] = guide.plus(dir.rotate(
+		wayPoints[cardinalDirection][Const.LEFT] = guide;
+		wayPoints[cardinalDirection][Const.EXIT] = guide.plus(dir.rotate(
+				Math.PI / 2).mult(width));
+		wayPoints[cardinalDirection][Const.RIGHT] = guide.plus(dir.rotate(
 				-Math.PI / 2).mult(width));
 
 		guide = guide.plus(dir.mult(turn));
-		wayPoints[cardinalDirection][SPLIT_LEFT] = guide;
-		wayPoints[cardinalDirection][SPLIT_STRAIGHT] = guide.plus(dir.rotate(
-				-Math.PI / 2).mult(width));
+		wayPoints[cardinalDirection][Const.SPLIT_LEFT] = guide;
+		wayPoints[cardinalDirection][Const.SPLIT_STRAIGHT] = guide.plus(dir
+				.rotate(-Math.PI / 2).mult(width));
 
 		guide = guide.plus(dir.mult(straight));
-		wayPoints[cardinalDirection][MAP_ENTRANCE] = guide.plus(dir.rotate(
-				-Math.PI / 2).mult(width));
-		wayPoints[cardinalDirection][MAP_EXIT] = guide.plus(dir.rotate(
+		wayPoints[cardinalDirection][Const.MAP_ENTRANCE] = guide.plus(dir
+				.rotate(-Math.PI / 2).mult(width));
+		wayPoints[cardinalDirection][Const.MAP_EXIT] = guide.plus(dir.rotate(
 				Math.PI / 2).mult(width));
 
 		// Move this section to the middle.
@@ -250,9 +249,10 @@ public class Intersection implements Drawable {
 
 		g2d.setColor(Color.red);
 
-		for (Segment seg : segments) {
-			seg.getTrack().draw(g2d);
-		}
+		if (Simulation.DEBUG)
+			for (Segment seg : segments) {
+				seg.getTrack().draw(g2d);
+			}
 	}
 
 	public Segment getEntry(int cardinalDirection) {

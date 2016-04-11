@@ -4,13 +4,13 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class CarModelDatabase {
+public class CarModelDb {
 	private static HashMap<String, CarModel> carModels = new HashMap<String, CarModel>();
 
 	/**
 	 * To prevent instantiation.
 	 */
-	private CarModelDatabase() {
+	private CarModelDb() {
 	}
 
 	/**

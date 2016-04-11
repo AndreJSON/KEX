@@ -2,11 +2,11 @@ package tscs;
 
 import java.util.Iterator;
 
-import sim.EntityDatabase;
+import sim.EntityDb;
 import car.Car;
 
 public abstract class AbstractTSCS {
-	public static final double SPEED_LIMIT = 60 / 3.6;
+	public static final double SPEED_LIMIT = 50 / 3.6;
 	protected boolean emergencyBreak = false;
 
 	public AbstractTSCS() {
@@ -16,10 +16,11 @@ public abstract class AbstractTSCS {
 
 	public void tick(double diff) {
 		if(emergencyBreak) {
-			Iterator<Car> it = EntityDatabase.getCars().iterator();
+			Iterator<Car> it = EntityDb.getCars().iterator();
 			while (it.hasNext()) {
 				Car car = it.next();
-				reduceSpeed(car, car.getMaxRetardation(diff));
+				car.setAcceleration(car.getMaxDeceleration());
+				car.setAutonomous(false);
 			}
 		}
 	}
@@ -32,24 +33,4 @@ public abstract class AbstractTSCS {
 		return emergencyBreak;
 	}
 
-	public static void reduceSpeed(Car car, double amount) {
-		if(amount < 0) {
-			System.out.println("TRYING TO REDUCE SPEED BY A NEGATIVE VALUE");
-		}
-		if (car.getSpeed() - amount < 0){
-			car.setSpeed(0);
-		} else {
-			car.setSpeed(car.getSpeed() - amount);
-			if(car.getSpeed() < 0.5){
-				car.setSpeed(0);
-			}
-		}
-	}
-
-	public static void increaseSpeed(Car car, double amount) {
-		if(amount < 0) {
-			System.out.println("TRYING TO INCREASE SPEED BY A NEGATIVE VALUE");
-		}
-		car.setSpeed(car.getSpeed() + amount);
-	}
 }

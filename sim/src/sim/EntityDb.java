@@ -18,7 +18,7 @@ import map.intersection.*;
  * @author henrik
  * 
  */
-public class EntityDatabase {
+public class EntityDb {
 
 	/**
 	 * All the cars
@@ -32,7 +32,7 @@ public class EntityDatabase {
 	private static final HashMap<Car, TravelData> car2travelData = new HashMap<>();
 	private static final Intersection intersection = new Intersection();
 
-	private EntityDatabase() {
+	private EntityDb() {
 	}
 
 	public static Collection<Car> getCars() {
@@ -44,9 +44,6 @@ public class EntityDatabase {
 				.getTrackPosition());
 		cars.add(car);
 		car2travelData.put(car, travelData);
-		if (Simulation.DEBUG) {
-			System.out.println("Added " + car);
-		}
 	}
 
 	public static TravelData getTravelData(Car car) {

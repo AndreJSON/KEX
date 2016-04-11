@@ -3,7 +3,7 @@ package spawner;
 import sim.Logic;
 import math.Statistics;
 
-public class PoissonSpawner implements Spawner {
+public class PoissonSpawner implements SpawnerInterface {
 	private double statTimer = 10;
 	private double mean = 0.6;
 	private int spawnQueue = 0;

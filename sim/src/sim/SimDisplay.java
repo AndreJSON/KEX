@@ -91,11 +91,11 @@ public class SimDisplay extends Canvas {
 	}
 
 	private void drawIntersection(Graphics2D g2d) {
-		EntityDatabase.getIntersection().draw(g2d);
+		EntityDb.getIntersection().draw(g2d);
 	}
 
 	private void drawCars(Graphics2D g2d) {
-		Collection<Car> cars = EntityDatabase.getCars();
+		Collection<Car> cars = EntityDb.getCars();
 		for (Car car : cars) {
 			car.draw(g2d);
 		}
