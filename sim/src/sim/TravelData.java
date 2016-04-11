@@ -1,8 +1,11 @@
 package sim;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+
+import tscs.AbstractTSCS;
 
 import car.Car;
 
@@ -11,19 +14,24 @@ import map.intersection.Segment;
 public class TravelData {
 	private final static HashMap<Integer, TravelPlan> travelPlans = new HashMap<>();
 	private final static HashMap<Segment, LinkedList<Car>> segment2cars = new HashMap<>();
+	private static double totLostTime = 0;
+	private static double totLostTimeSq = 0;
+	private static int carsCompleted = 0;
 
 	private final TravelPlan travelPlan;
 	private Car car;
 	private int currentIndex;
+	private double startTime;
 
-	// private int realTime; // Time it took in simulation.
+	private double realTime; // Time it took in simulation.
 
 	private TravelData(TravelPlan travelPlan, Car car) {
 		this.travelPlan = travelPlan;
 		currentIndex = 0;
 		this.car = car;
 		addToSeg();
-		// realTime = 0;
+		startTime = Simulation.timeElapsed;
+		realTime = 0;
 	}
 
 	public static LinkedList<Car> getCarsOnSegment(Segment seg) {
@@ -34,6 +42,24 @@ public class TravelData {
 		cars = new LinkedList<Car>();
 		segment2cars.put(seg, cars);
 		return cars;
+	}
+
+	public static String medianLostTime() {
+		if (carsCompleted == 0)
+			return "NAN";
+		else
+			return ""
+					+ new DecimalFormat("0.0").format(totLostTime
+							/ carsCompleted);
+	}
+
+	public static String medianLostTimeSq() {
+		if (carsCompleted == 0)
+			return "NAN";
+		else
+			return ""
+					+ new DecimalFormat("0.0").format(totLostTimeSq
+							/ carsCompleted);
 	}
 
 	private void addToSeg() {
@@ -55,6 +81,11 @@ public class TravelData {
 		currentIndex++;
 		if (currentIndex >= travelPlan.segments.size()) {
 			car = null;
+			realTime = Simulation.timeElapsed - startTime;
+			double lostTime = Math.max(0, realTime- travelPlan.optimalTime);
+			totLostTime += lostTime;
+			carsCompleted++;
+			totLostTimeSq += Math.pow(lostTime, 2);
 			return null;
 		}
 		addToSeg();
@@ -122,14 +153,17 @@ public class TravelData {
 			this.origin = origin;
 			this.destinaion = destination;
 			segments = new ArrayList<>();
+			double dist = 0;
 			// Bygga upp segments listan.
 			while (seg != null) {
 				segments.add(seg);
 				seg = seg.nextSegment(destination);
 			}
-
+			for (Segment seg1 : segments){
+				dist += seg1.length();
+			}
 			// TODO: Iterate through segments to calculate optimalTime.
-			optimalTime = -1;
+			optimalTime = dist / AbstractTSCS.SPEED_LIMIT;
 		}
 
 		public int hashCode() {

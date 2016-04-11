@@ -12,7 +12,7 @@ import map.intersection.*;
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 14, 8, 15, 8, 2 };
+	private static final double[] MAX_PHASE_LENGTH = { 1, 1, 1, 1, 1.5  };
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
@@ -34,23 +34,38 @@ public class DSCS extends AbstractTSCS {
 		phases.put(IDLE, new Pair[] {});
 	}
 
-	public void tick(double diff) {
-		super.tick(diff);
-		currentPhaseTime += diff;
-		boolean skipPhase = true;
-		for (Pair pair : phases.get(currentPhase)) {
+	private boolean haveCars(int phase){
+		for (Pair pair : phases.get(phase)) {
 			Segment segment = Intersection.getWaitingSegment(pair.getFrom(),
 					pair.getTo());
 			if (!TravelData.getCarsOnSegment(segment).isEmpty()) {
-				skipPhase = false;
+				return true;
 			}
+		}
+		return false;
+	}
+	
+	private double gapOut = 0;
+	public void tick(double diff) {
+		super.tick(diff);
+		currentPhaseTime += diff;
+		boolean skipPhase = !haveCars(currentPhase);
+		if(skipPhase){
+			gapOut += diff;
+		} else {
+			gapOut = 0;
 		}
 
 		if (currentPhaseTime >= MAX_PHASE_LENGTH[currentPhase]
-				|| (skipPhase && currentPhase != IDLE)) {
+				|| (gapOut > 1 && currentPhase != IDLE)) {
 			currentPhaseTime = 0;
 			if (currentPhase == IDLE) {
-				currentPhase = (lastPhase + 1) % 4;
+				currentPhase = lastPhase;
+				boolean lap = false;
+				do {
+					currentPhase = (currentPhase + 1) % 4;
+					lap = currentPhase == lastPhase;
+				} while (!haveCars(currentPhase) && !lap);
 				lastPhase = IDLE;
 			} else {
 				lastPhase = currentPhase;
@@ -79,7 +94,7 @@ public class DSCS extends AbstractTSCS {
 				if (car.remainingOnTrack() < car
 						.getBreakingDistance()) {
 					// Have to break hard!
-					car.setAutonomous(true);
+					car.setAcceleration(-car.getMaxDeceleration()*2);
 				} else if (car.remainingOnTrack() - 3 < car
 						.getBreakingDistance()) {
 					// Have to break hard!
@@ -103,7 +118,7 @@ public class DSCS extends AbstractTSCS {
 		return "Phase: "
 				+ currentPhase
 				+ " Time left: "
-				+ new DecimalFormat("#.0")
+				+ new DecimalFormat("0.0")
 						.format(MAX_PHASE_LENGTH[currentPhase]
 								- currentPhaseTime);
 	}
