@@ -67,7 +67,7 @@ public class SimDisplay extends Canvas {
 
 		// Draw SCALE
 		int width = (int) (1 * Simulation.SCALE);
-		int length = (int) (10 * Simulation.SCALE);
+		int length = (int) (100 * Simulation.SCALE);
 		g2d.drawLine(750 - width / 2, 50, 750 + width / 2, 50);
 		g2d.drawLine(750 - width / 2, 50 + length, 750 + width / 2, 50 + length);
 		g2d.drawLine(750, 50, 750, 50 + length);
@@ -77,7 +77,7 @@ public class SimDisplay extends Canvas {
 		g2d.translate(755, 30 + length / 2);
 		g2d.rotate(Math.PI / 2);
 		g2d.setColor(Color.BLACK);
-		g2d.drawString("10 m", 0, 0);
+		g2d.drawString("100 m", 0, 0);
 		g2d.setTransform(orig);
 		// Draw time elapsed
 		g2d.drawString("Time: " + sim.timeElapsed(), 25, 25);
@@ -85,10 +85,11 @@ public class SimDisplay extends Canvas {
 		// Draw current phase
 		g2d.drawString(sim.drawPhase(), 25, 55);
 
-		g2d.drawString("Median Lost Time: " + TravelData.medianLostTime(), 25,
+		g2d.drawString("Average Time Lost: " + TravelData.medianLostTime(), 25,
 				75);
-		g2d.drawString("Median Lost Time^2: " + TravelData.medianLostTimeSq(),
+		g2d.drawString("Average Time Lost^2: " + TravelData.medianLostTimeSq(),
 				25, 90);
+
 
 		g2d.drawString("FPS: " + sim.drawFps(), 700, 25);
 	}

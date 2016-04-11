@@ -44,11 +44,11 @@ public class Logic {
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new SpawnerInterface[] {
-				new PoissonSpawner(this, NORTH, 4),
+		spawners = new SpawnerInterface[] { new PoissonSpawner(this, NORTH, 4),
 				new PoissonSpawner(this, SOUTH, 4),
 				new PoissonSpawner(this, EAST, 4),
-				new PoissonSpawner(this, WEST, 4) };
+				new PoissonSpawner(this, WEST, 4)
+				};
 	}
 
 	public void tick(double diff) {
@@ -87,25 +87,23 @@ public class Logic {
 				continue;
 			}
 			Car inFront = EntityDb.nextCar(car);
-			if (inFront == null) {
-				car.setAcceleration(car.getMaxAcceleration());
+			if(inFront == null) {
+				car.setAcceleration(car.getMaxAcceleration() / ACCELERATION_COEFFICIENT);
 			} else {
 				double dist = EntityDb.distNextCar(car) - COLUMN_DISTANCE;
-
-				if (car.getSpeed() + car.getBreakingDistance() < inFront
-						.getSpeed() + dist + inFront.getBreakingDistance()) {
+				
+				if (car.getSpeed() + car.getBreakingDistance() / ACCELERATION_COEFFICIENT < inFront.getSpeed() + dist + inFront.getBreakingDistance() / ACCELERATION_COEFFICIENT) {
 					// If the car will catch up, break.
 
-					car.setAcceleration(car.getMaxAcceleration());
+					car.setAcceleration(car.getMaxAcceleration() / ACCELERATION_COEFFICIENT);
 				} else {
 
-					car.setAcceleration(-car.getMaxDeceleration());
+					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
 				}
 
 			}
 			if (car.getSpeed() > AbstractTSCS.SPEED_LIMIT) {
 				car.setSpeed(AbstractTSCS.SPEED_LIMIT);
-
 			}
 		}
 	}
@@ -162,7 +160,6 @@ public class Logic {
 		for (int i = 0; i < carShapes.size(); i++) {
 			returnObjects.clear();
 			returnObjects = qT.retrieve(returnObjects, carShapes.get(i));
-			System.out.println(returnObjects.size());
 			for (int x = 0; x < returnObjects.size(); x++) {
 				if(carShapes.get(i).equals(carShapes.get(x)))
 						continue;

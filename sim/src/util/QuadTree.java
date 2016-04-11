@@ -26,7 +26,6 @@ public class QuadTree {
 		for (int i = 0; i < nodes.length; i++) {
 			if (nodes[i] != null) {
 				nodes[i].clear();
-				nodes[i] = null;
 			}
 		}
 	}
@@ -115,6 +114,7 @@ public class QuadTree {
 		int index = getIndex(shape.getBounds());
 		if (index != -1 && nodes[0] != null) {
 			nodes[index].retrieve(returnObjects, shape);
+			return returnObjects;
 		}
 
 		returnObjects.addAll(shapes);

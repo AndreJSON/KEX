@@ -48,10 +48,9 @@ public class TravelData {
 		if (carsCompleted == 0)
 			return "NAN";
 		else
-			return ""
-					+ new DecimalFormat("0.0").format(totLostTime
-							/ carsCompleted);
+			return new DecimalFormat("0.0").format(totLostTime / carsCompleted);
 	}
+	
 
 	public static String medianLostTimeSq() {
 		if (carsCompleted == 0)
@@ -82,7 +81,7 @@ public class TravelData {
 		if (currentIndex >= travelPlan.segments.size()) {
 			car = null;
 			realTime = Simulation.timeElapsed - startTime;
-			double lostTime = Math.max(0, realTime- travelPlan.optimalTime);
+			double lostTime = Math.max(0, realTime - travelPlan.optimalTime);
 			totLostTime += lostTime;
 			carsCompleted++;
 			totLostTimeSq += Math.pow(lostTime, 2);
@@ -159,7 +158,7 @@ public class TravelData {
 				segments.add(seg);
 				seg = seg.nextSegment(destination);
 			}
-			for (Segment seg1 : segments){
+			for (Segment seg1 : segments) {
 				dist += seg1.length();
 			}
 			// TODO: Iterate through segments to calculate optimalTime.
