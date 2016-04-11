@@ -21,9 +21,9 @@ public class Simulation implements ActionListener {
 			/ Intersection.intersectionSize;
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
-	public static final int TICKS_PER_SECOND = 120;
-	public static final double SCALE_TICK = 1; // 1 = normal speed, 2 = double
-												// speed etc.
+	// 1 = normal speed, 2 = double speed etc.
+	public static final double SCALE_TICK = 30; 
+	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
 
 	private JFrame window;
 	private SimDisplay simDisp;
@@ -32,7 +32,7 @@ public class Simulation implements ActionListener {
 	private AbstractTSCS tscs;
 	private int drawFps;
 	private boolean currentlySpawning = true;
-	double timeElapsed = 0;
+	public static double timeElapsed = 0;
 
 	/************ Just init stuff in this section *************/
 

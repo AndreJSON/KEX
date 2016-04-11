@@ -40,10 +40,11 @@ public class Logic {
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new SpawnerInterface[] { new PoissonSpawner(this, NORTH, 3),
-				new PoissonSpawner(this, SOUTH, 3),
-				new PoissonSpawner(this, EAST, 2),
-				new PoissonSpawner(this, WEST, 2), };
+		spawners = new SpawnerInterface[] { new PoissonSpawner(this, NORTH, 2.5),
+				new PoissonSpawner(this, SOUTH, 2.5),
+				new PoissonSpawner(this, EAST, 1.5),
+				new PoissonSpawner(this, WEST, 1.5)
+				};
 	}
 
 	public void tick(double diff) {
@@ -152,7 +153,7 @@ public class Logic {
 			for (int j = i + 1; j < carShapes.size(); j++) {
 				boolean collided = collision(carShapes.get(i), carShapes.get(j));
 				if (collided) {
-					throw new RuntimeException("Collision!");
+					//throw new RuntimeException("Collision!");
 				}
 			}
 		}
