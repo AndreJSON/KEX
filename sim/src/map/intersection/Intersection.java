@@ -249,7 +249,7 @@ public class Intersection implements Drawable {
 
 		g2d.setColor(Color.red);
 
-		if (Simulation.DEBUG)
+		if (Simulation.SHOW_TRACKS)
 			for (Segment seg : segments) {
 				seg.getTrack().draw(g2d);
 			}

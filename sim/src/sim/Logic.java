@@ -23,9 +23,9 @@ import util.QuadTree;
 /**
  * Logic handles all the logic in the simulation. It accesses objects in the
  * world by using the EntityHandler.
- * 
+ *
  * @author henrik
- * 
+ *
  */
 public class Logic {
 	public static final double BREAKING_COEFFICIENT = 2.5; // Factor slower
@@ -91,13 +91,12 @@ public class Logic {
 				car.setAcceleration(car.getMaxAcceleration() / ACCELERATION_COEFFICIENT);
 			} else {
 				double dist = EntityDb.distNextCar(car) - COLUMN_DISTANCE;
-				
-				if (car.getSpeed() + car.getBreakingDistance() / ACCELERATION_COEFFICIENT < inFront.getSpeed() + dist + inFront.getBreakingDistance() / ACCELERATION_COEFFICIENT) {
-					// If the car will catch up, break.
-
+				if(dist < 0.5 && car.getSpeed() > inFront.getSpeed()) {
+					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
+				}
+				else if (car.getSpeed() + car.getBreakingDistance() * BREAKING_COEFFICIENT < inFront.getSpeed() + dist + inFront.getBreakingDistance() * BREAKING_COEFFICIENT) {
 					car.setAcceleration(car.getMaxAcceleration() / ACCELERATION_COEFFICIENT);
 				} else {
-
 					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
 				}
 

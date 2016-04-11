@@ -8,11 +8,12 @@ import sim.TravelData;
 import car.Car;
 import math.Pair;
 import map.intersection.*;
+import sim.Logic;
 
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 8, 6, 8, 6, 1.5 };
+	private static final double[] MAX_PHASE_LENGTH = { 13, 7, 13, 7, 2};
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
@@ -44,7 +45,7 @@ public class DSCS extends AbstractTSCS {
 		}
 		return false;
 	}
-	
+
 	private double gapOut = 0;
 	public void tick(double diff) {
 		super.tick(diff);
@@ -57,7 +58,7 @@ public class DSCS extends AbstractTSCS {
 		}
 
 		if (currentPhaseTime >= MAX_PHASE_LENGTH[currentPhase]
-				|| (gapOut > 1 && currentPhase != IDLE)) {
+				|| (gapOut > 0.5 && currentPhase != IDLE)) {
 			currentPhaseTime = 0;
 			if (currentPhase == IDLE) {
 				currentPhase = lastPhase;
@@ -94,19 +95,19 @@ public class DSCS extends AbstractTSCS {
 				if (car.remainingOnTrack() < car
 						.getBreakingDistance()) {
 					// Have to break hard!
-					car.setAcceleration(-car.getMaxDeceleration()*2);
+					car.setAcceleration(-car.getMaxDeceleration() / Logic.BREAKING_COEFFICIENT);
 				} else if (car.remainingOnTrack() - 3 < car
-						.getBreakingDistance()) {
+						.getBreakingDistance() / Logic.BREAKING_COEFFICIENT) {
 					// Have to break hard!
 					car.setAcceleration(-car.getMaxDeceleration());
 				} else if (car.remainingOnTrack() - 3 < car
 						.getBreakingDistance() * 1.2) {
 					// Break medium.
-					car.setAcceleration(-car.getMaxDeceleration() / 1.2);
+					car.setAcceleration(-car.getMaxDeceleration() / (Logic.BREAKING_COEFFICIENT * 1.2));
 				} else if (car.remainingOnTrack() - 3 < car
 						.getBreakingDistance() * 1.5) {
 					// Break light.
-					car.setAcceleration(-car.getMaxDeceleration() / 1.5);
+					car.setAcceleration(-car.getMaxDeceleration() / (Logic.BREAKING_COEFFICIENT * 1.5));
 				} else {
 					car.setAutonomous(true);
 				}

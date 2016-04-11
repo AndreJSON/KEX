@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 
 public class Simulation implements ActionListener {
+	public static final boolean SHOW_TRACKS = true;
 	public static final boolean DEBUG = false;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };
@@ -22,7 +23,7 @@ public class Simulation implements ActionListener {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 10; 
+	public static final double SCALE_TICK = 3;
 	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
 
 	private JFrame window;
