@@ -1,6 +1,7 @@
 .DEFAULT_GOAL := build_and_run
 SRC = sim/src
 MATH = $(SRC)/math
+UTIL = $(SRC)/util
 SIM = $(SRC)/sim
 CAR = $(SRC)/car
 TSCS = $(SRC)/tscs
@@ -25,6 +26,7 @@ $(TSCS)/AbstractTSCS.java \
 $(TSCS)/DSCS.java \
 $(SPAWNER)/PoissonSpawner.java \
 $(SPAWNER)/SpawnerInterface.java \
+$(UTIL)/QuadTree.java \
 $(SIM)/Drawable.java \
 $(SIM)/EntityDb.java \
 $(SIM)/Logic.java \
