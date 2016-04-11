@@ -12,7 +12,7 @@ import map.intersection.*;
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 1, 1, 1, 1, 1.5  };
+	private static final double[] MAX_PHASE_LENGTH = { 8, 6, 8, 6, 1.5 };
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
