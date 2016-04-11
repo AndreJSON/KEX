@@ -110,7 +110,10 @@ public class Simulation implements ActionListener {
 	}
 
 	public String timeElapsed() {
-		return new DecimalFormat("#.0").format(timeElapsed);
+		int minutes = (int) (timeElapsed / 60);
+		int seconds = (int) (timeElapsed % 60);
+		DecimalFormat dF = new DecimalFormat("00");
+		return dF.format(minutes)+":"+dF.format(seconds);
 	}
 
 	public int drawFps() {
