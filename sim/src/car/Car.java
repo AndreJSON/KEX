@@ -194,7 +194,7 @@ public class Car implements Drawable {
 		p = specs.getCenterPoint(getPosition(), heading).mult(Simulation.SCALE);
 		g2d.setColor(Color.black);
 		g2d.fillOval((int) p.x - 1, (int) p.y - 1, 3, 3);
-		g2d.drawString(this.toString() + " " + (int) (speed * 3.6) + " k/h",
+		g2d.drawString(/*this.toString() + " " + */(int) (speed * 3.6) + " k/h",
 				(int) p.x + 2, (int) p.y - 2);
 
 	}

@@ -25,7 +25,7 @@ import tscs.AbstractTSCS;
 public class Logic {
 	public static final double BREAKING_COEFFICIENT = 2.5; // Factor slower comfortable breaking should compared to the maximum retardation.
 	public static final double ACCELERATION_COEFFICIENT = 2;
-	public static final double COLUMN_DISTANCE = 1.5; //How close to each other vehicles will strive to drive when cruising.
+	public static final double COLUMN_DISTANCE = 2; //How close to each other vehicles will strive to drive when cruising.
 	private AbstractTSCS tscs;
 	private Spawner[] spawners;
 
@@ -33,10 +33,10 @@ public class Logic {
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 0),
-				new PoissonSpawner(this, SOUTH, 5),
-				new PoissonSpawner(this, EAST, 0),
-				new PoissonSpawner(this, WEST, 0), };
+		spawners = new Spawner[] { new PoissonSpawner(this, NORTH, 3),
+				new PoissonSpawner(this, SOUTH, 3),
+				new PoissonSpawner(this, EAST, 3),
+				new PoissonSpawner(this, WEST, 3), };
 	}
 
 	public void tick(double diff) {
@@ -77,25 +77,22 @@ public class Logic {
 			if(inFront == null) {
 				AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff) / ACCELERATION_COEFFICIENT);
 			}
-			else if(inFront.getSpeed() > car.getSpeed()) {
-				AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff) / ACCELERATION_COEFFICIENT);
-			}
-			else { // The car ahead is driving slower.
+			else {
 				double dist = EntityDatabase.distNextCar(car) - inFront.getLength() - COLUMN_DISTANCE;
-				if(dist <= 0) {
+				double relSpeed = car.getSpeed() - inFront.getSpeed();
+				if(dist < 0) { // Closer to the car ahead than desired.
 					AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / BREAKING_COEFFICIENT);
-				} 
-				else if (car.getSpeed() - inFront.getSpeed() < 0.5) {
-					//Keep on rollin.
 				}
-				else if(car.getSpeed() - inFront.getSpeed() < 2){ //Their relative speed isnt that large.
-					AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / (BREAKING_COEFFICIENT * Math.min(1 + dist, 1.5)));
+				else if(relSpeed < 0) { // Driving slower than the car ahead.
+					AbstractTSCS.increaseSpeed(car, car.getMaxAcceleration(diff) / ACCELERATION_COEFFICIENT);
 				}
-				else if(dist < car.getBreakingDistance() * BREAKING_COEFFICIENT * 1.5){ //Large relative speed.
-					AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / (BREAKING_COEFFICIENT * 1.3));
-				}
-				else if(dist < car.getBreakingDistance() * BREAKING_COEFFICIENT * 3){ //Large relative speed.
-					AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / (BREAKING_COEFFICIENT * 2.5));
+				else { // Driving faster than the car ahead.
+					if(dist < car.getBreakingDistance() * BREAKING_COEFFICIENT * 1.1) {
+						AbstractTSCS.reduceSpeed(car, car.getMaxRetardation(diff) / BREAKING_COEFFICIENT);
+					}
+					else if(dist < car.getBreakingDistance() * BREAKING_COEFFICIENT * 2) {
+						AbstractTSCS.reduceSpeed(car, Math.min(car.getMaxRetardation(diff) / BREAKING_COEFFICIENT, relSpeed * relSpeed / (1.9 * dist)));
+					}
 				}
 			}
 			car.setSpeed(Math.min(AbstractTSCS.SPEED_LIMIT, car.getSpeed()));

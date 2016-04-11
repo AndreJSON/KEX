@@ -12,10 +12,10 @@ import map.intersection.*;
 
 public class DSCS extends AbstractTSCS {
 	private static final int NORTH = Intersection.NORTH, EAST = Intersection.EAST, SOUTH = Intersection.SOUTH, WEST = Intersection.WEST;
-	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3;
-	private static final double[] MAX_PHASE_LENGTH = {14,8,14,8};
+	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3, IDLE = 4;
+	private static final double[] MAX_PHASE_LENGTH = {10,6,10,6,1.5};
 	private HashMap<Integer,Pair[]> phases;
-	private int currentPhase = NORTH;
+	private int currentPhase = NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
 
 
@@ -25,6 +25,7 @@ public class DSCS extends AbstractTSCS {
 		phases.put(PHASE1, new Pair[]{new Pair(WEST,NORTH), new Pair(EAST,SOUTH)});
 		phases.put(PHASE2, new Pair[]{new Pair(NORTH,SOUTH), new Pair(NORTH,WEST), new Pair(SOUTH,NORTH), new Pair(SOUTH,EAST)});
 		phases.put(PHASE3, new Pair[]{new Pair(SOUTH,WEST), new Pair(NORTH,EAST)});
+		phases.put(IDLE, new Pair[]{});
 	}
 
 	public void tick(double diff) {
@@ -32,7 +33,14 @@ public class DSCS extends AbstractTSCS {
 		currentPhaseTime+=diff;
 		if(currentPhaseTime >= MAX_PHASE_LENGTH[currentPhase]) {
 			currentPhaseTime = 0;
-			currentPhase = (currentPhase + 1) % 4;
+			if(currentPhase == IDLE) {
+				currentPhase = (lastPhase + 1) % 4;
+				lastPhase = IDLE;
+			}
+			else {
+				lastPhase = currentPhase;
+				currentPhase = IDLE;
+			}
 		}
 
 		Segment segment;
@@ -50,13 +58,13 @@ public class DSCS extends AbstractTSCS {
 				cars = TravelData.getCarsOnSegment(segment).listIterator();
 				while(cars.hasNext()) {
 					car = cars.next();
-					if(car.remainingOnTrack() >= car.getBreakingDistance() * Logic.BREAKING_COEFFICIENT * 1.1) {
+					if(car.remainingOnTrack() >= car.getBreakingDistance() * Logic.BREAKING_COEFFICIENT * 1.15) {
 						car.setAutonomy(false);
 						if(car.remainingOnTrack() >= Math.max(car.getBreakingDistance() * Logic.BREAKING_COEFFICIENT * 2, 2)) {
-							reduceSpeed(car, car.getMaxRetardation(diff / (3 * Logic.BREAKING_COEFFICIENT)));
+							reduceSpeed(car, car.getMaxRetardation(diff / (3.5 * Logic.BREAKING_COEFFICIENT)));
 							break;
 						}
-						reduceSpeed(car, car.getMaxRetardation(diff / (Logic.BREAKING_COEFFICIENT * 1.05)));
+						reduceSpeed(car, car.getMaxRetardation(diff / (Logic.BREAKING_COEFFICIENT * 1.1)));
 						break;
 					}
 				}
