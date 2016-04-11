@@ -3,6 +3,7 @@ package util;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuadTree {
 	private static int MAX_LEVEL = 5;
@@ -79,34 +80,45 @@ public class QuadTree {
 	public void insert(Shape shape) {
 		Rectangle rect = shape.getBounds();
 		if (nodes[0] != null) {
-		     int index = getIndex(rect);
-		 
-		     if (index != -1) {
-		       nodes[index].insert(rect);
-		 
-		       return;
-		     }
-		   }
-		 
-		   shapes.add(shape);
-		 
-		   if (shapes.size() > MAX_OBJECTS && level < MAX_LEVEL) {
-		      if (nodes[0] == null) { 
-		         split(); 
-		      }
-		 
-		     int i = 0;
-		     while (i < shapes.size()) {
-		       int index = getIndex(shapes.get(i).getBounds());
-		       if (index != -1) {
-		         nodes[index].insert(shapes.remove(i));
-		       }
-		       else {
-		         i++;
-		       }
-		     }
-		   }
+			int index = getIndex(rect);
 
+			if (index != -1) {
+				nodes[index].insert(rect);
+
+				return;
+			}
+		}
+
+		shapes.add(shape);
+
+		if (shapes.size() > MAX_OBJECTS && level < MAX_LEVEL) {
+			if (nodes[0] == null) {
+				split();
+			}
+
+			int i = 0;
+			while (i < shapes.size()) {
+				int index = getIndex(shapes.get(i).getBounds());
+				if (index != -1) {
+					nodes[index].insert(shapes.remove(i));
+				} else {
+					i++;
+				}
+			}
+		}
 	}
 
+	/*
+	 * Return all objects that could collide with the given object
+	 */
+	public ArrayList<Shape> retrieve(ArrayList<Shape> returnObjects, Shape shape) {
+		int index = getIndex(shape.getBounds());
+		if (index != -1 && nodes[0] != null) {
+			nodes[index].retrieve(returnObjects, shape);
+		}
+
+		returnObjects.addAll(shapes);
+
+		return returnObjects;
+	}
 }

@@ -1,5 +1,7 @@
 package sim;
 
+import java.awt.List;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
@@ -7,6 +9,7 @@ import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import map.intersection.Intersection;
 import map.intersection.Segment;
 import math.Vector2D;
 import car.Car;
@@ -15,6 +18,7 @@ import spawner.PoissonSpawner;
 import spawner.SpawnerInterface;
 import tscs.AbstractTSCS;
 import tscs.DSCS;
+import util.QuadTree;
 
 /**
  * Logic handles all the logic in the simulation. It accesses objects in the
@@ -31,8 +35,8 @@ public class Logic {
 															// maximum
 															// retardation.
 	public static final double ACCELERATION_COEFFICIENT = 2;
-	//How close to each other vehicles will strive to drive when cruising.
-	public static final double COLUMN_DISTANCE = 2; 
+	// How close to each other vehicles will strive to drive when cruising.
+	public static final double COLUMN_DISTANCE = 2;
 	private AbstractTSCS tscs;
 	private SpawnerInterface[] spawners;
 
@@ -40,11 +44,11 @@ public class Logic {
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new SpawnerInterface[] { new PoissonSpawner(this, NORTH, 2.5),
-				new PoissonSpawner(this, SOUTH, 2.5),
-				new PoissonSpawner(this, EAST, 1.5),
-				new PoissonSpawner(this, WEST, 1.5)
-				};
+		spawners = new SpawnerInterface[] {
+				new PoissonSpawner(this, NORTH, 3),
+				new PoissonSpawner(this, SOUTH, 3),
+				new PoissonSpawner(this, EAST, 3),
+				new PoissonSpawner(this, WEST, 3) };
 	}
 
 	public void tick(double diff) {
@@ -83,12 +87,13 @@ public class Logic {
 				continue;
 			}
 			Car inFront = EntityDb.nextCar(car);
-			if(inFront == null) {
+			if (inFront == null) {
 				car.setAcceleration(car.getMaxAcceleration());
 			} else {
 				double dist = EntityDb.distNextCar(car) - COLUMN_DISTANCE;
-				
-				if (car.getSpeed() + car.getBreakingDistance()< inFront.getSpeed() + dist + inFront.getBreakingDistance()) {
+
+				if (car.getSpeed() + car.getBreakingDistance() < inFront
+						.getSpeed() + dist + inFront.getBreakingDistance()) {
 					// If the car will catch up, break.
 
 					car.setAcceleration(car.getMaxAcceleration());
@@ -96,11 +101,11 @@ public class Logic {
 
 					car.setAcceleration(-car.getMaxDeceleration());
 				}
-				
+
 			}
-			if(car.getSpeed() > AbstractTSCS.SPEED_LIMIT){
+			if (car.getSpeed() > AbstractTSCS.SPEED_LIMIT) {
 				car.setSpeed(AbstractTSCS.SPEED_LIMIT);
-				
+
 			}
 		}
 	}
@@ -114,14 +119,14 @@ public class Logic {
 			if (rest <= 0) {
 				TravelData tD = EntityDb.getTravelData(car);
 
-				if (tD == null) { 
+				if (tD == null) {
 					// Car has no travel plan.
 					it.remove();
 					continue;
 				}
 				// Get the next segment.
-				Segment seg = tD.nextSegment(); 
-				if (seg == null) { 
+				Segment seg = tD.nextSegment();
+				if (seg == null) {
 					// Car reached the end.
 					it.remove();
 					continue;
@@ -132,31 +137,40 @@ public class Logic {
 		}
 	}
 
+	private QuadTree qT = new QuadTree(0, new Rectangle(0, 0,
+			(int) Intersection.intersectionSize,
+			(int) Intersection.intersectionSize));
 	private void checkCollision() {
 		ArrayList<Shape> carShapes = new ArrayList<>();
 		AffineTransform aF;// = new AffineTransform();
-		Shape shape;
 		Vector2D p;
+		qT.clear();
 
 		for (Car car : EntityDb.getCars()) {
-			if(!car.isCollision()){
+			if (!car.isCollision()) {
 				continue;
 			}
 			aF = new AffineTransform();
 			p = car.getPosition();
 			aF.translate(p.x, p.y);
 			aF.rotate(car.getHeading());
-			shape = aF.createTransformedShape(car.getModel().getShape());
+			Shape shape = aF.createTransformedShape(car.getModel().getShape());
 			carShapes.add(shape);
+			qT.insert(shape);
 		}
+		ArrayList<Shape> returnObjects = new ArrayList<Shape>();
 		for (int i = 0; i < carShapes.size(); i++) {
-			for (int j = i + 1; j < carShapes.size(); j++) {
-				boolean collided = collision(carShapes.get(i), carShapes.get(j));
-				if (collided) {
-					//throw new RuntimeException("Collision!");
+			returnObjects.clear();
+			returnObjects = qT.retrieve(returnObjects, carShapes.get(i));
+			for (int x = 0; x < returnObjects.size(); x++) {
+				if(carShapes.get(i).equals(carShapes.get(x)))
+						continue;
+				if (collision(carShapes.get(i), carShapes.get(x))) {
+					throw new RuntimeException("Collision!");
 				}
 			}
 		}
+
 	}
 
 	private boolean collision(Shape shape1, Shape shape2) {
