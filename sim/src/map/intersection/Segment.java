@@ -8,23 +8,16 @@ import math.Vector2D;
 
 public class Segment {
 	private AbstractTrack track;
-	@SuppressWarnings("unused")
-	private ArrayList<Segment> siblingSegments; // Holds a list of all segments
-												// that can cause collision with
-												// this one.
 	private HashMap<Integer, Segment> split; // Tells which Segment a car has to
 												// enter given its destination
 												// as key. Null instead of a
 												// Segment if destination is
 												// reached.
-	private int id;
-	private static int trackId = 0;
+	private int id = -1;
 
 	public Segment(AbstractTrack t) {
 		track = t;
-		siblingSegments = new ArrayList<>();
 		split = new HashMap<>();
-		id = ++trackId;
 	}
 
 	/**
@@ -48,6 +41,10 @@ public class Segment {
 
 	public int hashCode() {
 		return id;
+	}
+
+	public void setHashCode(int value) {
+		id = value;
 	}
 
 	public double length() {

@@ -43,17 +43,15 @@ public class Logic {
 	}
 
 	public void tick(double diff) {
+		updateCollisionBoxes();
+		checkCollision();
 		tscs.tick(diff);
 		handleAutonomous(diff);
 		moveCars(diff);
 
-		for (SpawnerInterface spawer : spawners) {
-			spawer.tick(diff);
-		}
-		checkCollision();
-
-		// TODO: add logic, such as collision detection etc.
-	}
+		for (SpawnerInterface spawner : spawners) {
+			spawner.tick(diff);
+		}	}
 
 	public void setSpawnerOn(boolean on) {
 		if (on) {
@@ -125,45 +123,46 @@ public class Logic {
 					it.remove();
 					continue;
 				}
-				car.setCollision(true);
+				car.setCollidable(true);
 				car.setTrackPosition(seg.getTrack().getTrackPosition(-rest));
 			}
+		}
+	}
+
+	private void updateCollisionBoxes() {
+		AffineTransform aF;
+		Vector2D p;
+
+		for (Car car : EntityDb.getCars()) {
+			if (!car.isCollidable())
+				continue;
+			aF = new AffineTransform();
+			p = car.getPosition();
+			aF.translate(p.x, p.y);
+			aF.rotate(car.getHeading());
+			car.setCollisionBox(car.getModel().getCollisionBox().transform(aF));
 		}
 	}
 
 	private final QuadTree qT = new QuadTree(0, new Rectangle(0, 0,
 			(int) Intersection.intersectionSize + 20,
 			(int) Intersection.intersectionSize + 20));
-	private final ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
 
 	private void checkCollision() {
-		AffineTransform aF;
-		Vector2D p;
-		CollisionBox collisionBox;
-
 		qT.clear();
-		collisionBoxes.clear();
+		ArrayList<CollisionBox> returnObjects = new ArrayList<>();
 
 		for (Car car : EntityDb.getCars()) {
-			if (!car.isCollision())
+			if (!car.isCollidable())
 				continue;
-			aF = new AffineTransform();
-			p = car.getPosition();
-			aF.translate(p.x, p.y);
-			aF.rotate(car.getHeading());
-			collisionBox = car.getModel().getCollisionBox().transform(aF);
-			collisionBoxes.add(collisionBox);
-		}
-		ArrayList<CollisionBox> returnObjects = new ArrayList<>();
-		for (CollisionBox cB : collisionBoxes) {
 			returnObjects.clear();
-			returnObjects = qT.retrieve(returnObjects, cB);
-			for (CollisionBox other : returnObjects) {
-				if (cB.collide(other)) {
+			returnObjects = qT.retrieve(returnObjects, car.getCollisionBox());
+			for (CollisionBox other: returnObjects) {
+				if (car.getCollisionBox().collide(other)) {
 					throw new RuntimeException("Collision");
 				}
 			}
-			qT.insert(cB);
+			qT.insert(car.getCollisionBox());
 		}
 
 	}

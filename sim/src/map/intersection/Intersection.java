@@ -19,11 +19,13 @@ import java.util.HashMap;
 
 public class Intersection implements Drawable {
 
-	public static final double straight = 50, turn = 120, buffer = 3,
+	public static final double straight = 0.50, turn = 0.120, buffer = 3,
 			width = 3.2;
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;
 	public static final double intersectionSize = arm * 2 + square;
+
+	private static int idTracker = 0;
 
 	// Used in building of intersection.
 	private static HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment;
@@ -84,6 +86,7 @@ public class Intersection implements Drawable {
 
 		for (HashMap<Vector2D, Segment> map : points2segment.values()) {
 			for (Segment seg : map.values()) {
+				seg.setHashCode(idTracker++);
 				segments.add(seg);
 			}
 		}
@@ -153,6 +156,10 @@ public class Intersection implements Drawable {
 
 	private static Segment getByPoints(Vector2D v1, Vector2D v2) {
 		return points2segment.get(v1).get(v2);
+	}
+
+	public Segment getByID(int id) {
+		return segments.get(id);
 	}
 
 	public static Segment getWaitingSegment(int from, int to) {
@@ -295,6 +302,7 @@ public class Intersection implements Drawable {
 		Graphics2D g = trackImage.createGraphics();
 		for (Segment seg : segments) {
 			seg.getTrack().draw(g);
+			seg.getTrack().drawID(g, seg.hashCode());
 		}
 	}
 

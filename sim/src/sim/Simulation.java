@@ -24,7 +24,7 @@ public class Simulation implements ActionListener {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 60;
+	public static final double SCALE_TICK = 3;
 	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
 	private static final DecimalFormat double0format = new DecimalFormat("00");
 	public static double timeElapsed = 0;
@@ -46,7 +46,7 @@ public class Simulation implements ActionListener {
 	}
 
 	public void init() {
-		tscs = new DSCS();
+		tscs = new SAD(SCALE_TICK / TICKS_PER_SECOND, 10);
 		logic = new Logic(tscs);
 		window = new JFrame(
 				"SAD Project - Autonomous Vehicle Intersection Controller");
