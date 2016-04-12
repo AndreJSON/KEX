@@ -30,6 +30,7 @@ $(SPAWNER)/PoissonSpawner.java \
 $(SPAWNER)/BinomialSpawner.java \
 $(SPAWNER)/SpawnerInterface.java \
 $(UTIL)/QuadTree.java \
+$(UTIL)/CollisionBox.java \
 $(SIM)/Drawable.java \
 $(SIM)/EntityDb.java \
 $(SIM)/Logic.java \
