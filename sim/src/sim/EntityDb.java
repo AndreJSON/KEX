@@ -30,7 +30,6 @@ public class EntityDb {
 	 * will be used for statistics.
 	 */
 	private static final HashMap<Car, TravelData> car2travelData = new HashMap<>();
-	private static final Intersection intersection = new Intersection();
 
 	// constructor
 	private EntityDb() {
@@ -73,10 +72,6 @@ public class EntityDb {
 
 	public static Segment currentSegment(Car car) {
 		return car2travelData.get(car).currentSegment();
-	}
-
-	static Intersection getIntersection() {
-		return intersection;
 	}
 
 }

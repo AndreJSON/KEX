@@ -10,6 +10,8 @@ import java.awt.image.BufferStrategy;
 import java.text.DecimalFormat;
 import java.util.Collection;
 
+import map.intersection.Intersection;
+
 import traveldata.TravelData;
 
 import car.Car;
@@ -107,7 +109,7 @@ class SimDisplay extends Canvas {
 	}
 
 	private void drawIntersection(Graphics2D g2d) {
-		EntityDb.getIntersection().draw(g2d);
+		Intersection.draw(g2d);
 	}
 
 	public String timeElapsedFormated() {

@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Intersection implements Drawable {
+public class Intersection {
 
 	// public static fields
 	public static final double straight = 50, turn = 120, buffer = 3,
@@ -42,7 +42,9 @@ public class Intersection implements Drawable {
 	private static BufferedImage trackImage;
 	private static BufferedImage intersectionImage;
 
-	
+	private Intersection() {
+	}
+
 	static {
 		init();
 	}
@@ -170,11 +172,10 @@ public class Intersection implements Drawable {
 	public static Segment getByID(int id) {
 		return segments.get(id);
 	}
-	
-	public static double getSize(){
+
+	public static double getSize() {
 		return intersectionSize;
 	}
-
 
 	private static void generateWayPoints() {
 		waypoints = new Vector2D[4][7];
@@ -226,7 +227,8 @@ public class Intersection implements Drawable {
 	 *            horizontal.
 	 * @return
 	 */
-	private static Segment curveSegment(Vector2D p1, Vector2D p3, boolean vertical) {
+	private static Segment curveSegment(Vector2D p1, Vector2D p3,
+			boolean vertical) {
 		Vector2D p2;
 		if (vertical) {
 			p2 = new Vector2D(p1.x, p3.y);
@@ -251,8 +253,7 @@ public class Intersection implements Drawable {
 		return seg;
 	}
 
-	@Override
-	public void draw(Graphics2D g2d) {
+	public static void draw(Graphics2D g2d) {
 		if (intersectionImage == null)
 			createRoadImage();
 		g2d.drawImage(intersectionImage, null, null);
