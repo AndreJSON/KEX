@@ -16,10 +16,6 @@ import sim.Simulation;
  */
 public class Car implements Drawable {
 	/**
-	 * my * g / 2
-	 */
-	// private static final double magicCoefficient = 13.8; //
-	/**
 	 * Hold track of the currently highest id.
 	 */
 	private static long trackId = 0;
@@ -43,7 +39,7 @@ public class Car implements Drawable {
 	/**
 	 * The heading of the car chassi.
 	 */
-	private double heading = 0;
+	private double heading;
 	/**
 	 * If the car is autonomous or not.
 	 */
@@ -52,8 +48,10 @@ public class Car implements Drawable {
 	 * The cars acceleration.
 	 */
 	private double acceleration;
-	private double relAcceleration;
-	private boolean collision = false;
+	/**
+	 * If the collision is on or off.
+	 */
+	private boolean collision;
 
 	/**
 	 * Create a new car of the specified car model.
@@ -65,7 +63,9 @@ public class Car implements Drawable {
 		id = ++trackId;
 		isAutonomous = true;
 		acceleration = 0;
-		relAcceleration = 0;
+		speed = 0;
+		heading = 0;
+		collision = false;
 	}
 
 	/**
@@ -95,12 +95,9 @@ public class Car implements Drawable {
 					+ " has not been assigned a track!");
 		}
 		if (position.remaining() > 0) {
-			relAcceleration = -speed;
 			speed += acceleration * diff;
-		
+
 			speedClamp();
-			relAcceleration += speed;
-			relAcceleration /= diff;
 			position.move(diff * getSpeed());
 			double rotation = getSpeed()
 					* (Math.tan(position.getHeading() - heading) / carModel
@@ -154,7 +151,7 @@ public class Car implements Drawable {
 	 * @return
 	 */
 	public double getSpeed() {
-		if (speed < 0.05)
+		if (speed < 0.01)
 			return 0;
 		return speed;
 	}
@@ -181,25 +178,35 @@ public class Car implements Drawable {
 		acceleration += value;
 		accelerationClamp();
 	}
-	
-	public double getAcceleration(){
-		return relAcceleration;
-	}
 
+	/**
+	 * Clamps the acceleration.
+	 */
 	private void accelerationClamp() {
-		if (acceleration > carModel.getMaxAcceleration())
-			acceleration = carModel.getMaxAcceleration();
-		if (acceleration < -carModel.getMaxDeceleration())
-			acceleration = -carModel.getMaxDeceleration();
+		acceleration = clamp(-getMaxDeceleration(), getMaxAcceleration(),
+				acceleration);
 	}
 
+	/**
+	 * Clamps the speed.
+	 */
 	private void speedClamp() {
-		if (speed < -carModel.getTopSpeed()/10)
-			speed = -carModel.getTopSpeed()/10;
-		else if (speed > carModel.getTopSpeed())
-			speed = carModel.getTopSpeed();
+		speed = clamp(-getTopSpeed() / 10, getTopSpeed(), speed);
 	}
 
+	private double clamp(double lowerBound, double upperBound, double value) {
+		if (value < lowerBound)
+			return lowerBound;
+		else if (value > upperBound)
+			return upperBound;
+		return value;
+	}
+
+	/**
+	 * Get the top speed of this car. Same as car.getType().getTopSpeed();
+	 * 
+	 * @return
+	 */
 	public double getTopSpeed() {
 		return carModel.getTopSpeed();
 	}
@@ -215,12 +222,20 @@ public class Car implements Drawable {
 		return carModel.getMaxDeceleration();
 	}
 
-	public double getBreakingDistance(double acc) {
-		return (1/2+1/acc)*Math.pow(getSpeed(),2);
+	/**
+	 * Get the breaking distance with specified deceleration.
+	 * 
+	 * @param deceleration
+	 * @return
+	 */
+	public double getBreakingDistance(double deceleration) {
+		if (deceleration <= 0)
+			throw new RuntimeException("Deceleration must be positiv.");
+		return 0.5 * Math.pow(getSpeed(), 2.) / deceleration;
 	}
 
 	/**
-	 * get the car type.
+	 * Get the car type.
 	 * 
 	 * @return
 	 */
@@ -256,10 +271,7 @@ public class Car implements Drawable {
 		aF.scale(Simulation.SCALE, Simulation.SCALE);
 		g2d.setColor(Color.black);
 		aF.rotate(getHeading());
-		/*
-		for (int i = 0; i < 4; i++) {
-			g2d.fill(aF.createTransformedShape(carModel.wheels[i]));
-		}*/
+
 		g2d.setColor(carModel.getColor());
 		Shape shape = aF.createTransformedShape(carModel.getShape());
 		g2d.fill(shape);
@@ -269,9 +281,8 @@ public class Car implements Drawable {
 		p = carModel.getCenterPoint(getPosition(), heading).mult(
 				Simulation.SCALE);
 		g2d.setColor(Color.black);
-		g2d.fillOval((int) p.x - 1, (int) p.y - 1, 3, 3);
-		g2d.drawString(/* this.toString() + " " + */(int) (speed * 3.6)
-				+ " k/h", (int) p.x + 2, (int) p.y - 2);
+		g2d.drawString((int)(speed * 3.6) + " k/h", (int) p.x + 2,
+				(int) p.y - 2);
 
 	}
 
@@ -282,8 +293,13 @@ public class Car implements Drawable {
 		return carModel;
 	}
 
+	/**
+	 * Get the length of the car. Equivalent to getModel().getLength();
+	 * 
+	 * @return
+	 */
 	public double getLength() {
-		return this.getModel().getLength();
+		return getModel().getLength();
 	}
 
 	@Override
@@ -320,10 +336,20 @@ public class Car implements Drawable {
 		this.isAutonomous = isAutonomous;
 	}
 
+	/**
+	 * Check if this car collides.
+	 * 
+	 * @return
+	 */
 	public boolean isCollision() {
 		return collision;
 	}
 
+	/**
+	 * Set collision.
+	 * 
+	 * @return
+	 */
 	public void setCollision(boolean collision) {
 		this.collision = collision;
 	}

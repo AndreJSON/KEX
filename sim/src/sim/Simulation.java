@@ -12,19 +12,20 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 
 public class Simulation implements ActionListener {
-	public static final boolean SHOW_TRACKS = false;
+	public static final boolean SHOW_TRACKS = true;
 	public static final boolean DEBUG = false;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
+	public static final int SimulationSize = windowSize[Y];
 	public static final int FPS = 60;
 	public static final double SCALE = windowSize[Y]
 			/ Intersection.intersectionSize;
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 30; 
-	public static final int TICKS_PER_SECOND = (int) (90 * SCALE_TICK);
+	public static final double SCALE_TICK = 60;
+	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
 
 	private JFrame window;
 	private SimDisplay simDisp;
@@ -45,7 +46,8 @@ public class Simulation implements ActionListener {
 	public void init() {
 		tscs = new DSCS();
 		logic = new Logic(tscs);
-		window = new JFrame("SAD Project - Autonomous Vehicle Intersection Controller");
+		window = new JFrame(
+				"SAD Project - Autonomous Vehicle Intersection Controller");
 		window.setLayout(null);
 		simDisp = new SimDisplay(this);
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
@@ -96,11 +98,12 @@ public class Simulation implements ActionListener {
 			// ticking
 			long now = System.nanoTime();
 			while (now - tickTime >= 1e9 / TICKS_PER_SECOND && !pause) {
-				try{
-				logic.tick(SCALE_TICK / TICKS_PER_SECOND);
-				} catch (Exception e){
+				try {
+					logic.tick(SCALE_TICK / TICKS_PER_SECOND);
+				} catch (Exception e) {
 					pause = true;
-					System.out.println("COLLISION");
+					System.err.println();
+					System.err.println("Exception: " + e.toString());
 				}
 				timeElapsed += SCALE_TICK / TICKS_PER_SECOND;
 				tickTime += 1e9 / TICKS_PER_SECOND;
@@ -119,7 +122,7 @@ public class Simulation implements ActionListener {
 		int minutes = (int) (timeElapsed / 60);
 		int seconds = (int) (timeElapsed % 60);
 		DecimalFormat dF = new DecimalFormat("00");
-		return dF.format(minutes)+":"+dF.format(seconds);
+		return dF.format(minutes) + ":" + dF.format(seconds);
 	}
 
 	public int drawFps() {

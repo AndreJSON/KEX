@@ -2,17 +2,17 @@ package util;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 
-public class QuadTree<E extends Shape> {
+
+public class QuadTree {
 	private static int MAX_LEVEL = 10;
 	private static int MAX_OBJECTS = 10;
 
 	private final Rectangle rect;
-	private final ArrayList<E> shapes;
+	private final ArrayList<CollisionBox> shapes;
 	private final int level;
-	private final QuadTree<E>[] nodes;
+	private final QuadTree[] nodes;
 
 	public QuadTree(int level, Rectangle rect) {
 		this.rect = rect;
@@ -35,13 +35,13 @@ public class QuadTree<E extends Shape> {
 		int subHeight = (int) rect.height / 2;
 		int x = (int) rect.x;
 		int y = (int) rect.y;
-		nodes[0] = new QuadTree<E>(level + 1, new Rectangle(x + subWidth, y
+		nodes[0] = new QuadTree(level + 1, new Rectangle(x + subWidth, y
 				+ subHeight, subWidth, subHeight));
-		nodes[1] = new QuadTree<E>(level + 1, new Rectangle(x, y, subWidth,
+		nodes[1] = new QuadTree(level + 1, new Rectangle(x, y, subWidth,
 				subHeight));
-		nodes[2] = new QuadTree<E>(level + 1, new Rectangle(x, y + subHeight,
+		nodes[2] = new QuadTree(level + 1, new Rectangle(x, y + subHeight,
 				subWidth, subHeight));
-		nodes[3] = new QuadTree<E>(level + 1, new Rectangle(x + subWidth, y,
+		nodes[3] = new QuadTree(level + 1, new Rectangle(x + subWidth, y,
 				subWidth, subHeight));
 	}
 
@@ -76,19 +76,19 @@ public class QuadTree<E extends Shape> {
 		return index;
 	}
 
-	public void insert(E shape) {
-		Rectangle rect = shape.getBounds();
+	public void insert(CollisionBox collisionBox) {
+		Rectangle rect = collisionBox.getBounds();
 		if (nodes[0] != null) {
 			int index = getIndex(rect);
 
 			if (index != -1) {
-				nodes[index].insert(shape);
+				nodes[index].insert(collisionBox);
 
 				return;
 			}
 		}
 
-		shapes.add(shape);
+		shapes.add(collisionBox);
 
 		if (shapes.size() > MAX_OBJECTS && level < MAX_LEVEL) {
 			if (nodes[0] == null) {
@@ -110,7 +110,7 @@ public class QuadTree<E extends Shape> {
 	/*
 	 * Return all objects that could collide with the given object
 	 */
-	public ArrayList<E> retrieve(ArrayList<E> returnObjects, Shape shape) {
+	public ArrayList<CollisionBox> retrieve(ArrayList<CollisionBox> returnObjects, CollisionBox shape) {
 		int index = getIndex(shape.getBounds());
 		if (index != -1 && nodes[0] != null) {
 			nodes[index].retrieve(returnObjects, shape);

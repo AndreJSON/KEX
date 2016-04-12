@@ -13,12 +13,13 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Intersection implements Drawable {
 
-	public static final double straight = 50, turn = 200, buffer = 3,
+	public static final double straight = 50, turn = 120, buffer = 3,
 			width = 3.2;
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;
@@ -33,7 +34,13 @@ public class Intersection implements Drawable {
 													// coming from each of the 4
 													// directions.
 
-	private static Vector2D wayPoints[][];
+	private static Vector2D waypoints[][];
+
+	/**
+	 * The images representing the intersection.
+	 */
+	private BufferedImage trackImage;
+	private BufferedImage intersectionImage;
 
 	public Intersection() {
 		points2segment = new HashMap<>();
@@ -54,22 +61,22 @@ public class Intersection implements Drawable {
 	private void generateSegments() {
 
 		for (int i = 0; i < 4; i++) {
-			Segment seg = lineSegment(wayPoints[i][Const.MAP_ENTRANCE],
-					wayPoints[i][Const.SPLIT_STRAIGHT]);
+			Segment seg = lineSegment(waypoints[i][Const.MAP_ENTRANCE],
+					waypoints[i][Const.SPLIT_STRAIGHT]);
 			startPoints.put(i, seg);
-			lineSegment(wayPoints[i][Const.SPLIT_STRAIGHT],
-					wayPoints[i][Const.STRAIGHT]);
-			lineSegment(wayPoints[i][Const.SPLIT_LEFT],
-					wayPoints[i][Const.LEFT]);
-			lineSegment(wayPoints[i][Const.EXIT], wayPoints[i][Const.MAP_EXIT]);
+			lineSegment(waypoints[i][Const.SPLIT_STRAIGHT],
+					waypoints[i][Const.STRAIGHT]);
+			lineSegment(waypoints[i][Const.SPLIT_LEFT],
+					waypoints[i][Const.LEFT]);
+			lineSegment(waypoints[i][Const.EXIT], waypoints[i][Const.MAP_EXIT]);
 
 			boolean vertical = i == Const.NORTH || i == Const.SOUTH;
-			curveSegment(wayPoints[i][Const.LEFT],
-					wayPoints[(i + 1) % 4][Const.EXIT], vertical);
-			curveSegment(wayPoints[i][Const.RIGHT],
-					wayPoints[(i + 3) % 4][Const.EXIT], vertical);
-			curveSegment(wayPoints[i][Const.STRAIGHT],
-					wayPoints[(i + 2) % 4][Const.EXIT], vertical);
+			curveSegment(waypoints[i][Const.LEFT],
+					waypoints[(i + 1) % 4][Const.EXIT], vertical);
+			curveSegment(waypoints[i][Const.RIGHT],
+					waypoints[(i + 3) % 4][Const.EXIT], vertical);
+			curveSegment(waypoints[i][Const.STRAIGHT],
+					waypoints[(i + 2) % 4][Const.EXIT], vertical);
 
 		}
 
@@ -86,37 +93,37 @@ public class Intersection implements Drawable {
 	private void linkAllSegments() {
 		for (int i = 0; i < 4; i++) {
 			Segment seg, left, rs, exit;
-			seg = getByPoints(wayPoints[i][Const.MAP_ENTRANCE],
-					wayPoints[i][Const.SPLIT_STRAIGHT]);
-			rs = getByPoints(wayPoints[i][Const.SPLIT_STRAIGHT],
-					wayPoints[i][Const.STRAIGHT]); // Straight and right
-			left = getByPoints(wayPoints[i][Const.SPLIT_LEFT],
-					wayPoints[i][Const.LEFT]); // to
+			seg = getByPoints(waypoints[i][Const.MAP_ENTRANCE],
+					waypoints[i][Const.SPLIT_STRAIGHT]);
+			rs = getByPoints(waypoints[i][Const.SPLIT_STRAIGHT],
+					waypoints[i][Const.STRAIGHT]); // Straight and right
+			left = getByPoints(waypoints[i][Const.SPLIT_LEFT],
+					waypoints[i][Const.LEFT]); // to
 			// the
 			// left
 			seg.linkSegment((i + 1) % 4, left);
 			seg.linkSegment((i + 2) % 4, rs);
 			seg.linkSegment((i + 3) % 4, rs);
 
-			seg = getByPoints(wayPoints[i][Const.STRAIGHT],
-					wayPoints[(i + 2) % 4][Const.EXIT]);
+			seg = getByPoints(waypoints[i][Const.STRAIGHT],
+					waypoints[(i + 2) % 4][Const.EXIT]);
 			rs.linkSegment((i + 2) % 4, seg);
-			exit = getByPoints(wayPoints[(i + 2) % 4][Const.EXIT],
-					wayPoints[(i + 2) % 4][Const.MAP_EXIT]);
+			exit = getByPoints(waypoints[(i + 2) % 4][Const.EXIT],
+					waypoints[(i + 2) % 4][Const.MAP_EXIT]);
 			seg.linkSegment((i + 2) % 4, exit);
 
-			seg = getByPoints(wayPoints[i][Const.LEFT],
-					wayPoints[(i + 1) % 4][Const.EXIT]);
+			seg = getByPoints(waypoints[i][Const.LEFT],
+					waypoints[(i + 1) % 4][Const.EXIT]);
 			left.linkSegment((i + 1) % 4, seg);
-			exit = getByPoints(wayPoints[(i + 1) % 4][Const.EXIT],
-					wayPoints[(i + 1) % 4][Const.MAP_EXIT]);
+			exit = getByPoints(waypoints[(i + 1) % 4][Const.EXIT],
+					waypoints[(i + 1) % 4][Const.MAP_EXIT]);
 			seg.linkSegment((i + 1) % 4, exit);
 
-			seg = getByPoints(wayPoints[i][Const.STRAIGHT],
-					wayPoints[(i + 3) % 4][Const.EXIT]);
+			seg = getByPoints(waypoints[i][Const.STRAIGHT],
+					waypoints[(i + 3) % 4][Const.EXIT]);
 			rs.linkSegment((i + 3) % 4, seg);
-			exit = getByPoints(wayPoints[(i + 3) % 4][Const.EXIT],
-					wayPoints[(i + 3) % 4][Const.MAP_EXIT]);
+			exit = getByPoints(waypoints[(i + 3) % 4][Const.EXIT],
+					waypoints[(i + 3) % 4][Const.MAP_EXIT]);
 			seg.linkSegment((i + 3) % 4, exit);
 		}
 	}
@@ -156,56 +163,59 @@ public class Intersection implements Drawable {
 			split = Const.SPLIT_LEFT;
 			direction = Const.LEFT;
 		}
-		return getByPoints(wayPoints[from][split], wayPoints[from][direction]);
+		return getByPoints(waypoints[from][split], waypoints[from][direction]);
 	}
 
 	private void generateWayPoints() {
-		wayPoints = new Vector2D[4][7];
+		waypoints = new Vector2D[4][7];
 
-		/**
+		/*
 		 * Send the index to fill and the cardinal direction as a vector.
 		 */
-		generateWayPoints2(Const.NORTH, new Vector2D(0, -1)); // Note that the
-																// vector
-		// points to north.
+		generateWayPoints2(Const.NORTH, new Vector2D(0, -1));
 		generateWayPoints2(Const.EAST, new Vector2D(1, 0));
 		generateWayPoints2(Const.SOUTH, new Vector2D(0, 1));
 		generateWayPoints2(Const.WEST, new Vector2D(-1, 0));
 	}
 
 	private void generateWayPoints2(int cardinalDirection, Vector2D dir) {
-		dir = dir.unit(); // Make sure it is a unit vector.
-		// We begin by disregarding the center of the intersection, we will add
-		// them last.
-		Vector2D guide = new Vector2D(); // this is now at the center of the
-											// intersection.
-		// Move it to the first intersection pairs.
+		// The direction we should go when drawing.
+		dir = dir.unit();
+		// Guid to where we should draw
+		Vector2D guide = new Vector2D(intersectionSize / 2,
+				intersectionSize / 2);
+
+		// Level 1, closest to the intersection.
 		guide = guide.plus(dir.mult(square / 2 + buffer));
-		wayPoints[cardinalDirection][Const.LEFT] = guide;
-		wayPoints[cardinalDirection][Const.EXIT] = guide.plus(dir.rotate(
+		waypoints[cardinalDirection][Const.LEFT] = guide;
+		waypoints[cardinalDirection][Const.EXIT] = guide.plus(dir.rotate(
 				Math.PI / 2).mult(width));
-		wayPoints[cardinalDirection][Const.RIGHT] = guide.plus(dir.rotate(
+		waypoints[cardinalDirection][Const.RIGHT] = guide.plus(dir.rotate(
 				-Math.PI / 2).mult(width));
 
+		// Level 2, start of waiting areas.
 		guide = guide.plus(dir.mult(turn));
-		wayPoints[cardinalDirection][Const.SPLIT_LEFT] = guide;
-		wayPoints[cardinalDirection][Const.SPLIT_STRAIGHT] = guide.plus(dir
+		waypoints[cardinalDirection][Const.SPLIT_LEFT] = guide;
+		waypoints[cardinalDirection][Const.SPLIT_STRAIGHT] = guide.plus(dir
 				.rotate(-Math.PI / 2).mult(width));
 
+		// Level 3, map exit and entrance
 		guide = guide.plus(dir.mult(straight));
-		wayPoints[cardinalDirection][Const.MAP_ENTRANCE] = guide.plus(dir
+		waypoints[cardinalDirection][Const.MAP_ENTRANCE] = guide.plus(dir
 				.rotate(-Math.PI / 2).mult(width));
-		wayPoints[cardinalDirection][Const.MAP_EXIT] = guide.plus(dir.rotate(
+		waypoints[cardinalDirection][Const.MAP_EXIT] = guide.plus(dir.rotate(
 				Math.PI / 2).mult(width));
-
-		// Move this section to the middle.
-		for (int i = 0; i < 7; i++) {
-			if (wayPoints[cardinalDirection][i] != null)
-				wayPoints[cardinalDirection][i].move(intersectionSize / 2,
-						intersectionSize / 2);
-		}
 	}
 
+	/**
+	 * 
+	 * @param p1
+	 * @param p3
+	 * @param vertical
+	 *            if the enterance to this curve points vertically, else
+	 *            horizontal.
+	 * @return
+	 */
 	private Segment curveSegment(Vector2D p1, Vector2D p3, boolean vertical) {
 		Vector2D p2;
 		if (vertical) {
@@ -218,41 +228,73 @@ public class Intersection implements Drawable {
 		return seg;
 	}
 
+	/**
+	 * Make a line segment from p1 to p2.
+	 * @param p1
+	 * @param p2
+	 * @return
+	 */
 	private Segment lineSegment(Vector2D p1, Vector2D p2) {
 		Segment seg = new Segment(new LineTrack(p1, p2));
 		addSegment(p1, p2, seg);
 		return seg;
 	}
 
-	Area shape;
-
 	@Override
 	public void draw(Graphics2D g2d) {
-		if (shape == null) {
-			shape = new Area();
-			Area a = new Area(new Rectangle2D.Double(intersectionSize / 2
-					- width * 3 / 2, 0, width * 3, intersectionSize));
-			shape.add(a);
-			a = new Area(new Rectangle2D.Double(0, intersectionSize / 2 - width
-					* 3 / 2, intersectionSize, width * 3));
-			shape.add(a);
-			double damn = square * 1.8;
-			Shape rect = new Rectangle2D.Double(-damn / 2, -damn / 2, damn,
-					damn);
-			AffineTransform aF = new AffineTransform();
-			aF.translate(intersectionSize / 2, intersectionSize / 2);
-			aF.rotate(Math.PI / 4);
-			shape.add(new Area(aF.createTransformedShape(rect)));
+		if (intersectionImage == null)
+			createRoadImage();
+		g2d.drawImage(intersectionImage, null, null);
+
+		if (Simulation.SHOW_TRACKS) {
+			if (trackImage == null)
+				createTrackImage();
+			g2d.drawImage(trackImage, null, null);
 		}
-		g2d.setColor(Color.gray);
-		g2d.fill(Simulation.SCALER.createTransformedShape(shape));
+	}
 
-		g2d.setColor(Color.red);
+	/**
+	 * Create the image for the roads.
+	 */
+	private void createRoadImage() {
+		// Create the background road
+		intersectionImage = new BufferedImage(Simulation.SimulationSize,
+				Simulation.SimulationSize, BufferedImage.TYPE_INT_ARGB);
 
-		if (Simulation.SHOW_TRACKS)
-			for (Segment seg : segments) {
-				seg.getTrack().draw(g2d);
-			}
+		Area area = new Area();
+		// Road from top to bottom.
+		Area a = new Area(new Rectangle2D.Double(intersectionSize / 2 - width
+				* 3 / 2, 0, width * 3, intersectionSize));
+		area.add(a);
+		// Road from right to left.
+		a = new Area(new Rectangle2D.Double(0, intersectionSize / 2 - width * 3
+				/ 2, intersectionSize, width * 3));
+		area.add(a);
+
+		// Turn areas.
+		double damn = square * 1.8;
+		Shape rect = new Rectangle2D.Double(-damn / 2, -damn / 2, damn, damn);
+		AffineTransform aF = new AffineTransform();
+		aF.translate(intersectionSize / 2, intersectionSize / 2);
+		aF.rotate(Math.PI / 4);
+		area.add(new Area(aF.createTransformedShape(rect)));
+
+		Graphics2D g = intersectionImage.createGraphics();
+		g.setColor(Color.gray);
+		Shape s = Simulation.SCALER.createTransformedShape(area);
+		g.fill(s);
+	}
+
+	/**
+	 * Create an image of the tracks.
+	 */
+	private void createTrackImage() {
+		trackImage = new BufferedImage(Simulation.SimulationSize,
+				Simulation.SimulationSize, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = trackImage.createGraphics();
+		for (Segment seg : segments) {
+			seg.getTrack().draw(g);
+		}
 	}
 
 	public Segment getEntry(int cardinalDirection) {

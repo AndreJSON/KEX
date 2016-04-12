@@ -102,9 +102,8 @@ public class Bezier2Track extends AbstractTrack {
 	 * @return
 	 */
 	private Vector2D evaluate(double t) {
-		double tm = 1 - t;
-		// A(1-t)^2 + 2B(1-t)t + Ct^2.
-		return c1.mult(tm * tm).plus(c2.mult(2 * tm * t).plus(c3.mult(t * t)));
+		double t2 = 1 - t;
+		return c1.mult(t2 * t2).plus(c2.mult(2 * t2 * t)).plus(c3.mult(t * t));
 	}
 
 	@Override
@@ -187,12 +186,7 @@ public class Bezier2Track extends AbstractTrack {
 
 		@Override
 		public void move(double distance) {
-			double cDist = 0;
-			while (distance - cDist > 0.05) {
-				calcT(0.05);
-				cDist += 0.05;
-			}
-			calcT(distance - cDist);
+			calcT(distance);
 			totDist += distance;
 
 			point = evaluate(t);
@@ -200,13 +194,15 @@ public class Bezier2Track extends AbstractTrack {
 		}
 
 		/**
-		 * Calculate the new t value when moving with distance.
+		 * Calculate the new t value when moving with distance. Using Heun's
+		 * method.
 		 * 
 		 * @param distance
 		 */
 		private void calcT(double distance) {
-			t += distance * 1. / v1.mult(t).plus(v2).norm();
-
+			double k1 = 1. / v1.mult(t).plus(v2).norm();
+			double k2 = 1. / v1.mult(t + distance * k1).plus(v2).norm();
+			t += distance * (k1 + k2) / 2.;
 		}
 
 		@Override

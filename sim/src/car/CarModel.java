@@ -4,15 +4,34 @@ import java.awt.Color;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import util.CollisionBox;
+
 import math.Vector2D;
 
 public class CarModel {
+	/**
+	 * The name of this car model.
+	 */
 	private final String name;
+	/**
+	 * The length and the width of the chassi
+	 */
 	private final double length, width;
-	private final Shape shape;
-	public final Shape[] wheels;
-	private final Color color;
+	/**
+	 * The shape for this car model in meters. Centered at the car front.
+	 * Heading in 0 theta.
+	 */
+	private final Shape carShape;
+	private final CollisionBox collisionBox;
 
+	/**
+	 * Color of this model of car.
+	 */
+	private final Color modelColor;
+
+	/**
+	 * The distance from the front to the front axel and the rear axel.
+	 */
 	private final double frontAxleDisplacement;
 	private final double rearAxleDisplacement;
 
@@ -39,26 +58,18 @@ public class CarModel {
 		this.maxDeceleration = maxRetardation;
 		this.frontAxleDisplacement = frontAxleDisplacement;
 		this.rearAxleDisplacement = rearAxleDisplacement;
-		this.color = color;
+		this.modelColor = color;
 		this.name = name;
 		this.length = length;
 		this.width = width;
-		shape = new Rectangle2D.Double(-length, -width / 2, length, width);
-
-		double wheelDiameter = 0.61, wheelWidth = 0.4;
-		wheels = new Shape[4];
-		wheels[0] = new Rectangle2D.Double(-frontAxleDisplacement
-				- wheelDiameter / 2, -width / 2 - wheelWidth / 2,
-				wheelDiameter, wheelWidth);
-		wheels[1] = new Rectangle2D.Double(-frontAxleDisplacement
-				- wheelDiameter / 2, width / 2 - wheelWidth / 2, wheelDiameter,
-				wheelWidth);
-		wheels[2] = new Rectangle2D.Double(-rearAxleDisplacement
-				- wheelDiameter / 2, -width / 2 - wheelWidth / 2,
-				wheelDiameter, wheelWidth);
-		wheels[3] = new Rectangle2D.Double(-rearAxleDisplacement
-				- wheelDiameter / 2, width / 2 - wheelWidth / 2, wheelDiameter,
-				wheelWidth);
+		carShape = new Rectangle2D.Double(-length, -width / 2, length, width);
+		
+		double halfWidth = width / 2;
+		collisionBox = new CollisionBox(4, -length, -halfWidth);
+		collisionBox.lineTo(0, -halfWidth);
+		collisionBox.lineTo(0, halfWidth);
+		collisionBox.lineTo(-length, halfWidth);
+		collisionBox.close();
 	}
 
 	/**
@@ -89,22 +100,6 @@ public class CarModel {
 	}
 
 	/**
-	 * Gets the rear point of the car.
-	 * 
-	 * @param pos
-	 *            the center point of the car
-	 * @param heading
-	 *            the heading of the car
-	 * @return rear point of the car
-	 */
-	public Vector2D getRearPoint(Vector2D pos, double heading) {
-		// EJ KONTROLLERAD
-		double x = pos.getX() - Math.cos(heading) * length;
-		double y = pos.getY() - Math.sin(heading) * length;
-		return new Vector2D(x, y);
-	}
-
-	/**
 	 * Gets the center point of the car.
 	 * 
 	 * @param pos
@@ -121,37 +116,10 @@ public class CarModel {
 	}
 
 	/**
-	 * Gets the center point of the car.
+	 * Get the distance between front wheel axel and rear wheel axel.
 	 * 
-	 * @param pos
-	 *            the center point of the car
-	 * @param heading
-	 *            the heading of the car
-	 * @return rear point of the car
+	 * @return
 	 */
-	public Vector2D getFrontWheelPoint(Vector2D pos, double heading) {
-		// EJ KONTROLLERAD
-		double x = pos.getX() - Math.cos(heading) * frontAxleDisplacement;
-		double y = pos.getY() - Math.sin(heading) * frontAxleDisplacement;
-		return new Vector2D(x, y);
-	}
-
-	/**
-	 * Gets the center point of the car.
-	 * 
-	 * @param pos
-	 *            the center point of the car
-	 * @param heading
-	 *            the heading of the car
-	 * @return rear point of the car
-	 */
-	public Vector2D getRearWheelPoint(Vector2D pos, double heading) {
-		// EJ KONTROLLERAD
-		double x = pos.getX() - Math.cos(heading) * rearAxleDisplacement;
-		double y = pos.getY() - Math.sin(heading) * rearAxleDisplacement;
-		return new Vector2D(x, y);
-	}
-
 	public double getWheelBase() {
 		return rearAxleDisplacement - frontAxleDisplacement;
 	}
@@ -162,7 +130,7 @@ public class CarModel {
 	 * @return
 	 */
 	public Shape getShape() {
-		return shape;
+		return carShape;
 	}
 
 	/**
@@ -171,7 +139,7 @@ public class CarModel {
 	 * @return the color of the car type.
 	 */
 	public Color getColor() {
-		return color;
+		return modelColor;
 	}
 
 	@Override
@@ -181,6 +149,7 @@ public class CarModel {
 
 	/**
 	 * Get the distance from the front to the front axle.
+	 * 
 	 * @return
 	 */
 	public double getFrontAxleDisplacement() {
@@ -189,6 +158,7 @@ public class CarModel {
 
 	/**
 	 * Get the distance from the front to the rear axle.
+	 * 
 	 * @return
 	 */
 	public double getRearAxleDisplacement() {
@@ -197,6 +167,7 @@ public class CarModel {
 
 	/**
 	 * Get the maximum acceleration.
+	 * 
 	 * @return
 	 */
 	public double getMaxAcceleration() {
@@ -205,6 +176,7 @@ public class CarModel {
 
 	/**
 	 * Get the maximum retardation.
+	 * 
 	 * @return
 	 */
 	public double getMaxDeceleration() {
@@ -213,9 +185,17 @@ public class CarModel {
 
 	/**
 	 * Get the top speed.
+	 * 
 	 * @return
 	 */
 	public double getTopSpeed() {
 		return topSpeed;
+	}
+
+	/**
+	 * @return the collisionBox
+	 */
+	public CollisionBox getCollisionBox() {
+		return collisionBox;
 	}
 }
