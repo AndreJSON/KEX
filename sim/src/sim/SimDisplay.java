@@ -36,9 +36,9 @@ public class SimDisplay extends Canvas {
 
 		BufferStrategy strategy = getBufferStrategy();
 		Graphics2D g2d = (Graphics2D) strategy.getDrawGraphics();
-
+		
+		// Makes text smooth.
 		RenderingHints rh = new RenderingHints(
-				// Makes text cleaner.
 				RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHints(rh);
@@ -93,7 +93,7 @@ public class SimDisplay extends Canvas {
 				"Sqrt of Mean Sq Time Lost: " + TravelData.sqrtMeanSqTimeLoss(),
 				25, 90);
 
-		g2d.drawString("FPS: " + sim.drawFps(), 700, 25);
+		g2d.drawString("FPS: " + sim.fps(), 700, 25);
 	}
 
 	private void drawIntersection(Graphics2D g2d) {

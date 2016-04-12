@@ -29,12 +29,13 @@ public class Simulation implements ActionListener {
 	private static final DecimalFormat double0format = new DecimalFormat("00");
 	public static double timeElapsed = 0;
 
+
 	private JFrame window;
 	private SimDisplay simDisp;
 	private JButton b1, b2;
 	private Logic logic;
 	private AbstractTSCS tscs;
-	private int drawFps;
+	private int lastFps;
 	private boolean currentlySpawning = true;
 
 	/************ Just init stuff in this section *************/
@@ -105,6 +106,7 @@ public class Simulation implements ActionListener {
 					pause = true;
 					System.err.println();
 					System.err.println("Exception: " + e.toString());
+					e.printStackTrace();
 				}
 				timeElapsed += SCALE_TICK / TICKS_PER_SECOND;
 				tickTime += 1e9 / TICKS_PER_SECOND;
@@ -113,7 +115,7 @@ public class Simulation implements ActionListener {
 			// FPS
 			if (fpsTime <= System.nanoTime()) {
 				fpsTime += 1e9;
-				drawFps = fps;
+				lastFps = fps;
 				fps = 0;
 			}
 		}
@@ -128,8 +130,8 @@ public class Simulation implements ActionListener {
 				+ double0format.format(seconds);
 	}
 
-	public int drawFps() {
-		return drawFps;
+	public int fps() {
+		return lastFps;
 	}
 
 	public String drawPhase() {
