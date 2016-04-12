@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class Intersection implements Drawable {
 
 	// public static fields
-	private static final double straight = 0.50, turn = 0.120, buffer = 3,
+	public static final double straight = 50, turn = 120, buffer = 3,
 			width = 3.2;
 	private static final double arm = straight + turn + buffer;
 	private static final double square = width * 3;

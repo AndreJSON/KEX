@@ -15,7 +15,7 @@ public abstract class AbstractTrack implements Drawable {
 	/**
 	 * The distance each point in the discretized representation should have.
 	 */
-	protected final double POINT_STEP = 0.2;
+	protected final double POINT_STEP = 0.1;
 
 	/**
 	 * Keeps the currently highest id.
