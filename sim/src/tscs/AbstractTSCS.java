@@ -8,9 +8,6 @@ import car.Car;
 public abstract class AbstractTSCS {
 	protected boolean emergencyBreak = false;
 
-	public AbstractTSCS() {
-	}
-
 	public abstract String drawPhase();
 
 	public void tick(double diff) {

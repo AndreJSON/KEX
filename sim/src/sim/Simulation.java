@@ -45,7 +45,7 @@ public class Simulation implements ActionListener {
 	}
 
 	public void init() {
-		tscs = new SAD();
+		tscs = new SAD(SCALE_TICK / TICKS_PER_SECOND, 10);
 		logic = new Logic(tscs);
 		window = new JFrame(
 				"SAD Project - Autonomous Vehicle Intersection Controller");
