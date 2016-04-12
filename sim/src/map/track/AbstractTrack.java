@@ -2,6 +2,7 @@ package map.track;
 
 import sim.Drawable;
 import math.Vector2D;
+import java.awt.Graphics2D;
 
 /**
  * AbstractTrack represents a path that a car can follow. It contains a
@@ -87,5 +88,7 @@ public abstract class AbstractTrack implements Drawable {
 	public int hashCode() {
 		return (int) id;
 	}
+
+	public abstract void drawID(Graphics2D g2d, int id);
 
 }

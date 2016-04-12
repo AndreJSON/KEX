@@ -156,6 +156,15 @@ public class Bezier2Track extends AbstractTrack {
 		g2d.drawOval((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
 	}
 
+	@Override
+	public void drawID(Graphics2D g2d, int id)  {
+		Vector2D p1, p2;
+		p1 = c1.mult(Simulation.SCALE);
+		p2 = c3.mult(Simulation.SCALE);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("id" + id, (float)(p1.getX() + p2.getX()) / 2, (float)(p1.getY() + p2.getY()) / 2);
+	}
+
 	private class Position implements TrackPosition {
 		// TODO: Complete this class.
 

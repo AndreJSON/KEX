@@ -88,6 +88,15 @@ public class LineTrack extends AbstractTrack {
 		g2d.drawOval((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
 	}
 
+	@Override
+	public void drawID(Graphics2D g2d, int id)  {
+		Vector2D p1, p2;
+		p1 = startPoint.mult(Simulation.SCALE);
+		p2 = endPoint.mult(Simulation.SCALE);
+		g2d.setColor(Color.BLACK);
+		g2d.drawString("id" + id, (float)(p1.getX() + p2.getX()) / 2, (float)(p1.getY() + p2.getY()) / 2);
+	}
+
 	public class Position implements TrackPosition {
 		private Vector2D point;
 		private double totalDistance;
