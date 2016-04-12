@@ -10,6 +10,7 @@ import math.Vector2D;
 import car.Car;
 import car.CarModelDb;
 import spawner.*;
+import traveldata.TravelData;
 import tscs.AbstractTSCS;
 import util.CollisionBox;
 import util.QuadTree;
@@ -22,10 +23,6 @@ import util.QuadTree;
  * 
  */
 public class Logic {
-	// Factor slower comfortable breaking should compared to the maximum
-	// retardation.
-	public static final double BREAK_COEF = 2.5;
-	public static final double ACC_COEF = 1.5;
 
 	// How close to each other vehicles will strive to drive when cruising.
 	// If this value is too low, the cars will collide in curves.
@@ -79,13 +76,13 @@ public class Logic {
 				car.setAutonomous(true);
 				continue;
 			}
-			Car inFront = EntityDb.nextCar(car);
+			Car inFront = car.nextCar();
 			if (inFront == null) {
-				car.setAcc(car.getMaxAcceleration() / ACC_COEF);
+				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			} else {
-				double dist = EntityDb.distNextCar(car) - COLUMN_DISTANCE;
-				double car1breakVal = car.getMaxDeceleration() / BREAK_COEF;
-				double car2breakVal = inFront.getMaxDeceleration() / BREAK_COEF;
+				double dist = car.distNextCar() - COLUMN_DISTANCE;
+				double car1breakVal = car.getMaxDeceleration() / Const.BREAK_COEF;
+				double car2breakVal = inFront.getMaxDeceleration() / Const.BREAK_COEF;
 
 				double car1distance = car.getBreakingDistance(car1breakVal);
 				double car2distance = inFront.getBreakingDistance(car2breakVal);
@@ -93,14 +90,14 @@ public class Logic {
 				if (dist < 0.5 && car.getSpeed() > inFront.getSpeed()) {
 					car.setAcc(-car1breakVal * 1.1);
 				} else if (car1distance < dist + car2distance) {
-					car.setAcc(car.getMaxAcceleration() / ACC_COEF);
+					car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 				} else {
 					car.setAcc(-car1breakVal);
 				}
 
 			}
-			if (car.getSpeed() > AbstractTSCS.SPEED_LIMIT) {
-				car.setSpeed(AbstractTSCS.SPEED_LIMIT);
+			if (car.getSpeed() > Const.SPEED_LIMIT) {
+				car.setSpeed(Const.SPEED_LIMIT);
 			}
 		}
 	}
@@ -132,10 +129,10 @@ public class Logic {
 		}
 	}
 
-	private QuadTree qT = new QuadTree(0, new Rectangle(0, 0,
+	private final QuadTree qT = new QuadTree(0, new Rectangle(0, 0,
 			(int) Intersection.intersectionSize + 20,
 			(int) Intersection.intersectionSize + 20));
-	ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
+	private final ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
 
 	private void checkCollision() {
 		AffineTransform aF;
@@ -154,26 +151,24 @@ public class Logic {
 			aF.rotate(car.getHeading());
 			collisionBox = car.getModel().getCollisionBox().transform(aF);
 			collisionBoxes.add(collisionBox);
-			qT.insert(collisionBox);
 		}
 		ArrayList<CollisionBox> returnObjects = new ArrayList<>();
-		for (int i = 0; i < collisionBoxes.size(); i++) {
+		for (CollisionBox cB: collisionBoxes) {
 			returnObjects.clear();
-			returnObjects = qT.retrieve(returnObjects, collisionBoxes.get(i));
-			for (int x = 0; x < returnObjects.size(); x++) {
-				if (collisionBoxes.get(i).equals(collisionBoxes.get(x)))
-					continue;
-				if (collisionBoxes.get(i).collide(collisionBoxes.get(x))) {
+			returnObjects = qT.retrieve(returnObjects, cB);
+			for (CollisionBox other: returnObjects) {
+				if (cB.collide(other)) {
 					throw new RuntimeException("Collision");
 				}
 			}
+			qT.insert(cB);
 		}
 
 	}
 
 	public void spawnCar(String carName, int from, int to) {
 		Car car = new Car(CarModelDb.getByName(carName));
-		car.setSpeed(AbstractTSCS.SPEED_LIMIT);
+		car.setSpeed(Const.SPEED_LIMIT);
 		EntityDb.addCar(car, TravelData.createTravelData(car, from, to));
 	}
 }

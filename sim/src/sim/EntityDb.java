@@ -3,7 +3,8 @@ package sim;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+
+import traveldata.TravelData;
 
 import car.Car;
 
@@ -61,6 +62,7 @@ public class EntityDb {
 
 	public static void removeCar(Car car) {
 		cars.remove(car);
+		car2travelData.remove(car);
 		if (Simulation.DEBUG) {
 			System.out.println("Removed " + car);
 		}
@@ -68,76 +70,6 @@ public class EntityDb {
 
 	public static Segment currentSegment(Car car) {
 		return car2travelData.get(car).currentSegment();
-	}
-
-	public static Car nextCar(Car car) {
-		TravelData tD;
-		Segment searchSegment;
-		Iterator<Car> carsOnSegment;
-		boolean passedSelf = false;
-
-		tD = getTravelData(car);
-		passedSelf = false;
-		searchSegment = tD.currentSegment();
-		while (true) {
-			carsOnSegment = TravelData.getCarsOnSegment(searchSegment).descendingIterator();
-			while (carsOnSegment.hasNext()) {
-				Car nextCar = carsOnSegment.next();
-				if (nextCar.equals(car)) {
-					passedSelf = true;
-				} else if (passedSelf) {
-					return nextCar;
-				}
-			}
-			searchSegment = searchSegment.nextSegment(tD.getDestination());
-			if (searchSegment == null) {
-				break;
-			}
-		}
-
-		// Return null if no car is in front of this car.
-		return null;
-	}
-
-	public static double distNextCar(Car car) {
-		// If the car has passed itself during the search.
-		boolean passedSelf = false;
-		// Get the travel data of the car.
-		TravelData tD;
-		// Get the current segment the car is on.
-		Segment searchSegment;
-		// Iterator to check all cars on this segment.
-		Iterator<Car> carsOnSegment;
-		// The distance to next car.
-		double distance;
-		//
-		
-
-		distance = 0;
-		tD = getTravelData(car);
-		passedSelf = false;
-		searchSegment = tD.currentSegment();
-		while (true) {
-			carsOnSegment = TravelData.getCarsOnSegment(searchSegment)
-					.descendingIterator();
-			while (carsOnSegment.hasNext()) {
-				Car nextCar = carsOnSegment.next();
-				if (nextCar.equals(car)) {
-					passedSelf = true;
-				} else if (passedSelf) {
-					distance += -nextCar.remainingOnTrack()
-							+ car.remainingOnTrack() - car.getModel().getLength();
-					return distance;
-				}
-			}
-			searchSegment = searchSegment.nextSegment(tD.getDestination());
-			if (searchSegment == null)
-				break;
-			distance += searchSegment.length();
-		}
-
-		// Return -1 if no car is in front of this car.
-		return -1;
 	}
 
 	public static Intersection getIntersection() {

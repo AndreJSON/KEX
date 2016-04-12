@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 public class CollisionBox {
 	private final Line2D.Double[] lines;
@@ -14,6 +15,15 @@ public class CollisionBox {
 
 	public CollisionBox(int numOfLines, double x, double y) {
 		this(numOfLines, new Point2D.Double(x, y));
+	}
+	
+	public CollisionBox(Rectangle2D rect){
+		this(4, rect.getMinX(), rect.getMinY());
+		lineTo(rect.getMaxX(), rect.getMinY());
+		lineTo(rect.getMaxX(), rect.getMaxY());
+		lineTo(rect.getMinX(), rect.getMaxY());
+		close();
+		boundingBox = rect.getBounds();
 	}
 
 	public CollisionBox(int numOfLines, Point2D start) {

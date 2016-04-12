@@ -9,6 +9,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.util.Collection;
 
+import traveldata.TravelData;
+
 import car.Car;
 
 /**
@@ -82,7 +84,7 @@ public class SimDisplay extends Canvas {
 		
 		
 		// Draw time elapsed
-		g2d.drawString("Time: " + sim.timeElapsed(), 25, 25);
+		g2d.drawString("Time: " + Simulation.timeElapsed(), 25, 25);
 		g2d.drawString("Time multiplier: " + Simulation.SCALE_TICK, 25, 40);
 		// Draw current phase
 		g2d.drawString(sim.drawPhase(), 25, 55);

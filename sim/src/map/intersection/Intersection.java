@@ -5,7 +5,8 @@ import math.Vector2D;
 import sim.Const;
 import sim.Drawable;
 import sim.Simulation;
-import sim.TravelData;
+import traveldata.TravelData;
+import traveldata.TravelPlan;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -130,9 +131,9 @@ public class Intersection implements Drawable {
 
 	private void createTravelPlans(Segment start, int cardinalDirection) {
 		int i = cardinalDirection;
-		TravelData.registerTravelPlan(start, i, (i + 1) % 4);
-		TravelData.registerTravelPlan(start, i, (i + 2) % 4);
-		TravelData.registerTravelPlan(start, i, (i + 3) % 4);
+		TravelPlan.registerTravelPlan(start, i, (i + 1) % 4);
+		TravelPlan.registerTravelPlan(start, i, (i + 2) % 4);
+		TravelPlan.registerTravelPlan(start, i, (i + 3) % 4);
 	}
 
 	/**

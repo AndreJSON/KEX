@@ -13,7 +13,15 @@ public class Const {
 	public static final int SPLIT_STRAIGHT = 3, SPLIT_LEFT = 4;
 	public static final int MAP_ENTRANCE = 5, MAP_EXIT = 6;
 	// End Intersection segment coordinates
+	
 
+	// Factor slower comfortable breaking should compared to the maximum
+	// retardation.
+	public static final double BREAK_COEF = 2.5;
+	public static final double ACC_COEF = 1.5;
+
+	public static final double SPEED_LIMIT = 50 / 3.6;
+	
 	private Const() {
 	}
 }

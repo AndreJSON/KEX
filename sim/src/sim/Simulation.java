@@ -26,6 +26,8 @@ public class Simulation implements ActionListener {
 	// 1 = normal speed, 2 = double speed etc.
 	public static final double SCALE_TICK = 60;
 	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
+	private static final DecimalFormat double0format = new DecimalFormat("00");
+	public static double timeElapsed = 0;
 
 	private JFrame window;
 	private SimDisplay simDisp;
@@ -34,7 +36,6 @@ public class Simulation implements ActionListener {
 	private AbstractTSCS tscs;
 	private int drawFps;
 	private boolean currentlySpawning = true;
-	public static double timeElapsed = 0;
 
 	/************ Just init stuff in this section *************/
 
@@ -44,7 +45,7 @@ public class Simulation implements ActionListener {
 	}
 
 	public void init() {
-		tscs = new SAD();
+		tscs = new DSCS();
 		logic = new Logic(tscs);
 		window = new JFrame(
 				"SAD Project - Autonomous Vehicle Intersection Controller");
@@ -118,11 +119,13 @@ public class Simulation implements ActionListener {
 		}
 	}
 
-	public String timeElapsed() {
-		int minutes = (int) (timeElapsed / 60);
+	public static String timeElapsed() {
+		int hours = (int) (timeElapsed / 60 / 60);
+		int minutes = (int) (timeElapsed / 60 - hours * 60);
 		int seconds = (int) (timeElapsed % 60);
-		DecimalFormat dF = new DecimalFormat("00");
-		return dF.format(minutes) + ":" + dF.format(seconds);
+		return double0format.format(hours) + ":"
+				+ double0format.format(minutes) + ":"
+				+ double0format.format(seconds);
 	}
 
 	public int drawFps() {
