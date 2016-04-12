@@ -4,20 +4,23 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import sim.Const;
-import sim.TravelData;
+import traveldata.TravelData;
 import car.Car;
 import math.Pair;
 import map.intersection.*;
-import sim.Logic;
 
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 13, 9, 13, 9, 2 };
+	private static final double[] MAX_PHASE_LENGTH = { 14, 8, 14, 8, 1.5 };
+	private static double GAP_OUT = 1;
+	
+	
+	
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
-	private double gapOut = 0;
+	private double gapOutTimer = 0;
 
 	// Stop x meters from intersection. If no buffer, the cars will spill over.
 	private double BUFFER = 3;
@@ -59,13 +62,13 @@ public class DSCS extends AbstractTSCS {
 		currentPhaseTime += diff;
 		boolean skipPhase = !haveCars(currentPhase);
 		if (skipPhase) {
-			gapOut += diff;
+			gapOutTimer += diff;
 		} else {
-			gapOut = 0;
+			gapOutTimer = 0;
 		}
 
 		if (currentPhaseTime >= MAX_PHASE_LENGTH[currentPhase]
-				|| (gapOut > 0.5 && currentPhase != IDLE)) {
+				|| (gapOutTimer > GAP_OUT && currentPhase != IDLE)) {
 			currentPhaseTime = 0;
 			if (currentPhase == IDLE) {
 				currentPhase = lastPhase;
@@ -104,19 +107,19 @@ public class DSCS extends AbstractTSCS {
 				if (tracRem < car.getBreakingDistance(maxDec)) {
 					// Can't break hard enough! Just try to not stand in the
 					// intersection.
-					car.setAcc(car.getMaxAcceleration() / Logic.ACC_COEF * 1.2);
+					car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF * 1.2);
 				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec
-						/ Logic.BREAK_COEF)) {
+						/ Const.BREAK_COEF)) {
 					// Break medium hard, stop 3 meters from intersection.
-					car.setAcc(-maxDec / Logic.BREAK_COEF);
+					car.setAcc(-maxDec / Const.BREAK_COEF);
 				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec
-						/ (Logic.BREAK_COEF * 1.2))) {
+						/ (Const.BREAK_COEF * 1.2))) {
 					// Break medium.
-					car.setAcc(-maxDec / (Logic.BREAK_COEF * 1.2));
+					car.setAcc(-maxDec / (Const.BREAK_COEF * 1.2));
 				} else if (car.remainingOnTrack() - BUFFER < car
-						.getBreakingDistance(maxDec / (Logic.BREAK_COEF * 1.4))) {
+						.getBreakingDistance(maxDec / (Const.BREAK_COEF * 1.4))) {
 					// Break light.
-					car.setAcc(-maxDec / (Logic.BREAK_COEF * 1.4));
+					car.setAcc(-maxDec / (Const.BREAK_COEF * 1.4));
 				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec)) {
 					// Emergency break.
 					car.setAcc(-maxDec);

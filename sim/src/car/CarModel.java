@@ -63,13 +63,7 @@ public class CarModel {
 		this.length = length;
 		this.width = width;
 		carShape = new Rectangle2D.Double(-length, -width / 2, length, width);
-		
-		double halfWidth = width / 2;
-		collisionBox = new CollisionBox(4, -length, -halfWidth);
-		collisionBox.lineTo(0, -halfWidth);
-		collisionBox.lineTo(0, halfWidth);
-		collisionBox.lineTo(-length, halfWidth);
-		collisionBox.close();
+		collisionBox = new CollisionBox((Rectangle2D)carShape);
 	}
 
 	/**

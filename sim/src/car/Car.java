@@ -4,11 +4,15 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.util.Iterator;
 
+import map.intersection.Segment;
 import map.track.TrackPosition;
 import math.Vector2D;
 import sim.Drawable;
+import sim.EntityDb;
 import sim.Simulation;
+import traveldata.TravelData;
 
 /**
  * @author henrik
@@ -352,5 +356,76 @@ public class Car implements Drawable {
 	 */
 	public void setCollision(boolean collision) {
 		this.collision = collision;
+	}
+	
+
+	public Car nextCar() {
+		TravelData tD;
+		Segment searchSegment;
+		Iterator<Car> carsOnSegment;
+		boolean passedSelf = false;
+
+		tD = EntityDb.getTravelData(this);
+		passedSelf = false;
+		searchSegment = tD.currentSegment();
+		while (true) {
+			carsOnSegment = TravelData.getCarsOnSegment(searchSegment).descendingIterator();
+			while (carsOnSegment.hasNext()) {
+				Car nextCar = carsOnSegment.next();
+				if (equals(nextCar)) {
+					passedSelf = true;
+				} else if (passedSelf) {
+					return nextCar;
+				}
+			}
+			searchSegment = searchSegment.nextSegment(tD.getDestination());
+			if (searchSegment == null) {
+				break;
+			}
+		}
+
+		// Return null if no car is in front of this car.
+		return null;
+	}
+
+	public double distNextCar() {
+		// If the car has passed itself during the search.
+		boolean passedSelf = false;
+		// Get the travel data of the car.
+		TravelData tD;
+		// Get the current segment the car is on.
+		Segment searchSegment;
+		// Iterator to check all cars on this segment.
+		Iterator<Car> carsOnSegment;
+		// The distance to next car.
+		double distance;
+		//
+		
+
+		distance = 0;
+		tD = EntityDb.getTravelData(this);
+		passedSelf = false;
+		searchSegment = tD.currentSegment();
+		while (true) {
+			carsOnSegment = TravelData.getCarsOnSegment(searchSegment)
+					.descendingIterator();
+			while (carsOnSegment.hasNext()) {
+				Car nextCar = carsOnSegment.next();
+				if (equals(nextCar)) {
+					passedSelf = true;
+				} else if (passedSelf) {
+					distance += -nextCar.remainingOnTrack()
+							+ remainingOnTrack() - getModel().getLength();
+					return distance;
+				}
+			}
+			searchSegment = searchSegment.nextSegment(tD.getDestination());
+			if (searchSegment == null)
+				break;
+			distance += searchSegment.length();
+		}
+
+		// Return -1 if no car is in front of this car.
+		return -1;
 	}
 }
