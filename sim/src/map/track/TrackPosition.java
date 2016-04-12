@@ -3,7 +3,7 @@ package map.track;
 import sim.Drawable;
 import math.Vector2D;
 
-public interface TrackPosition extends Drawable {
+public interface TrackPosition {
 
 	/**
 	 * Get a double position that is on the track.
@@ -32,4 +32,10 @@ public interface TrackPosition extends Drawable {
 	 * @return
 	 */
 	double remaining();
+	
+	/**
+	 * Give an exact copy of the TrackPosition.
+	 * @return
+	 */
+	TrackPosition copy();
 }

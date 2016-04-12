@@ -159,7 +159,7 @@ public class Bezier2Track extends AbstractTrack {
 	private class Position implements TrackPosition {
 		// TODO: Complete this class.
 
-		private double t, heading, totDist;
+		private double t, heading, totalDistance;
 		private Vector2D point;
 
 		public Position(double distance) {
@@ -187,7 +187,7 @@ public class Bezier2Track extends AbstractTrack {
 		@Override
 		public void move(double distance) {
 			calcT(distance);
-			totDist += distance;
+			totalDistance += distance;
 
 			point = evaluate(t);
 			calcHeading();
@@ -207,13 +207,17 @@ public class Bezier2Track extends AbstractTrack {
 
 		@Override
 		public double remaining() {
-			return length - totDist;
+			return length - totalDistance;
 		}
 
 		@Override
-		public void draw(Graphics2D g2d) {
-			Vector2D p = point.mult(Simulation.SCALE);
-			g2d.drawOval((int) (p.x - 1), (int) (p.y - 1), 2, 2);
+		public TrackPosition copy() {
+			Position copy = new Position(0);
+			copy.t = t;
+			copy.heading = heading;
+			copy.totalDistance = totalDistance;
+			copy.point = (Vector2D) point.clone();
+			return copy;
 		}
 
 	}
