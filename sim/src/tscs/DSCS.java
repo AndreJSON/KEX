@@ -17,6 +17,7 @@ public class DSCS extends AbstractTSCS {
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
+	private double gapOut = 0;
 
 	// Stop x meters from intersection. If no buffer, the cars will spill over.
 	private double BUFFER = 3;
@@ -52,8 +53,6 @@ public class DSCS extends AbstractTSCS {
 		}
 		return false;
 	}
-
-	private double gapOut = 0;
 
 	public void tick(double diff) {
 		super.tick(diff);

@@ -43,7 +43,7 @@ public class Simulation implements ActionListener {
 	}
 
 	public void init() {
-		tscs = new DSCS();
+		tscs = new SAD();
 		logic = new Logic(tscs);
 		window = new JFrame("SAD Project - Autonomous Vehicle Intersection Controller");
 		window.setLayout(null);

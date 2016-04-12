@@ -24,7 +24,9 @@ $(MATH)/Pair.java \
 $(MATH)/Statistics.java \
 $(TSCS)/AbstractTSCS.java \
 $(TSCS)/DSCS.java \
+$(TSCS)/SAD.java \
 $(SPAWNER)/PoissonSpawner.java \
+$(SPAWNER)/BinomialSpawner.java \
 $(SPAWNER)/SpawnerInterface.java \
 $(UTIL)/QuadTree.java \
 $(SIM)/Drawable.java \
