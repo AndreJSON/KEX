@@ -1,11 +1,9 @@
 package traveldata;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import sim.Const;
 import sim.Simulation;
 
 import car.Car;

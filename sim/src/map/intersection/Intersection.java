@@ -5,7 +5,6 @@ import math.Vector2D;
 import sim.Const;
 import sim.Drawable;
 import sim.Simulation;
-import traveldata.TravelData;
 import traveldata.TravelPlan;
 
 import java.awt.Color;
