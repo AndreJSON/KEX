@@ -5,14 +5,14 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 
-public class QuadTree {
+public class QuadTree<E extends Shape> {
 	private static int MAX_LEVEL = 10;
 	private static int MAX_OBJECTS = 10;
 
 	private final Rectangle rect;
-	private final ArrayList<Area> shapes;
+	private final ArrayList<E> shapes;
 	private final int level;
-	private final QuadTree[] nodes;
+	private final QuadTree<E>[] nodes;
 
 	public QuadTree(int level, Rectangle rect) {
 		this.rect = rect;
@@ -35,13 +35,13 @@ public class QuadTree {
 		int subHeight = (int) rect.height / 2;
 		int x = (int) rect.x;
 		int y = (int) rect.y;
-		nodes[0] = new QuadTree(level + 1, new Rectangle(x + subWidth, y
+		nodes[0] = new QuadTree<E>(level + 1, new Rectangle(x + subWidth, y
 				+ subHeight, subWidth, subHeight));
-		nodes[1] = new QuadTree(level + 1, new Rectangle(x, y, subWidth,
+		nodes[1] = new QuadTree<E>(level + 1, new Rectangle(x, y, subWidth,
 				subHeight));
-		nodes[2] = new QuadTree(level + 1, new Rectangle(x, y + subHeight,
+		nodes[2] = new QuadTree<E>(level + 1, new Rectangle(x, y + subHeight,
 				subWidth, subHeight));
-		nodes[3] = new QuadTree(level + 1, new Rectangle(x + subWidth, y,
+		nodes[3] = new QuadTree<E>(level + 1, new Rectangle(x + subWidth, y,
 				subWidth, subHeight));
 	}
 
@@ -76,7 +76,7 @@ public class QuadTree {
 		return index;
 	}
 
-	public void insert(Area shape) {
+	public void insert(E shape) {
 		Rectangle rect = shape.getBounds();
 		if (nodes[0] != null) {
 			int index = getIndex(rect);
@@ -110,7 +110,7 @@ public class QuadTree {
 	/*
 	 * Return all objects that could collide with the given object
 	 */
-	public ArrayList<Area> retrieve(ArrayList<Area> returnObjects, Shape shape) {
+	public ArrayList<E> retrieve(ArrayList<E> returnObjects, Shape shape) {
 		int index = getIndex(shape.getBounds());
 		if (index != -1 && nodes[0] != null) {
 			nodes[index].retrieve(returnObjects, shape);

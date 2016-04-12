@@ -132,10 +132,10 @@ public class Logic {
 		}
 	}
 
-	private QuadTree qT = new QuadTree(0, new Rectangle(0, 0,
+	private QuadTree<Shape> qT = new QuadTree<Shape>(0, new Rectangle(0, 0,
 			(int) Intersection.intersectionSize + 20,
 			(int) Intersection.intersectionSize + 20));
-	ArrayList<Area> carShapes = new ArrayList<>();
+	ArrayList<Shape> carShapes = new ArrayList<>();
 
 	private void checkCollision() {
 		AffineTransform aF;// = new AffineTransform();
@@ -151,20 +151,17 @@ public class Logic {
 			aF.translate(p.x, p.y);
 			aF.rotate(car.getHeading());
 			Shape shape = aF.createTransformedShape(car.getModel().getShape());
-			carShapes.add(new Area(shape));
-			qT.insert(new Area(shape));
+			carShapes.add(shape);
+			qT.insert(shape);
 		}
-		ArrayList<Area> returnObjects = new ArrayList<>();
+		ArrayList<Shape> returnObjects = new ArrayList<>();
 		for (int i = 0; i < carShapes.size(); i++) {
 			returnObjects.clear();
 			returnObjects = qT.retrieve(returnObjects, carShapes.get(i));
 			for (int x = 0; x < returnObjects.size(); x++) {
 				if (carShapes.get(i).equals(carShapes.get(x)))
 					continue;
-
-				Area a = (Area) carShapes.get(i).clone();
-				a.intersect(carShapes.get(x));
-				if(!a.isEmpty()){
+				if(collision(carShapes.get(i),carShapes.get(x))){
 					throw new RuntimeException("Collision");
 				}
 			}
