@@ -4,29 +4,32 @@ import sim.Logic;
 import math.Statistics;
 
 public class BinomialSpawner implements SpawnerInterface {
-	private double statTimer = 10;
+	// private fields
+	private double statTimer;
 	private int n;
 	private double p;
-	private int spawnQueue = 0;
-	private double spawnTimer = 0;
+	private int spawnQueue;
+	private double spawnTimer;
 	private int origin;
 	private Logic log;
-	private boolean on;
+	private boolean isOn;
 
+	// constructor
 	public BinomialSpawner(Logic log, int origin, int n, double p) {
 		this.log = log;
 		this.origin = origin;
 		statTimer = Math.random() * 10;
-		on = true;
+		isOn = true;
 		this.n = n;
 		this.p = p;
 	}
 
+	// public methods
 	@Override
 	public void tick(double diff) {
 		statTimer += diff;
 		spawnTimer += diff;
-		if (!on)
+		if (!isOn)
 			return;
 		if (statTimer > 10) {
 			spawnQueue += Statistics.getBinomial(n, p);
@@ -40,18 +43,20 @@ public class BinomialSpawner implements SpawnerInterface {
 		}
 	}
 
+	@Override
+	public void setOn(boolean isOn) {
+		this.isOn = isOn;
+	}
+
+	@Override
+	public boolean isOn() {
+		return isOn;
+	}
+	
+	// private methods
 	private void spawn() {
 		int dest = (int) (Math.random() * 3 + 1) + origin;
 		log.spawnCar("Mazda3", origin, dest % 4);
 	}
 
-	@Override
-	public void on() {
-		this.on = true;
-	}
-
-	@Override
-	public void off() {
-		this.on = false;
-	}
 }

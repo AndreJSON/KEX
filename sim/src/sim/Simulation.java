@@ -3,8 +3,6 @@ package sim;
 import map.intersection.*;
 import tscs.*;
 
-import java.text.DecimalFormat;
-
 import java.awt.geom.AffineTransform;
 import java.awt.event.*;
 
@@ -12,6 +10,8 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 
 public class Simulation implements ActionListener {
+
+	// public static final fields
 	public static final boolean SHOW_TRACKS = true;
 	public static final boolean DEBUG = false;
 	public static final int X = 0, Y = 1;
@@ -20,16 +20,15 @@ public class Simulation implements ActionListener {
 	public static final int SimulationSize = windowSize[Y];
 	public static final int FPS = 60;
 	public static final double SCALE = windowSize[Y]
-			/ Intersection.intersectionSize;
+			/ Intersection.getSize();
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
 	public static final double SCALE_TICK = 3;
 	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
-	private static final DecimalFormat double0format = new DecimalFormat("00");
-	public static double timeElapsed = 0;
 
-
+	// private fields
+	private double elapsedTime = 0;
 	private JFrame window;
 	private SimDisplay simDisp;
 	private JButton b1, b2;
@@ -38,21 +37,27 @@ public class Simulation implements ActionListener {
 	private int lastFps;
 	private boolean currentlySpawning = true;
 
-	/************ Just init stuff in this section *************/
-
-	public Simulation() {
-		init();
-		run();
+	// main
+	public static void main(String[] args) {
+		Simulation simulation = new Simulation();
+		simulation.run();
 	}
 
-	public void init() {
+	// Constructor
+	public Simulation() {
+		init();
+	}
+
+	// Initializer
+	private void init() {
 		tscs = new SAD(SCALE_TICK / TICKS_PER_SECOND, 10);
-		logic = new Logic(tscs);
+		logic = new Logic(this, tscs);
+		simDisp = new SimDisplay(this);
+		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
+		
 		window = new JFrame(
 				"SAD Project - Autonomous Vehicle Intersection Controller");
 		window.setLayout(null);
-		simDisp = new SimDisplay(this);
-		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
 		window.add(simDisp);
 		b1 = new JButton("BREAK!");
 		b1.setBounds(windowSize[Y] + 20, 50,
@@ -73,10 +78,7 @@ public class Simulation implements ActionListener {
 		window.setResizable(false);
 	}
 
-	public static void main(String[] args) {
-		new Simulation();
-	}
-
+	// public methods.
 	public void run() {
 		System.out.print("\nStarting simulation.\n\n");
 
@@ -108,7 +110,7 @@ public class Simulation implements ActionListener {
 					System.err.println("Exception: " + e.toString());
 					e.printStackTrace();
 				}
-				timeElapsed += SCALE_TICK / TICKS_PER_SECOND;
+				elapsedTime += SCALE_TICK / TICKS_PER_SECOND;
 				tickTime += 1e9 / TICKS_PER_SECOND;
 			}
 
@@ -121,13 +123,8 @@ public class Simulation implements ActionListener {
 		}
 	}
 
-	public static String timeElapsed() {
-		int hours = (int) (timeElapsed / 60 / 60);
-		int minutes = (int) (timeElapsed / 60 - hours * 60);
-		int seconds = (int) (timeElapsed % 60);
-		return double0format.format(hours) + ":"
-				+ double0format.format(minutes) + ":"
-				+ double0format.format(seconds);
+	public double elapsedTime() {
+		return elapsedTime;
 	}
 
 	public int fps() {

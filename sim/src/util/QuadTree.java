@@ -28,52 +28,6 @@ public class QuadTree {
 		}
 	}
 
-	private void split() {
-		int subWidth = (int) rect.width / 2;
-		int subHeight = (int) rect.height / 2;
-		int x = (int) rect.x;
-		int y = (int) rect.y;
-		nodes[0] = new QuadTree(level + 1, new Rectangle(x + subWidth, y
-				+ subHeight, subWidth, subHeight));
-		nodes[1] = new QuadTree(level + 1, new Rectangle(x, y, subWidth,
-				subHeight));
-		nodes[2] = new QuadTree(level + 1, new Rectangle(x, y + subHeight,
-				subWidth, subHeight));
-		nodes[3] = new QuadTree(level + 1, new Rectangle(x + subWidth, y,
-				subWidth, subHeight));
-	}
-
-	private int getIndex(Rectangle pRect) {
-		int index = -1;
-		double verticalMidpoint = rect.getX() + (rect.getWidth() / 2);
-		double horizontalMidpoint = rect.getY() + (rect.getHeight() / 2);
-
-		// Object can completely fit within the top quadrants
-		boolean topQuadrant = (pRect.getY() < horizontalMidpoint && pRect
-				.getY() + pRect.getHeight() < horizontalMidpoint);
-		// Object can completely fit within the bottom quadrants
-		boolean bottomQuadrant = (pRect.getY() > horizontalMidpoint);
-
-		if (pRect.getX() < verticalMidpoint
-				&& pRect.getX() + pRect.getWidth() < verticalMidpoint) {
-			// Object can completely fit within the left quadrants
-			if (topQuadrant) {
-				index = 1;
-			} else if (bottomQuadrant) {
-				index = 2;
-			}
-		} else if (pRect.getX() > verticalMidpoint) {
-			// Object can completely fit within the right quadrants
-			if (topQuadrant) {
-				index = 0;
-			} else if (bottomQuadrant) {
-				index = 3;
-			}
-		}
-
-		return index;
-	}
-
 	public void insert(CollisionBox collisionBox) {
 		Rectangle rect = collisionBox.getBounds();
 		if (nodes[0] != null) {
@@ -119,5 +73,51 @@ public class QuadTree {
 		returnObjects.addAll(shapes);
 
 		return returnObjects;
+	}
+
+	private void split() {
+		int subWidth = (int) rect.width / 2;
+		int subHeight = (int) rect.height / 2;
+		int x = (int) rect.x;
+		int y = (int) rect.y;
+		nodes[0] = new QuadTree(level + 1, new Rectangle(x + subWidth, y
+				+ subHeight, subWidth, subHeight));
+		nodes[1] = new QuadTree(level + 1, new Rectangle(x, y, subWidth,
+				subHeight));
+		nodes[2] = new QuadTree(level + 1, new Rectangle(x, y + subHeight,
+				subWidth, subHeight));
+		nodes[3] = new QuadTree(level + 1, new Rectangle(x + subWidth, y,
+				subWidth, subHeight));
+	}
+
+	private int getIndex(Rectangle pRect) {
+		int index = -1;
+		double verticalMidpoint = rect.getX() + (rect.getWidth() / 2);
+		double horizontalMidpoint = rect.getY() + (rect.getHeight() / 2);
+
+		// Object can completely fit within the top quadrants
+		boolean topQuadrant = (pRect.getY() < horizontalMidpoint && pRect
+				.getY() + pRect.getHeight() < horizontalMidpoint);
+		// Object can completely fit within the bottom quadrants
+		boolean bottomQuadrant = (pRect.getY() > horizontalMidpoint);
+
+		if (pRect.getX() < verticalMidpoint
+				&& pRect.getX() + pRect.getWidth() < verticalMidpoint) {
+			// Object can completely fit within the left quadrants
+			if (topQuadrant) {
+				index = 1;
+			} else if (bottomQuadrant) {
+				index = 2;
+			}
+		} else if (pRect.getX() > verticalMidpoint) {
+			// Object can completely fit within the right quadrants
+			if (topQuadrant) {
+				index = 0;
+			} else if (bottomQuadrant) {
+				index = 3;
+			}
+		}
+
+		return index;
 	}
 }

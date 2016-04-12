@@ -19,6 +19,7 @@ import map.intersection.*;
  */
 public class EntityDb {
 
+	// private static fields
 	/**
 	 * All the cars
 	 */
@@ -31,9 +32,11 @@ public class EntityDb {
 	private static final HashMap<Car, TravelData> car2travelData = new HashMap<>();
 	private static final Intersection intersection = new Intersection();
 
+	// constructor
 	private EntityDb() {
 	}
 
+	// public static methods
 	public static Collection<Car> getCars() {
 		return cars;
 	}
@@ -72,7 +75,8 @@ public class EntityDb {
 		return car2travelData.get(car).currentSegment();
 	}
 
-	public static Intersection getIntersection() {
+	static Intersection getIntersection() {
 		return intersection;
 	}
+
 }

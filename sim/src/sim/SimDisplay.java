@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
+import java.text.DecimalFormat;
 import java.util.Collection;
 
 import traveldata.TravelData;
@@ -20,23 +21,27 @@ import car.Car;
  * 
  */
 @SuppressWarnings("serial")
-public class SimDisplay extends Canvas {
+class SimDisplay extends Canvas {
+	private final DecimalFormat double0format;
 	private final Simulation sim;
 
-	public SimDisplay(Simulation sim) {
+	// Simulation display.
+	SimDisplay(Simulation sim) {
 		this.sim = sim;
+		double0format = new DecimalFormat("00");
 	}
 
+	// public methods;
 	/**
 	 * Call whenever something in the simulations should be drawn.
 	 */
-	public void render() {
+	void render() {
 		if (this.getBufferStrategy() == null)
 			createBufferStrategy(2);
 
 		BufferStrategy strategy = getBufferStrategy();
 		Graphics2D g2d = (Graphics2D) strategy.getDrawGraphics();
-		
+
 		// Makes text smooth.
 		RenderingHints rh = new RenderingHints(
 				RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -55,6 +60,8 @@ public class SimDisplay extends Canvas {
 
 	}
 
+	// private methods
+
 	private void drawBackground(Graphics2D g2d) {
 		g2d.setColor(Color.GREEN);
 		g2d.fillRect(0, 0, Simulation.windowSize[Simulation.X]
@@ -64,7 +71,7 @@ public class SimDisplay extends Canvas {
 				0, Simulation.HUDSize, Simulation.windowSize[Simulation.Y]);
 	}
 
-	public void drawInterface(Graphics2D g2d) {
+	private void drawInterface(Graphics2D g2d) {
 		g2d.setColor(Color.black);
 
 		// Draw SCALE
@@ -82,22 +89,35 @@ public class SimDisplay extends Canvas {
 		g2d.drawString("100 m", 0, 0);
 		g2d.setTransform(orig);
 
+		int paddingX = 20;
 		// Draw time elapsed
-		g2d.drawString("Time: " + Simulation.timeElapsed(), 25, 25);
-		g2d.drawString("Time multiplier: " + Simulation.SCALE_TICK, 25, 40);
+		g2d.drawString("Time: " + timeElapsedFormated(), paddingX, 25);
+		g2d.drawString("Time multiplier: " + Simulation.SCALE_TICK, paddingX,
+				40);
 		// Draw current phase
-		g2d.drawString(sim.drawPhase(), 25, 55);
+		g2d.drawString(sim.drawPhase(), paddingX, 55);
 
-		g2d.drawString("Mean Time Lost: " + TravelData.meanTimeLoss(), 25, 75);
+		g2d.drawString("Mean Time Lost: " + TravelData.meanTimeLoss(),
+				paddingX, 75);
 		g2d.drawString(
 				"Sqrt of Mean Sq Time Lost: " + TravelData.sqrtMeanSqTimeLoss(),
-				25, 90);
+				paddingX, 90);
 
 		g2d.drawString("FPS: " + sim.fps(), 700, 25);
 	}
 
 	private void drawIntersection(Graphics2D g2d) {
 		EntityDb.getIntersection().draw(g2d);
+	}
+
+	public String timeElapsedFormated() {
+		double elapsedTime = sim.elapsedTime();
+		int hours = (int) (elapsedTime / 60 / 60);
+		int minutes = (int) (elapsedTime / 60 - hours * 60);
+		int seconds = (int) (elapsedTime % 60);
+		return double0format.format(hours) + ":"
+				+ double0format.format(minutes) + ":"
+				+ double0format.format(seconds);
 	}
 
 	private void drawCars(Graphics2D g2d) {

@@ -1,7 +1,6 @@
 package map.intersection;
 
 import java.util.HashMap;
-import java.util.ArrayList;
 
 import map.track.*;
 import math.Vector2D;

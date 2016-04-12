@@ -9,6 +9,7 @@ import util.CollisionBox;
 import math.Vector2D;
 
 public class CarModel {
+	// private fields
 	/**
 	 * The name of this car model.
 	 */
@@ -38,7 +39,9 @@ public class CarModel {
 	private final double maxAcceleration;
 	private final double maxDeceleration;
 	private final double topSpeed;
-
+	
+	
+	// constructor
 	/**
 	 * 
 	 * @param name
@@ -65,7 +68,8 @@ public class CarModel {
 		carShape = new Rectangle2D.Double(-length, -width / 2, length, width);
 		collisionBox = new CollisionBox((Rectangle2D) carShape);
 	}
-
+	
+	// public methods 
 	/**
 	 * Get the name of the car type.
 	 * 

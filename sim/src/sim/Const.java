@@ -7,6 +7,8 @@ package sim;
  * 
  */
 public class Const {
+	// public static constants
+	
 	// Begin Intersection segment coordinates
 	public static final int NORTH = 0, EAST = 1, SOUTH = 2, WEST = 3;
 	public static final int STRAIGHT = 0, RIGHT = 0, LEFT = 1, EXIT = 2;
@@ -21,6 +23,12 @@ public class Const {
 
 	public static final double SPEED_LIMIT = 50 / 3.6;
 
+
+	// How close to each other vehicles will strive to drive when cruising.
+	// If this value is too low, the cars will collide in curves.
+	public static final double COLUMN_DISTANCE = 1.2;
+	
+	// constructor
 	private Const() {
 	}
 }

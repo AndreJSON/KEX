@@ -24,13 +24,20 @@ import util.QuadTree;
  */
 public class Logic {
 
-	// How close to each other vehicles will strive to drive when cruising.
-	// If this value is too low, the cars will collide in curves.
-	public static final double COLUMN_DISTANCE = 1.2;
+	// private fields
 	private AbstractTSCS tscs;
 	private SpawnerInterface[] spawners;
+	private Simulation sim;
+	/**
+	 * For checking collision.
+	 */
+	private final QuadTree quadTree = new QuadTree(0, new Rectangle(0, 0,
+			(int) Intersection.getSize() + 20,
+			(int) Intersection.getSize() + 20));
 
-	public Logic(AbstractTSCS tscs) {
+	// constructor
+	Logic(Simulation sim, AbstractTSCS tscs) {
+		this.sim = sim;
 		this.tscs = tscs;
 		// Use BinomialSpawner for heavy traffic.
 		// Use PoissonSpawner for light traffic.
@@ -42,26 +49,33 @@ public class Logic {
 				new BinomialSpawner(this, Const.EAST, 8, 0.5) };
 	}
 
-	public void tick(double diff) {
+	// package methods
+	void tick(double diff) {
 		updateCollisionBoxes();
 		checkCollision();
 		tscs.tick(diff);
 		handleAutonomous(diff);
 		moveCars(diff);
+		updateSpawners(diff);
+	}
 
+	void setSpawnerOn(boolean isOn) {
+		for (SpawnerInterface spawer : spawners) {
+			spawer.setOn(isOn);
+		}
+	}
+
+	// public methods
+	public void spawnCar(String carName, int from, int to) {
+		Car car = new Car(CarModelDb.getByName(carName));
+		car.setSpeed(Const.SPEED_LIMIT);
+		EntityDb.addCar(car, TravelData.createTravelData(sim, car, from, to));
+	}
+
+	// private methods
+	private void updateSpawners(double diff) {
 		for (SpawnerInterface spawner : spawners) {
 			spawner.tick(diff);
-		}	}
-
-	public void setSpawnerOn(boolean on) {
-		if (on) {
-			for (SpawnerInterface spawer : spawners) {
-				spawer.on();
-			}
-		} else {
-			for (SpawnerInterface spawer : spawners) {
-				spawer.off();
-			}
 		}
 	}
 
@@ -74,11 +88,12 @@ public class Logic {
 				car.setAutonomous(true);
 				continue;
 			}
+
 			Car inFront = car.nextCar();
 			if (inFront == null) {
 				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			} else {
-				double dist = car.distNextCar() - COLUMN_DISTANCE;
+				double dist = car.distNextCar() - Const.COLUMN_DISTANCE;
 				double car1breakVal = car.getMaxDeceleration()
 						/ Const.BREAK_COEF;
 				double car2breakVal = inFront.getMaxDeceleration()
@@ -96,6 +111,7 @@ public class Logic {
 				}
 
 			}
+
 			if (car.getSpeed() > Const.SPEED_LIMIT) {
 				car.setSpeed(Const.SPEED_LIMIT);
 			}
@@ -144,32 +160,23 @@ public class Logic {
 		}
 	}
 
-	private final QuadTree qT = new QuadTree(0, new Rectangle(0, 0,
-			(int) Intersection.intersectionSize + 20,
-			(int) Intersection.intersectionSize + 20));
-
 	private void checkCollision() {
-		qT.clear();
+		quadTree.clear();
 		ArrayList<CollisionBox> returnObjects = new ArrayList<>();
 
 		for (Car car : EntityDb.getCars()) {
 			if (!car.isCollidable())
 				continue;
 			returnObjects.clear();
-			returnObjects = qT.retrieve(returnObjects, car.getCollisionBox());
-			for (CollisionBox other: returnObjects) {
+			returnObjects = quadTree.retrieve(returnObjects,
+					car.getCollisionBox());
+			for (CollisionBox other : returnObjects) {
 				if (car.getCollisionBox().collide(other)) {
 					throw new RuntimeException("Collision");
 				}
 			}
-			qT.insert(car.getCollisionBox());
+			quadTree.insert(car.getCollisionBox());
 		}
-
 	}
 
-	public void spawnCar(String carName, int from, int to) {
-		Car car = new Car(CarModelDb.getByName(carName));
-		car.setSpeed(Const.SPEED_LIMIT);
-		EntityDb.addCar(car, TravelData.createTravelData(car, from, to));
-	}
 }

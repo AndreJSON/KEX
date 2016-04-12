@@ -7,12 +7,14 @@ import java.util.HashMap;
 public class CarModelDb {
 	private static HashMap<String, CarModel> carModels = new HashMap<String, CarModel>();
 
+	// constructor
 	/**
 	 * To prevent instantiation.
 	 */
 	private CarModelDb() {
 	}
 
+	// static fields
 	/**
 	 * Register a new car type, or override an older car type.
 	 * 
@@ -44,6 +46,7 @@ public class CarModelDb {
 		return carModels.get(name);
 	}
 
+	// compile time
 	// All cars need UNIQUE names!
 	static {
 		/*

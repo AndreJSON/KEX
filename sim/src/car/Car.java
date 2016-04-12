@@ -20,6 +20,7 @@ import util.CollisionBox;
  * 
  */
 public class Car implements Drawable {
+	// private fields
 	/**
 	 * Hold track of the currently highest id.
 	 */
@@ -62,6 +63,7 @@ public class Car implements Drawable {
 	 */
 	private boolean collidable;
 
+	// Constrtuctors
 	/**
 	 * Create a new car of the specified car model.
 	 * 
@@ -77,9 +79,11 @@ public class Car implements Drawable {
 		collidable = false;
 	}
 
+	//public methods
 	/**
 	 * The to string has the form "Car" + id + "[" + Car model name + "]".
 	 */
+	@Override
 	public String toString() {
 		return "Car" + id + "[" + carModel.getName() + "]";
 	}
@@ -188,6 +192,7 @@ public class Car implements Drawable {
 		accelerationClamp();
 	}
 
+	// private methods
 	/**
 	 * Clamps the acceleration.
 	 */
@@ -196,20 +201,6 @@ public class Car implements Drawable {
 				acceleration);
 	}
 
-	/**
-	 * Clamps the speed.
-	 */
-	private void speedClamp() {
-		speed = clamp(-getTopSpeed() / 10, getTopSpeed(), speed);
-	}
-
-	private double clamp(double lowerBound, double upperBound, double value) {
-		if (value < lowerBound)
-			return lowerBound;
-		else if (value > upperBound)
-			return upperBound;
-		return value;
-	}
 
 	/**
 	 * Get the top speed of this car. Same as car.getType().getTopSpeed();
@@ -445,5 +436,20 @@ public class Car implements Drawable {
 
 		// Return -1 if no car is in front of this car.
 		return -1;
+	}
+	
+	/**
+	 * Clamps the speed.
+	 */
+	private void speedClamp() {
+		speed = clamp(-getTopSpeed() / 10, getTopSpeed(), speed);
+	}
+
+	private double clamp(double lowerBound, double upperBound, double value) {
+		if (value < lowerBound)
+			return lowerBound;
+		else if (value > upperBound)
+			return upperBound;
+		return value;
 	}
 }

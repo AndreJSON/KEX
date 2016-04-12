@@ -19,38 +19,36 @@ import java.util.HashMap;
 
 public class Intersection implements Drawable {
 
-	public static final double straight = 0.50, turn = 0.120, buffer = 3,
+	// public static fields
+	private static final double straight = 0.50, turn = 0.120, buffer = 3,
 			width = 3.2;
-	public static final double arm = straight + turn + buffer;
-	public static final double square = width * 3;
-	public static final double intersectionSize = arm * 2 + square;
+	private static final double arm = straight + turn + buffer;
+	private static final double square = width * 3;
+	private static final double intersectionSize = arm * 2 + square;
 
+	// counter
 	private static int idTracker = 0;
 
 	// Used in building of intersection.
-	private static HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment;
+	private static HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment = new HashMap<>();
 	// For drawing the segments.
-	private ArrayList<Segment> segments;
-
-	private HashMap<Integer, Segment> startPoints; // Gives the first segment
-													// coming from each of the 4
-													// directions.
-
+	private static ArrayList<Segment> segments;
+	// Gives the first segment coming from each of the 4 directions.
+	private static HashMap<Integer, Segment> startPoints = new HashMap<>();
+	// Points were segments starts/ends
 	private static Vector2D waypoints[][];
 
-	/**
-	 * The images representing the intersection.
-	 */
-	private BufferedImage trackImage;
-	private BufferedImage intersectionImage;
+	// The images representing the intersection.
+	private static BufferedImage trackImage;
+	private static BufferedImage intersectionImage;
 
-	public Intersection() {
-		points2segment = new HashMap<>();
-		startPoints = new HashMap<>();
+	
+	static {
 		init();
 	}
 
-	private void init() {
+	// private methods
+	private static void init() {
 		generateWayPoints();
 		generateSegments();
 		linkAllSegments();
@@ -60,7 +58,7 @@ public class Intersection implements Drawable {
 		createTravelPlans(getEntry(Const.SOUTH), Const.SOUTH);
 	}
 
-	private void generateSegments() {
+	private static void generateSegments() {
 
 		for (int i = 0; i < 4; i++) {
 			Segment seg = lineSegment(waypoints[i][Const.MAP_ENTRANCE],
@@ -93,7 +91,7 @@ public class Intersection implements Drawable {
 
 	}
 
-	private void linkAllSegments() {
+	private static void linkAllSegments() {
 		for (int i = 0; i < 4; i++) {
 			Segment seg, left, rs, exit;
 			seg = getByPoints(waypoints[i][Const.MAP_ENTRANCE],
@@ -131,7 +129,7 @@ public class Intersection implements Drawable {
 		}
 	}
 
-	private void createTravelPlans(Segment start, int cardinalDirection) {
+	private static void createTravelPlans(Segment start, int cardinalDirection) {
 		int i = cardinalDirection;
 		TravelPlan.registerTravelPlan(start, i, (i + 1) % 4);
 		TravelPlan.registerTravelPlan(start, i, (i + 2) % 4);
@@ -145,7 +143,7 @@ public class Intersection implements Drawable {
 	 * @param v2
 	 * @param s
 	 */
-	private void addSegment(Vector2D v1, Vector2D v2, Segment s) {
+	private static void addSegment(Vector2D v1, Vector2D v2, Segment s) {
 		HashMap<Vector2D, Segment> point2segment = points2segment.get(v1);
 		if (point2segment == null) {
 			point2segment = new HashMap<>();
@@ -156,10 +154,6 @@ public class Intersection implements Drawable {
 
 	private static Segment getByPoints(Vector2D v1, Vector2D v2) {
 		return points2segment.get(v1).get(v2);
-	}
-
-	public Segment getByID(int id) {
-		return segments.get(id);
 	}
 
 	public static Segment getWaitingSegment(int from, int to) {
@@ -173,7 +167,16 @@ public class Intersection implements Drawable {
 		return getByPoints(waypoints[from][split], waypoints[from][direction]);
 	}
 
-	private void generateWayPoints() {
+	public static Segment getByID(int id) {
+		return segments.get(id);
+	}
+	
+	public static double getSize(){
+		return intersectionSize;
+	}
+
+
+	private static void generateWayPoints() {
 		waypoints = new Vector2D[4][7];
 
 		/*
@@ -185,7 +188,7 @@ public class Intersection implements Drawable {
 		generateWayPoints2(Const.WEST, new Vector2D(-1, 0));
 	}
 
-	private void generateWayPoints2(int cardinalDirection, Vector2D dir) {
+	private static void generateWayPoints2(int cardinalDirection, Vector2D dir) {
 		// The direction we should go when drawing.
 		dir = dir.unit();
 		// Guid to where we should draw
@@ -223,7 +226,7 @@ public class Intersection implements Drawable {
 	 *            horizontal.
 	 * @return
 	 */
-	private Segment curveSegment(Vector2D p1, Vector2D p3, boolean vertical) {
+	private static Segment curveSegment(Vector2D p1, Vector2D p3, boolean vertical) {
 		Vector2D p2;
 		if (vertical) {
 			p2 = new Vector2D(p1.x, p3.y);
@@ -242,7 +245,7 @@ public class Intersection implements Drawable {
 	 * @param p2
 	 * @return
 	 */
-	private Segment lineSegment(Vector2D p1, Vector2D p2) {
+	private static Segment lineSegment(Vector2D p1, Vector2D p2) {
 		Segment seg = new Segment(new LineTrack(p1, p2));
 		addSegment(p1, p2, seg);
 		return seg;
@@ -264,7 +267,7 @@ public class Intersection implements Drawable {
 	/**
 	 * Create the image for the roads.
 	 */
-	private void createRoadImage() {
+	private static void createRoadImage() {
 		// Create the background road
 		intersectionImage = new BufferedImage(Simulation.SimulationSize,
 				Simulation.SimulationSize, BufferedImage.TYPE_INT_ARGB);
@@ -296,7 +299,7 @@ public class Intersection implements Drawable {
 	/**
 	 * Create an image of the tracks.
 	 */
-	private void createTrackImage() {
+	private static void createTrackImage() {
 		trackImage = new BufferedImage(Simulation.SimulationSize,
 				Simulation.SimulationSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = trackImage.createGraphics();
@@ -306,7 +309,7 @@ public class Intersection implements Drawable {
 		}
 	}
 
-	public Segment getEntry(int cardinalDirection) {
+	public static Segment getEntry(int cardinalDirection) {
 		return startPoints.get(cardinalDirection);
 	}
 }
