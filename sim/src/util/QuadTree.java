@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuadTree {
-	private static int MAX_LEVEL = 5;
+	private static int MAX_LEVEL = 10;
 	private static int MAX_OBJECTS = 10;
 
 	private final Rectangle rect;

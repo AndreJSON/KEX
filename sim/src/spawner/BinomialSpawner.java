@@ -3,21 +3,23 @@ package spawner;
 import sim.Logic;
 import math.Statistics;
 
-public class PoissonSpawner implements SpawnerInterface {
+public class BinomialSpawner implements SpawnerInterface {
 	private double statTimer = 10;
-	private double mean = 0.6;
+	private int n;
+	private double p;
 	private int spawnQueue = 0;
 	private double spawnTimer = 0;
 	private int origin;
 	private Logic log;
 	private boolean on;
 
-	public PoissonSpawner(Logic log, int origin, double mean) {
+	public BinomialSpawner(Logic log, int origin, int n, double p) {
 		this.log = log;
 		this.origin = origin;
-		this.mean = mean;
 		statTimer = Math.random() * 10;
 		on = true;
+		this.n = n;
+		this.p = p;
 	}
 
 	@Override
@@ -27,7 +29,7 @@ public class PoissonSpawner implements SpawnerInterface {
 		if (!on)
 			return;
 		if (statTimer > 10) {
-			spawnQueue += Statistics.getPoissonRandom(mean);
+			spawnQueue += Statistics.getBinomial(n, p);
 			statTimer = Statistics.getBellRandom(0, 3);
 		}
 

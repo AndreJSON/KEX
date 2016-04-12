@@ -22,9 +22,9 @@ import util.QuadTree;
 /**
  * Logic handles all the logic in the simulation. It accesses objects in the
  * world by using the EntityHandler.
- * 
+ *
  * @author henrik
- * 
+ *
  */
 public class Logic {
 	public static final double BREAKING_COEFFICIENT = 2.5; // Factor slower
@@ -39,14 +39,15 @@ public class Logic {
 	private AbstractTSCS tscs;
 	private SpawnerInterface[] spawners;
 
-	private static int NORTH = 0, SOUTH = 2, EAST = 1, WEST = 3;
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
-		spawners = new SpawnerInterface[] { new BinomialSpawner(this, NORTH, 10, 0.5),
-				new BinomialSpawner(this, SOUTH, 10, 0.5),
-				new PoissonSpawner(this, EAST, 0.61),
-				new PoissonSpawner(this, WEST, 0.61) };
+		// Use BinomialSpawner for heavy traffic.
+		spawners = new SpawnerInterface[] { new BinomialSpawner(this, Const.NORTH, 8, 0.5),
+				// 10 * 0.5 = 5 <= mean value
+				new BinomialSpawner(this, Const.SOUTH, 8, 0.5),
+				new BinomialSpawner(this, Const.WEST, 8, 0.5),
+				new BinomialSpawner(this, Const.EAST, 8, 0.5) };
 	}
 
 	public void tick(double diff) {
@@ -89,19 +90,13 @@ public class Logic {
 						/ ACCELERATION_COEFFICIENT);
 			} else {
 				double dist = EntityDb.distNextCar(car) - COLUMN_DISTANCE;
-				//Take the current acceleration and add it to the speed for future speed.
-				double car1Position = car.getSpeed() + car.getBreakingDistance() / BREAKING_COEFFICIENT;
-				double car2Position = inFront.getSpeed() + inFront.getBreakingDistance() / BREAKING_COEFFICIENT + dist;
-
-				if (car1Position < car2Position) {
-					// If the car will catch up, break.
-
-					car.setAcceleration(car.getMaxAcceleration()
-							/ ACCELERATION_COEFFICIENT);
+				if(dist < 0.5 && car.getSpeed() > inFront.getSpeed()) {
+					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
+				}
+				else if (car.getSpeed() + car.getBreakingDistance() * BREAKING_COEFFICIENT < inFront.getSpeed() + dist + inFront.getBreakingDistance() * BREAKING_COEFFICIENT) {
+					car.setAcceleration(car.getMaxAcceleration() / ACCELERATION_COEFFICIENT);
 				} else {
-
-					car.setAcceleration(-car.getMaxDeceleration()
-							/ BREAKING_COEFFICIENT);
+					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
 				}
 
 			}
