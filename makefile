@@ -6,6 +6,7 @@ SIM = $(SRC)/sim
 CAR = $(SRC)/car
 TSCS = $(SRC)/tscs
 SPAWNER = $(SRC)/spawner
+TRAVELDATA = $(SRC)/traveldata
 MAP = $(SRC)/map
 TRACK = $(MAP)/track
 INTERSECTION = $(MAP)/intersection
@@ -29,13 +30,14 @@ $(TSCS)/SADSchedule.java \
 $(SPAWNER)/PoissonSpawner.java \
 $(SPAWNER)/BinomialSpawner.java \
 $(SPAWNER)/SpawnerInterface.java \
+$(TRAVELDATA)/TravelData.java \
+$(TRAVELDATA)/TravelPlan.java \
 $(UTIL)/QuadTree.java \
 $(UTIL)/CollisionBox.java \
 $(SIM)/Drawable.java \
 $(SIM)/EntityDb.java \
 $(SIM)/Logic.java \
 $(SIM)/SimDisplay.java \
-$(SIM)/TravelData.java \
 $(SIM)/Const.java \
 $(SIM)/Simulation.java
 
