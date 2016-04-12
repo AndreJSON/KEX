@@ -66,7 +66,7 @@ public class SimDisplay extends Canvas {
 		g2d.setColor(Color.black);
 
 		// Draw SCALE
-		int width = (int) (1 * Simulation.SCALE);
+		int width = (int) (4 * Simulation.SCALE);
 		int length = (int) (100 * Simulation.SCALE);
 		g2d.drawLine(750 - width / 2, 50, 750 + width / 2, 50);
 		g2d.drawLine(750 - width / 2, 50 + length, 750 + width / 2, 50 + length);
@@ -79,6 +79,8 @@ public class SimDisplay extends Canvas {
 		g2d.setColor(Color.BLACK);
 		g2d.drawString("100 m", 0, 0);
 		g2d.setTransform(orig);
+		
+		
 		// Draw time elapsed
 		g2d.drawString("Time: " + sim.timeElapsed(), 25, 25);
 		g2d.drawString("Time multiplier: " + Simulation.SCALE_TICK, 25, 40);

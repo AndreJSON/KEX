@@ -2,15 +2,15 @@ package util;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Area;
 import java.util.ArrayList;
-import java.util.List;
 
 public class QuadTree {
 	private static int MAX_LEVEL = 10;
 	private static int MAX_OBJECTS = 10;
 
 	private final Rectangle rect;
-	private final ArrayList<Shape> shapes;
+	private final ArrayList<Area> shapes;
 	private final int level;
 	private final QuadTree[] nodes;
 
@@ -76,13 +76,13 @@ public class QuadTree {
 		return index;
 	}
 
-	public void insert(Shape shape) {
+	public void insert(Area shape) {
 		Rectangle rect = shape.getBounds();
 		if (nodes[0] != null) {
 			int index = getIndex(rect);
 
 			if (index != -1) {
-				nodes[index].insert(rect);
+				nodes[index].insert(shape);
 
 				return;
 			}
@@ -110,7 +110,7 @@ public class QuadTree {
 	/*
 	 * Return all objects that could collide with the given object
 	 */
-	public ArrayList<Shape> retrieve(ArrayList<Shape> returnObjects, Shape shape) {
+	public ArrayList<Area> retrieve(ArrayList<Area> returnObjects, Shape shape) {
 		int index = getIndex(shape.getBounds());
 		if (index != -1 && nodes[0] != null) {
 			nodes[index].retrieve(returnObjects, shape);

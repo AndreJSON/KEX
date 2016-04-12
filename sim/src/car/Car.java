@@ -194,8 +194,8 @@ public class Car implements Drawable {
 	}
 
 	private void speedClamp() {
-		if (speed < 0)
-			speed = 0;
+		if (speed < -carModel.getTopSpeed()/10)
+			speed = -carModel.getTopSpeed()/10;
 		else if (speed > carModel.getTopSpeed())
 			speed = carModel.getTopSpeed();
 	}

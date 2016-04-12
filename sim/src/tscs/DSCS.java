@@ -13,7 +13,7 @@ import sim.Logic;
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 12, 7, 12, 7, 2 };
+	private static final double[] MAX_PHASE_LENGTH = { 13, 9, 13, 9, 2 };
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
@@ -93,10 +93,11 @@ public class DSCS extends AbstractTSCS {
 						pair.getTo());
 				car = TravelData.getCarsOnSegment(segment).getFirst();
 				car.setAutonomous(false);
-				if (car.remainingOnTrack() - 1 < car
+				if (car.remainingOnTrack() < car
 						.getBreakingDistance()) {
-					// Break very hard.
-					car.setAcceleration(-car.getMaxDeceleration());
+					// Break medium hard, stop 3 meters from intersection.
+					car.setAcceleration(car.getMaxAcceleration()
+							/ Logic.ACCELERATION_COEFFICIENT);
 				} else if (car.remainingOnTrack() - 3 < car
 						.getBreakingDistance() * Logic.BREAKING_COEFFICIENT) {
 					// Break medium hard, stop 3 meters from intersection.

@@ -3,6 +3,7 @@ package sim;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
@@ -27,12 +28,8 @@ import util.QuadTree;
  *
  */
 public class Logic {
-	public static final double BREAKING_COEFFICIENT = 2.5; // Factor slower
-															// comfortable
-															// breaking should
-															// compared to the
-															// maximum
-															// retardation.
+	// Factor slower comfortable breaking should compared to the maximum retardation.
+	public static final double BREAKING_COEFFICIENT = 2.5; 
 	public static final double ACCELERATION_COEFFICIENT = 2;
 	// How close to each other vehicles will strive to drive when cruising.
 	public static final double COLUMN_DISTANCE = 2;
@@ -43,11 +40,11 @@ public class Logic {
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
 		// Use BinomialSpawner for heavy traffic.
-		spawners = new SpawnerInterface[] { new BinomialSpawner(this, Const.NORTH, 8, 0.5),
+		spawners = new SpawnerInterface[] { new BinomialSpawner(this, Const.NORTH, 6, 0.5),
 				// 10 * 0.5 = 5 <= mean value
-				new BinomialSpawner(this, Const.SOUTH, 8, 0.5),
-				new BinomialSpawner(this, Const.WEST, 8, 0.5),
-				new BinomialSpawner(this, Const.EAST, 8, 0.5) };
+				new BinomialSpawner(this, Const.SOUTH, 6, 0.5),
+				new BinomialSpawner(this, Const.WEST, 6, 0.5),
+				new BinomialSpawner(this, Const.EAST, 6, 0.5) };
 	}
 
 	public void tick(double diff) {
@@ -90,10 +87,12 @@ public class Logic {
 						/ ACCELERATION_COEFFICIENT);
 			} else {
 				double dist = EntityDb.distNextCar(car) - COLUMN_DISTANCE;
+				double car2distance = inFront.getSpeed() + inFront.getBreakingDistance() * BREAKING_COEFFICIENT;
+				double car1distance = car.getSpeed() + car.getBreakingDistance() * BREAKING_COEFFICIENT;
 				if(dist < 0.5 && car.getSpeed() > inFront.getSpeed()) {
 					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
 				}
-				else if (car.getSpeed() + car.getBreakingDistance() * BREAKING_COEFFICIENT < inFront.getSpeed() + dist + inFront.getBreakingDistance() * BREAKING_COEFFICIENT) {
+				else if ( car1distance < dist +car2distance) {
 					car.setAcceleration(car.getMaxAcceleration() / ACCELERATION_COEFFICIENT);
 				} else {
 					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
@@ -136,13 +135,13 @@ public class Logic {
 	private QuadTree qT = new QuadTree(0, new Rectangle(0, 0,
 			(int) Intersection.intersectionSize + 20,
 			(int) Intersection.intersectionSize + 20));
+	ArrayList<Area> carShapes = new ArrayList<>();
 
 	private void checkCollision() {
-		ArrayList<Shape> carShapes = new ArrayList<>();
 		AffineTransform aF;// = new AffineTransform();
 		Vector2D p;
 		qT.clear();
-
+		carShapes.clear();
 		for (Car car : EntityDb.getCars()) {
 			if (!car.isCollision()) {
 				continue;
@@ -152,18 +151,21 @@ public class Logic {
 			aF.translate(p.x, p.y);
 			aF.rotate(car.getHeading());
 			Shape shape = aF.createTransformedShape(car.getModel().getShape());
-			carShapes.add(shape);
-			qT.insert(shape);
+			carShapes.add(new Area(shape));
+			qT.insert(new Area(shape));
 		}
-		ArrayList<Shape> returnObjects = new ArrayList<Shape>();
+		ArrayList<Area> returnObjects = new ArrayList<>();
 		for (int i = 0; i < carShapes.size(); i++) {
 			returnObjects.clear();
 			returnObjects = qT.retrieve(returnObjects, carShapes.get(i));
 			for (int x = 0; x < returnObjects.size(); x++) {
 				if (carShapes.get(i).equals(carShapes.get(x)))
 					continue;
-				if (collision(carShapes.get(i), carShapes.get(x))) {
-					throw new RuntimeException("Collision!");
+
+				Area a = (Area) carShapes.get(i).clone();
+				a.intersect(carShapes.get(x));
+				if(!a.isEmpty()){
+					throw new RuntimeException("Collision");
 				}
 			}
 		}

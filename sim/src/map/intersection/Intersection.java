@@ -18,8 +18,8 @@ import java.util.HashMap;
 
 public class Intersection implements Drawable {
 
-	public static final double straight = 200, turn = 70, buffer = 5,
-			width = 3.1;
+	public static final double straight = 50, turn = 70, buffer = 5,
+			width = 3.2;
 	public static final double arm = straight + turn + buffer;
 	public static final double square = width * 3;
 	public static final double intersectionSize = arm * 2 + square;
