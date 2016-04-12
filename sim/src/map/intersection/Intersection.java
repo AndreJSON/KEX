@@ -5,7 +5,6 @@ import math.Vector2D;
 import sim.Const;
 import sim.Drawable;
 import sim.Simulation;
-import traveldata.TravelData;
 import traveldata.TravelPlan;
 
 import java.awt.Color;
@@ -231,6 +230,7 @@ public class Intersection implements Drawable {
 
 	/**
 	 * Make a line segment from p1 to p2.
+	 * 
 	 * @param p1
 	 * @param p2
 	 * @return

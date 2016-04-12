@@ -43,44 +43,6 @@ public class LineTrack extends AbstractTrack {
 		return length;
 	}
 
-	public class Position implements TrackPosition {
-		private Vector2D point;
-		private double totDist;
-
-		private Position(double dist) {
-			point = new Vector2D(startPoint);
-			move(dist);
-		}
-
-		@Override
-		public double getHeading() {
-			return unit.theta();
-		}
-
-		@Override
-		public void move(double dist) {
-			totDist += dist;
-			point = startPoint.plus(unit.mult(totDist));
-		}
-
-		@Override
-		public Vector2D getPoint() {
-			return point;
-		}
-
-		@Override
-		public double remaining() {
-			return length - totDist;
-		}
-
-		@Override
-		public void draw(Graphics2D g2d) {
-			Vector2D p = point.mult(Simulation.SCALE);
-			g2d.drawOval((int) (p.x - 1), (int) (p.y - 1), 2, 2);
-		}
-
-	}
-
 	@Override
 	public TrackPosition getTrackPosition() {
 		return new Position(0);
@@ -124,6 +86,46 @@ public class LineTrack extends AbstractTrack {
 		g2d.drawOval((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
 		p = endPoint.mult(Simulation.SCALE);
 		g2d.drawOval((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
+	}
+
+	public class Position implements TrackPosition {
+		private Vector2D point;
+		private double totalDistance;
+
+		private Position(double dist) {
+			point = new Vector2D(startPoint);
+			move(dist);
+		}
+
+		@Override
+		public double getHeading() {
+			return unit.theta();
+		}
+
+		@Override
+		public void move(double distance) {
+			totalDistance += distance;
+			point = startPoint.plus(unit.mult(totalDistance));
+		}
+
+		@Override
+		public Vector2D getPoint() {
+			return point;
+		}
+
+		@Override
+		public double remaining() {
+			return length - totalDistance;
+		}
+
+		@Override
+		public TrackPosition copy() {
+			Position copy = new Position(0);
+			copy.point = (Vector2D) point.clone();
+			copy.totalDistance = totalDistance;
+			return null;
+		}
+
 	}
 
 }

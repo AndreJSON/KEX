@@ -1,11 +1,9 @@
 package traveldata;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import sim.Const;
 import sim.Simulation;
 
 import car.Car;
@@ -114,7 +112,8 @@ public class TravelData {
 			int destination) {
 		TravelData travelData;
 		try {
-			travelData = new TravelData(TravelPlan.getTravelPlan(origin, destination), car);
+			travelData = new TravelData(TravelPlan.getTravelPlan(origin,
+					destination), car);
 		} catch (NullPointerException e) {
 			System.out.println("Origin: " + origin);
 			System.out.println("Destination: " + destination);
@@ -123,7 +122,5 @@ public class TravelData {
 		}
 		return travelData;
 	}
-
-
 
 }

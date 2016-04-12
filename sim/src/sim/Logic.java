@@ -79,8 +79,10 @@ public class Logic {
 				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			} else {
 				double dist = car.distNextCar() - COLUMN_DISTANCE;
-				double car1breakVal = car.getMaxDeceleration() / Const.BREAK_COEF;
-				double car2breakVal = inFront.getMaxDeceleration() / Const.BREAK_COEF;
+				double car1breakVal = car.getMaxDeceleration()
+						/ Const.BREAK_COEF;
+				double car2breakVal = inFront.getMaxDeceleration()
+						/ Const.BREAK_COEF;
 
 				double car1distance = car.getBreakingDistance(car1breakVal);
 				double car2distance = inFront.getBreakingDistance(car2breakVal);

@@ -8,9 +8,7 @@ import traveldata.TravelData;
 
 import car.Car;
 
-
 import map.intersection.*;
-
 
 /**
  * EntityDatabase manages the collection of Entities that are IN the simulator
@@ -52,7 +50,9 @@ public class EntityDb {
 	}
 
 	/**
-	 * Get the segment the car is on. Return null if the car is not on a segment.
+	 * Get the segment the car is on. Return null if the car is not on a
+	 * segment.
+	 * 
 	 * @param car
 	 * @return
 	 */

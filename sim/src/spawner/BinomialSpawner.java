@@ -35,7 +35,7 @@ public class BinomialSpawner implements SpawnerInterface {
 
 		if (spawnQueue > 0 && spawnTimer > 0.8) {
 			spawnQueue--;
-			spawnTimer = Statistics.getBellRandom(0, 1/2);
+			spawnTimer = Statistics.getBellRandom(0, 1 / 2);
 			spawn();
 		}
 	}
