@@ -3,48 +3,48 @@ package sim;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
 import java.awt.geom.Line2D;
 import java.awt.geom.PathIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import map.intersection.Intersection;
-import map.intersection.Segment;
+import map.intersection.*;
 import math.Vector2D;
 import car.Car;
 import car.CarModelDb;
-import spawner.BinomialSpawner;
-import spawner.PoissonSpawner;
-import spawner.SpawnerInterface;
+import spawner.*;
 import tscs.AbstractTSCS;
 import util.QuadTree;
 
 /**
  * Logic handles all the logic in the simulation. It accesses objects in the
  * world by using the EntityHandler.
- *
+ * 
  * @author henrik
- *
+ * 
  */
 public class Logic {
-	// Factor slower comfortable breaking should compared to the maximum retardation.
-	public static final double BREAKING_COEFFICIENT = 2.5; 
-	public static final double ACCELERATION_COEFFICIENT = 2;
+	// Factor slower comfortable breaking should compared to the maximum
+	// retardation.
+	public static final double BREAK_COEF = 2.5;
+	public static final double ACC_COEF = 2;
+	
 	// How close to each other vehicles will strive to drive when cruising.
-	public static final double COLUMN_DISTANCE = 2;
+	// If this value is too low, the cars will collide in curves.
+	public static final double COLUMN_DISTANCE = 1.2;
 	private AbstractTSCS tscs;
 	private SpawnerInterface[] spawners;
-
 
 	public Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
 		// Use BinomialSpawner for heavy traffic.
-		spawners = new SpawnerInterface[] { new BinomialSpawner(this, Const.NORTH, 6, 0.5),
+		// Use PoissonSpawner for light traffic.
+		spawners = new SpawnerInterface[] {
+				new BinomialSpawner(this, Const.NORTH, 9, 0.5),
 				// 10 * 0.5 = 5 <= mean value
-				new BinomialSpawner(this, Const.SOUTH, 6, 0.5),
-				new BinomialSpawner(this, Const.WEST, 6, 0.5),
-				new BinomialSpawner(this, Const.EAST, 6, 0.5) };
+				new BinomialSpawner(this, Const.SOUTH, 9, 0.5),
+				new BinomialSpawner(this, Const.WEST, 8, 0.5),
+				new BinomialSpawner(this, Const.EAST, 8, 0.5) };
 	}
 
 	public void tick(double diff) {
@@ -83,19 +83,23 @@ public class Logic {
 			}
 			Car inFront = EntityDb.nextCar(car);
 			if (inFront == null) {
-				car.setAcceleration(car.getMaxAcceleration()
-						/ ACCELERATION_COEFFICIENT);
+				car.setAcc(car.getMaxAcceleration() / ACC_COEF);
 			} else {
 				double dist = EntityDb.distNextCar(car) - COLUMN_DISTANCE;
-				double car2distance = inFront.getSpeed() + inFront.getBreakingDistance() * BREAKING_COEFFICIENT;
-				double car1distance = car.getSpeed() + car.getBreakingDistance() * BREAKING_COEFFICIENT;
-				if(dist < 0.5 && car.getSpeed() > inFront.getSpeed()) {
-					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
-				}
-				else if ( car1distance < dist +car2distance) {
-					car.setAcceleration(car.getMaxAcceleration() / ACCELERATION_COEFFICIENT);
+				double car1breakVal = car.getMaxDeceleration()
+						/ BREAK_COEF;
+				double car2breakVal = inFront.getMaxDeceleration()
+						/ BREAK_COEF;
+
+				double car1distance = car.getBreakingDistance(car1breakVal);
+				double car2distance = inFront.getBreakingDistance(car2breakVal);
+				
+				if (dist < 0.5 && car.getSpeed() > inFront.getSpeed()) {
+					car.setAcc(-car1breakVal*1.1);
+				} else if (car1distance < dist + car2distance) {
+					car.setAcc(car.getMaxAcceleration() / ACC_COEF);
 				} else {
-					car.setAcceleration(-car.getMaxDeceleration() / BREAKING_COEFFICIENT);
+					car.setAcc(-car1breakVal);
 				}
 
 			}
@@ -161,7 +165,7 @@ public class Logic {
 			for (int x = 0; x < returnObjects.size(); x++) {
 				if (carShapes.get(i).equals(carShapes.get(x)))
 					continue;
-				if(collision(carShapes.get(i),carShapes.get(x))){
+				if (collision(carShapes.get(i), carShapes.get(x))) {
 					throw new RuntimeException("Collision");
 				}
 			}

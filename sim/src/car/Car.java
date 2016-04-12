@@ -177,7 +177,7 @@ public class Car implements Drawable {
 		return carModel.getMaxAcceleration();
 	}
 
-	public void setAcceleration(double value) {
+	public void setAcc(double value) {
 		acceleration += value;
 		accelerationClamp();
 	}
@@ -215,8 +215,8 @@ public class Car implements Drawable {
 		return carModel.getMaxDeceleration();
 	}
 
-	public double getBreakingDistance() {
-		return Math.pow(getSpeed() * 3.6 / 9, 2);
+	public double getBreakingDistance(double acc) {
+		return (1/2+1/acc)*Math.pow(getSpeed(),2);
 	}
 
 	/**

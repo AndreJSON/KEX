@@ -18,6 +18,9 @@ public class DSCS extends AbstractTSCS {
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;
 
+	// Stop x meters from intersection. If no buffer, the cars will spill over.
+	private double BUFFER = 3;
+
 	public DSCS() {
 		phases = new HashMap<>();
 		phases.put(PHASE0, new Pair[] { new Pair(Const.WEST, Const.EAST),
@@ -25,13 +28,17 @@ public class DSCS extends AbstractTSCS {
 				new Pair(Const.EAST, Const.WEST),
 				new Pair(Const.EAST, Const.NORTH) });
 		phases.put(PHASE1, new Pair[] { new Pair(Const.WEST, Const.NORTH),
-				new Pair(Const.EAST, Const.SOUTH) });
+				new Pair(Const.EAST, Const.SOUTH),
+				new Pair(Const.NORTH, Const.WEST),
+				new Pair(Const.SOUTH, Const.EAST) });
 		phases.put(PHASE2, new Pair[] { new Pair(Const.NORTH, Const.SOUTH),
 				new Pair(Const.NORTH, Const.WEST),
 				new Pair(Const.SOUTH, Const.NORTH),
 				new Pair(Const.SOUTH, Const.EAST) });
 		phases.put(PHASE3, new Pair[] { new Pair(Const.SOUTH, Const.WEST),
-				new Pair(Const.NORTH, Const.EAST) });
+				new Pair(Const.NORTH, Const.EAST),
+				new Pair(Const.WEST, Const.SOUTH),
+				new Pair(Const.EAST, Const.NORTH) });
 		phases.put(IDLE, new Pair[] {});
 	}
 
@@ -93,27 +100,29 @@ public class DSCS extends AbstractTSCS {
 						pair.getTo());
 				car = TravelData.getCarsOnSegment(segment).getFirst();
 				car.setAutonomous(false);
-				if (car.remainingOnTrack() < car
-						.getBreakingDistance()) {
+				double maxDec = car.getMaxDeceleration();
+				double tracRem = car.remainingOnTrack();
+				if (tracRem < car.getBreakingDistance(maxDec)) {
+					// Can't break hard enough! Just try to not stand in the
+					// intersection.
+					car.setAcc(car.getMaxAcceleration() / Logic.ACC_COEF * 1.2);
+				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec
+						/ Logic.BREAK_COEF)) {
 					// Break medium hard, stop 3 meters from intersection.
-					car.setAcceleration(car.getMaxAcceleration()
-							/ Logic.ACCELERATION_COEFFICIENT);
-				} else if (car.remainingOnTrack() - 3 < car
-						.getBreakingDistance() * Logic.BREAKING_COEFFICIENT) {
-					// Break medium hard, stop 3 meters from intersection.
-					car.setAcceleration(-car.getMaxDeceleration()
-							/ Logic.BREAKING_COEFFICIENT);
-				} else if (car.remainingOnTrack() - 3 < car
-						.getBreakingDistance() * 1.2) {
+					car.setAcc(-maxDec / Logic.BREAK_COEF);
+				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec
+						/ (Logic.BREAK_COEF * 1.2))) {
 					// Break medium.
-					car.setAcceleration(-car.getMaxDeceleration()
-							/ (Logic.BREAKING_COEFFICIENT * 1.2));
-				} else if (car.remainingOnTrack() - 3 < car
-						.getBreakingDistance() * 1.5) {
+					car.setAcc(-maxDec / (Logic.BREAK_COEF * 1.2));
+				} else if (car.remainingOnTrack() - BUFFER < car
+						.getBreakingDistance(maxDec / (Logic.BREAK_COEF * 1.4))) {
 					// Break light.
-					car.setAcceleration(-car.getMaxDeceleration()
-							/ (Logic.BREAKING_COEFFICIENT * 1.5));
+					car.setAcc(-maxDec / (Logic.BREAK_COEF * 1.4));
+				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec)) {
+					// Emergency break.
+					car.setAcc(-maxDec);
 				} else {
+
 					car.setAutonomous(true);
 				}
 			}
