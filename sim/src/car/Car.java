@@ -13,6 +13,7 @@ import sim.Drawable;
 import sim.EntityDb;
 import sim.Simulation;
 import traveldata.TravelData;
+import util.CollisionBox;
 
 /**
  * @author henrik
@@ -37,6 +38,10 @@ public class Car implements Drawable {
 	 */
 	private TrackPosition position;
 	/**
+	 * The collisionBox for the car.
+	 */
+	private CollisionBox collisionBox;
+	/**
 	 * The speed of the car.
 	 */
 	private double speed;
@@ -55,7 +60,7 @@ public class Car implements Drawable {
 	/**
 	 * If the collision is on or off.
 	 */
-	private boolean collision;
+	private boolean collidable;
 
 	/**
 	 * Create a new car of the specified car model.
@@ -69,7 +74,7 @@ public class Car implements Drawable {
 		acceleration = 0;
 		speed = 0;
 		heading = 0;
-		collision = false;
+		collidable = false;
 	}
 
 	/**
@@ -345,17 +350,31 @@ public class Car implements Drawable {
 	 * 
 	 * @return
 	 */
-	public boolean isCollision() {
-		return collision;
+	public boolean isCollidable() {
+		return collidable;
 	}
 
 	/**
-	 * Set collision.
+	 * Set collidable.
 	 * 
 	 * @return
 	 */
-	public void setCollision(boolean collision) {
-		this.collision = collision;
+	public void setCollidable(boolean collidable) {
+		this.collidable = collidable;
+	}
+
+	/**
+	 * Get the cars collision box
+	 */
+	public CollisionBox getCollisionBox() {
+		return collisionBox;
+	}
+
+	/**
+	 * Set the cars collision box
+	 */
+	public void setCollisionBox(CollisionBox collisionBox) {
+		this.collisionBox = collisionBox;
 	}
 	
 
