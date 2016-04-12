@@ -13,7 +13,7 @@ public class Segment {
 												// as key. Null instead of a
 												// Segment if destination is
 												// reached.
-	private int id = -1;
+	private int id = -1; //Given a value later
 
 	public Segment(AbstractTrack t) {
 		track = t;

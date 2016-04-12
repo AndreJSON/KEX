@@ -5,7 +5,14 @@ import java.util.LinkedList;
 import car.Car;
 
 public class SADSchedule {
-	private static LinkedList<Integer>[][] space4Blocks; //[FROM][TO]
+	private static final LinkedList<Integer>[][] SPACE4_OCCUPATION = getOccupation(2); //[ID][POS] where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	private static final int[][] SEG_IDS = {//[FROM][TO]
+		{-1, 23, 1, 0},
+		{20, -1, 26, 19},
+		{9, 10, -1, 21},
+		{15, 25, 24, -1}
+	};
+	private static LinkedList<Integer>[][] space4Blocks; //[FROM][TO] dessa ska eventuellt inte finnas
 	private static LinkedList<Integer>[][] space9Blocks; //[FROM][TO]
 	private Grid[] grids;
 	private double stepLength;
@@ -81,5 +88,17 @@ public class SADSchedule {
 				for(int j = 0; j < spaceFine.length; j++)
 					spaceFine[i][j] = null;
 		}
+	}
+
+	public static LinkedList<Integer>[][] getOccupation(int dim){
+		LinkedList<Integer>[][] tmp = (LinkedList<Integer>[][]) (new LinkedList[dim][dim]);
+		for(int i = 0; i < SEG_IDS.length; i++) {
+			for(int j = 0; j < SEG_IDS[i].length; j++) {
+				if(SEG_IDS[i][j] != -1) {
+					tmp[i][j] = new LinkedList<Integer>(); //TODO: Actually calculate this
+				}
+			}
+		}
+		return tmp;
 	}
 }
