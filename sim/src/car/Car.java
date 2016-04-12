@@ -285,7 +285,7 @@ public class Car implements Drawable {
 		p = carModel.getCenterPoint(getPosition(), heading).mult(
 				Simulation.SCALE);
 		g2d.setColor(Color.black);
-		g2d.drawString((int)(speed * 3.6) + " k/h", (int) p.x + 2,
+		g2d.drawString((int) (speed * 3.6) + " k/h", (int) p.x + 2,
 				(int) p.y - 2);
 
 	}
@@ -357,7 +357,6 @@ public class Car implements Drawable {
 	public void setCollision(boolean collision) {
 		this.collision = collision;
 	}
-	
 
 	public Car nextCar() {
 		TravelData tD;
@@ -369,7 +368,8 @@ public class Car implements Drawable {
 		passedSelf = false;
 		searchSegment = tD.currentSegment();
 		while (true) {
-			carsOnSegment = TravelData.getCarsOnSegment(searchSegment).descendingIterator();
+			carsOnSegment = TravelData.getCarsOnSegment(searchSegment)
+					.descendingIterator();
 			while (carsOnSegment.hasNext()) {
 				Car nextCar = carsOnSegment.next();
 				if (equals(nextCar)) {
@@ -400,7 +400,6 @@ public class Car implements Drawable {
 		// The distance to next car.
 		double distance;
 		//
-		
 
 		distance = 0;
 		tD = EntityDb.getTravelData(this);

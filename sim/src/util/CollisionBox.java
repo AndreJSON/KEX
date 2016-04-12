@@ -16,8 +16,8 @@ public class CollisionBox {
 	public CollisionBox(int numOfLines, double x, double y) {
 		this(numOfLines, new Point2D.Double(x, y));
 	}
-	
-	public CollisionBox(Rectangle2D rect){
+
+	public CollisionBox(Rectangle2D rect) {
 		this(4, rect.getMinX(), rect.getMinY());
 		lineTo(rect.getMaxX(), rect.getMinY());
 		lineTo(rect.getMaxX(), rect.getMaxY());

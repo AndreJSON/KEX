@@ -31,9 +31,10 @@ public interface TrackPosition {
 	 * @return
 	 */
 	double remaining();
-	
+
 	/**
 	 * Give an exact copy of the TrackPosition.
+	 * 
 	 * @return
 	 */
 	TrackPosition copy();

@@ -3,7 +3,6 @@ package util;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-
 public class QuadTree {
 	private static int MAX_LEVEL = 10;
 	private static int MAX_OBJECTS = 10;
@@ -109,7 +108,8 @@ public class QuadTree {
 	/*
 	 * Return all objects that could collide with the given object
 	 */
-	public ArrayList<CollisionBox> retrieve(ArrayList<CollisionBox> returnObjects, CollisionBox shape) {
+	public ArrayList<CollisionBox> retrieve(
+			ArrayList<CollisionBox> returnObjects, CollisionBox shape) {
 		int index = getIndex(shape.getBounds());
 		if (index != -1 && nodes[0] != null) {
 			nodes[index].retrieve(returnObjects, shape);

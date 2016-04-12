@@ -14,9 +14,7 @@ public class DSCS extends AbstractTSCS {
 			IDLE = 4;
 	private static final double[] MAX_PHASE_LENGTH = { 14, 8, 14, 8, 1.5 };
 	private static double GAP_OUT = 1;
-	
-	
-	
+
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
 	private double currentPhaseTime = 0;

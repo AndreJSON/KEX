@@ -112,7 +112,8 @@ public class TravelData {
 			int destination) {
 		TravelData travelData;
 		try {
-			travelData = new TravelData(TravelPlan.getTravelPlan(origin, destination), car);
+			travelData = new TravelData(TravelPlan.getTravelPlan(origin,
+					destination), car);
 		} catch (NullPointerException e) {
 			System.out.println("Origin: " + origin);
 			System.out.println("Destination: " + destination);
@@ -121,7 +122,5 @@ public class TravelData {
 		}
 		return travelData;
 	}
-
-
 
 }

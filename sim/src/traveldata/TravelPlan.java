@@ -35,16 +35,16 @@ public class TravelPlan {
 		// TODO: Iterate through segments to calculate optimalTime.
 		optimalTime = dist / Const.SPEED_LIMIT;
 	}
-	
-	public double optimalTime(){
+
+	public double optimalTime() {
 		return optimalTime;
 	}
-	
-	public int numOfSegments(){
+
+	public int numOfSegments() {
 		return segments.size();
 	}
-	
-	public Segment getSegment(int i){
+
+	public Segment getSegment(int i) {
 		return segments.get(i);
 	}
 
@@ -77,7 +77,6 @@ public class TravelPlan {
 	public int getDestination() {
 		return destination;
 	}
-	
 
 	public int getOrigin() {
 		return origin;

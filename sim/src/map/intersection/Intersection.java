@@ -230,6 +230,7 @@ public class Intersection implements Drawable {
 
 	/**
 	 * Make a line segment from p1 to p2.
+	 * 
 	 * @param p1
 	 * @param p2
 	 * @return

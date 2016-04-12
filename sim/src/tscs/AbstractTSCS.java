@@ -14,7 +14,7 @@ public abstract class AbstractTSCS {
 	public abstract String drawPhase();
 
 	public void tick(double diff) {
-		if(emergencyBreak) {
+		if (emergencyBreak) {
 			Iterator<Car> it = EntityDb.getCars().iterator();
 			while (it.hasNext()) {
 				Car car = it.next();
