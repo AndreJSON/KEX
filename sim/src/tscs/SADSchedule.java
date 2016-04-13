@@ -119,9 +119,9 @@ public class SADSchedule {
 				}
 				int id = SEG_IDS[from][to];
 				tmp[id] = new ArrayList<LinkedList<Pair>>(200);
-				CollisionBox[] boxes = Intersection.getByID(id).getCollisionBoxes(CarModelDb.getByName("Mazda3"));
-				for(int i = 0; i < boxes.length; i++) {
-					tmp[id].add(i, getOccupationTiles(boxes[i]));
+				ArrayList<CollisionBox> boxes = Intersection.getByID(id).getCollisionBoxes(CarModelDb.getByName("Mazda3"));
+				for(int i = 0; i < boxes.size(); i++) {
+					tmp[id].add(i, getOccupationTiles(boxes.get(i)));
 				}
 			}
 		}
@@ -132,7 +132,7 @@ public class SADSchedule {
 		LinkedList<Pair> list = new LinkedList<Pair>();
 		for(int i = 0; i < TILE_AMOUNT; i++) {
 			for(int j = 0; j < TILE_AMOUNT; j++) {
-				if(b.collide(GRID_BOXES[i][j])) {
+				if(CollisionBox.collide(b, GRID_BOXES[i][j])) {
 					list.add(new Pair(i,j));
 				}
 			}

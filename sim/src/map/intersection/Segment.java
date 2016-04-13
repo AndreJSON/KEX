@@ -64,7 +64,7 @@ public class Segment {
 	/**
 	 * Get a array of collision boxes of the car model with a distance of 0.1 m.
 	 */
-	public CollisionBox[] getCollisionBoxes(CarModel carModel) {
+	public ArrayList<CollisionBox> getCollisionBoxes(CarModel carModel) {
 		TrackPosition position = track.getTrackPosition();
 		AffineTransform aF = new AffineTransform();
 		Segment seg = this;
@@ -91,7 +91,7 @@ public class Segment {
 			aF.rotate(chassiRotation);
 			cBs.add(carModel.getCollisionBox().transform(aF));
 		}
-		return cBs.toArray(new CollisionBox[cBs.size()]);
+		return cBs;
 	}
 
 }

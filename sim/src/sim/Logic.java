@@ -171,7 +171,7 @@ public class Logic {
 			returnObjects = quadTree.retrieve(returnObjects,
 					car.getCollisionBox());
 			for (CollisionBox other : returnObjects) {
-				if (car.getCollisionBox().collide(other)) {
+				if (CollisionBox.collide(car.getCollisionBox(), other)) {
 					throw new RuntimeException("Collision");
 				}
 			}

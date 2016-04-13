@@ -74,10 +74,9 @@ public class CollisionBox {
 		return boundingBox;
 	}
 
-	public boolean collide(CollisionBox collision) {
-		checkCompletion();
-		for (Line2D.Double line1 : lines) {
-			for (Line2D.Double line2 : collision.lines) {
+	public static boolean collide(CollisionBox c1, CollisionBox c2) {
+		for (Line2D.Double line1 : c1.lines) {
+			for (Line2D.Double line2 : c2.lines) {
 				if (line1.intersectsLine(line2)) {
 					return true;
 				}
