@@ -27,7 +27,6 @@ public class Logic {
 	// private fields
 	private AbstractTSCS tscs;
 	private SpawnerInterface[] spawners;
-	private Simulation sim;
 	/**
 	 * For checking collision.
 	 */
@@ -36,8 +35,7 @@ public class Logic {
 			(int) Intersection.getSize() + 20));
 
 	// constructor
-	Logic(Simulation sim, AbstractTSCS tscs) {
-		this.sim = sim;
+	Logic(AbstractTSCS tscs) {
 		this.tscs = tscs;
 		// Use BinomialSpawner for heavy traffic.
 		// Use PoissonSpawner for light traffic.
@@ -69,7 +67,7 @@ public class Logic {
 	public void spawnCar(String carName, int from, int to) {
 		Car car = new Car(CarModelDb.getByName(carName));
 		car.setSpeed(Const.SPEED_LIMIT);
-		EntityDb.addCar(car, TravelData.createTravelData(sim, car, from, to));
+		EntityDb.addCar(car, from, to);
 	}
 
 	// private methods
@@ -123,25 +121,12 @@ public class Logic {
 		while (it.hasNext()) {
 			Car car = it.next();
 			car.move(diff);
-			double rest = car.remainingOnTrack();
-			if (rest <= 0) {
-				TravelData tD = EntityDb.getTravelData(car);
-
-				if (tD == null) {
-					// Car has no travel plan.
-					it.remove();
-					continue;
-				}
-				// Get the next segment.
-				Segment seg = tD.nextSegment();
-				if (seg == null) {
-					// Car reached the end.
-					it.remove();
-					continue;
-				}
-				car.setCollidable(true);
-				car.setTrackPosition(seg.getTrack().getTrackPosition(-rest));
+			if (car.isFinished()) {
+				EntityDb.removeCarFromSegment(car);
+				it.remove();
+				continue;
 			}
+			car.setCollidable(true);
 		}
 	}
 

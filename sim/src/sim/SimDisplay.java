@@ -12,8 +12,6 @@ import java.util.Collection;
 
 import map.intersection.Intersection;
 
-import traveldata.TravelData;
-
 import car.Car;
 
 /**
@@ -98,13 +96,11 @@ class SimDisplay extends Canvas {
 				40);
 		// Draw current phase
 		g2d.drawString(sim.drawPhase(), paddingX, 55);
-
-		g2d.drawString("Mean Time Lost: " + TravelData.meanTimeLoss(),
-				paddingX, 75);
-		g2d.drawString(
-				"Sqrt of Mean Sq Time Lost: " + TravelData.sqrtMeanSqTimeLoss(),
-				paddingX, 90);
-
+		/*
+		 * g2d.drawString("Mean Time Lost: " + TravelData.meanTimeLoss(),
+		 * paddingX, 75); g2d.drawString( "Sqrt of Mean Sq Time Lost: " +
+		 * TravelData.sqrtMeanSqTimeLoss(), paddingX, 90);
+		 */
 		g2d.drawString("FPS: " + sim.fps(), 700, 25);
 	}
 
