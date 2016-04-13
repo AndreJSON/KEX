@@ -10,6 +10,7 @@ import map.intersection.Intersection;
 import math.Vector2D;
 import math.Pair;
 import util.CollisionBox;
+import sim.Const;
 
 public class SADSchedule {
 	private static final int TILE_AMOUNT = 18; //How many tiles the intersection should have in each dimenstion.
@@ -25,6 +26,7 @@ public class SADSchedule {
 	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_FINE = initOccupation(TILE_AMOUNT, GRID_BOXES_FINE); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
 	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_9 = initOccupation(3, GRID_BOXES_9); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
 	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_4 = initOccupation(2, GRID_BOXES_4); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	private static final Vector2D INTERSECTION_POINTS[] = initPoints();
 	private Grid[] grids;
 	private int gridIndex;
 
@@ -38,8 +40,8 @@ public class SADSchedule {
 	/**
 	 * Returns the amount of time until the car will get to the intersection given its curent velocity.
 	 */
-	private double timeToI(Car car) {
-		return 0; //TODO: Actually calculate the time.
+	public double timeToI(Car car) {
+		return distance(car.getPosition(),INTERSECTION_POINTS[car.getOrigin()]) / car.getSpeed(); //TODO: Actually calculate the time.
 	}
 
 	/**
@@ -100,6 +102,21 @@ public class SADSchedule {
 				for(int j = 0; j < spaceFine.length; j++)
 					spaceFine[i][j] = null;
 		}
+	}
+
+	private double distance(Vector2D p1, Vector2D p2) {
+		double d1 = Math.pow(p1.getX() - p2.getX(), 2);
+		double d2 = Math.pow(p1.getY() - p2.getY(), 2);
+		return Math.sqrt(d1 + d2);
+	}
+
+	private static Vector2D[] initPoints() {
+		Vector2D[] tmp = new Vector2D[4];
+		tmp[0] = Intersection.getWaypoint(Const.NORTH, Const.STRAIGHT);
+		tmp[1] = Intersection.getWaypoint(Const.EAST, Const.STRAIGHT);
+		tmp[2] = Intersection.getWaypoint(Const.SOUTH, Const.STRAIGHT);
+		tmp[3] = Intersection.getWaypoint(Const.WEST, Const.STRAIGHT);
+		return tmp;
 	}
 
 	private static int[][] initSegID() {

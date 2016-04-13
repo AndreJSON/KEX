@@ -270,6 +270,10 @@ public class Car implements Drawable {
 		position = trackPosition;
 	}
 
+	public int getOrigin() {
+		return travelData.getOrigin();
+	}
+
 	@Override
 	public void draw(Graphics2D g2d) {
 		if (position == null)

@@ -230,6 +230,10 @@ public class Intersection {
 				Math.PI / 2).mult(width));
 	}
 
+	public static Vector2D getWaypoint(int from, int point) {
+		return waypoints[from][point];
+	}
+
 	/**
 	 * 
 	 * @param p1
