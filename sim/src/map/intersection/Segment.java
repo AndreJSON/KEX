@@ -66,7 +66,7 @@ public class Segment {
 	 */
 	public ArrayList<CollisionBox> getCollisionBoxes(CarModel carModel) {
 		TrackPosition position = track.getTrackPosition();
-		AffineTransform aF = new AffineTransform();
+		AffineTransform aF;
 		Segment seg = this;
 		ArrayList<CollisionBox> cBs = new ArrayList<>();
 		// The heading of the CAR.
@@ -90,6 +90,7 @@ public class Segment {
 			stearingWheel = position.getHeading() - chassiHeading;
 			chassiRotation = (Math.tan(stearingWheel) / carModel.getWheelBase());
 			// Now we calculate the CollisionBox!
+			aF = new AffineTransform();
 			aF.translate(position.getX(), position.getY());
 			aF.rotate(chassiRotation);
 			cBs.add(carModel.getCollisionBox().transform(aF));
