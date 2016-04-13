@@ -91,4 +91,8 @@ public class CollisionBox {
 					"CollisionBox not completed: lines added = " + linesAdded
 							+ " < " + lines.length);
 	}
+
+	public Point2D getPosition() {
+		return position;
+	}
 }
