@@ -15,4 +15,12 @@ public class Pair {
 	public int getTo() {
 		return to;
 	}
+
+	public int first() {
+		return from;
+	}
+
+	public int second() {
+		return to;
+	}
 }

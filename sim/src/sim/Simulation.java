@@ -12,7 +12,7 @@ import javax.swing.JButton;
 public class Simulation implements ActionListener {
 
 	// public static final fields
-	public static final boolean SHOW_TRACKS = true;
+	public static final boolean SHOW_TRACKS = false;
 	public static final boolean DEBUG = false;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };
@@ -50,7 +50,7 @@ public class Simulation implements ActionListener {
 
 	// Initializer
 	private void init() {
-		tscs = new DSCS();
+		tscs = new SAD();
 		logic = new Logic(this, tscs);
 		simDisp = new SimDisplay(this);
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);

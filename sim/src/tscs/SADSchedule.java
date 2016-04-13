@@ -1,19 +1,36 @@
 package tscs;
 
+import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
+import java.util.ArrayList;
 
 import car.Car;
+import car.CarModelDb;
+import map.intersection.Intersection;
+import math.Vector2D;
+import math.Pair;
+import util.CollisionBox;
 
 public class SADSchedule {
-	private static LinkedList<Integer>[][] space4Blocks; //[FROM][TO]
+	private static final Vector2D INTERSECTION_POS = new Vector2D(Intersection.straight + Intersection.turn, Intersection.straight + Intersection.turn); //Upper left corner of the intersection.
+	private static final double INTERSECTION_SIZE = 3 * Intersection.width + 2 * Intersection.buffer;
+	private static final int TILE_AMOUNT = 18; //How many tiles the intersection should have in each dimenstion.
+	private static final double TILE_SIZE = (INTERSECTION_SIZE / (double)TILE_AMOUNT);
+	private static final CollisionBox[][] GRID_BOXES = initGridBoxes(); //[X][Y] 0 < X,Y < DIM
+	private static final int[][] SEG_IDS = {//[FROM][TO]
+		{-1, 23, 1, 0},
+		{20, -1, 26, 19},
+		{9, 10, -1, 21},
+		{15, 25, 24, -1}
+	};
+	private static ArrayList<LinkedList<Pair>>[] SPACE4_OCCUPATION = initOccupation(); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	private static LinkedList<Integer>[][] space4Blocks; //[FROM][TO] dessa ska eventuellt inte finnas
 	private static LinkedList<Integer>[][] space9Blocks; //[FROM][TO]
 	private Grid[] grids;
-	private double stepLength;
 	private int gridIndex;
 
-	public SADSchedule(double stepLength, double planLength) {
-		this.stepLength = stepLength;
-		grids = new Grid[(int)(planLength/stepLength)];
+	public SADSchedule() {
+		grids = new Grid[TILE_AMOUNT];
 	}
 
 	/**
@@ -81,5 +98,45 @@ public class SADSchedule {
 				for(int j = 0; j < spaceFine.length; j++)
 					spaceFine[i][j] = null;
 		}
+	}
+
+	private static CollisionBox[][] initGridBoxes() {
+		CollisionBox[][] tmp = new CollisionBox[TILE_AMOUNT][TILE_AMOUNT];
+		for(int i = 0; i < TILE_AMOUNT; i++) {
+			for(int j = 0; j < TILE_AMOUNT; j++) {
+				tmp[i][j] = new CollisionBox(new Rectangle2D.Double(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE));
+			}
+		}
+		return tmp;
+	}
+
+	private static ArrayList<LinkedList<Pair>>[] initOccupation(){
+		ArrayList<LinkedList<Pair>>[] tmp = new ArrayList[Intersection.numberOfSegments()];
+		for(int from = 0; from <= 3; from++) {
+			for(int to = 0; to <= 3; to++) {
+				if(from == to) {
+					continue;
+				}
+				int id = SEG_IDS[from][to];
+				tmp[id] = new ArrayList<LinkedList<Pair>>(200);
+				CollisionBox[] boxes = Intersection.getByID(id).getCollisionBoxes(CarModelDb.getByName("Mazda3"));
+				for(int i = 0; i < boxes.length; i++) {
+					tmp[id].add(i, getOccupationTiles(boxes[i]));
+				}
+			}
+		}
+		return SPACE4_OCCUPATION;
+	}
+
+	private static LinkedList<Pair> getOccupationTiles(CollisionBox b) {
+		LinkedList<Pair> list = new LinkedList<Pair>();
+		for(int i = 0; i < TILE_AMOUNT; i++) {
+			for(int j = 0; j < TILE_AMOUNT; j++) {
+				if(b.collide(GRID_BOXES[i][j])) {
+					list.add(new Pair(i,j));
+				}
+			}
+		}
+		return list;
 	}
 }
