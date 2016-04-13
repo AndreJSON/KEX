@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 import sim.Const;
-import traveldata.TravelData;
+import sim.EntityDb;
 import car.Car;
 import math.Pair;
 import map.intersection.*;
@@ -48,7 +48,7 @@ public class DSCS extends AbstractTSCS {
 		for (Pair pair : phases.get(phase)) {
 			Segment segment = Intersection.getWaitingSegment(pair.getFrom(),
 					pair.getTo());
-			if (!TravelData.getCarsOnSegment(segment).isEmpty()) {
+			if (!EntityDb.getCarsOnSegment(segment).isEmpty()) {
 				return true;
 			}
 		}
@@ -93,12 +93,12 @@ public class DSCS extends AbstractTSCS {
 				}
 				segment = Intersection.getWaitingSegment(pair.getFrom(),
 						pair.getTo());
-				if (TravelData.getCarsOnSegment(segment).isEmpty()) {
+				if (EntityDb.getCarsOnSegment(segment).isEmpty()) {
 					continue;
 				}
 				segment = Intersection.getWaitingSegment(pair.getFrom(),
 						pair.getTo());
-				car = TravelData.getCarsOnSegment(segment).getFirst();
+				car = EntityDb.getCarsOnSegment(segment).getFirst();
 				car.setAutonomous(false);
 				double maxDec = car.getMaxDeceleration();
 				double tracRem = car.remainingOnTrack();

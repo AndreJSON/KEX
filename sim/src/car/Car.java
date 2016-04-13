@@ -63,6 +63,10 @@ public class Car implements Drawable {
 	 */
 	private boolean collidable;
 
+	private TravelData travelData;
+
+	private boolean finished;
+
 	// Constrtuctors
 	/**
 	 * Create a new car of the specified car model.
@@ -77,9 +81,10 @@ public class Car implements Drawable {
 		speed = 0;
 		heading = 0;
 		collidable = false;
+		finished = false;
 	}
 
-	//public methods
+	// public methods
 	/**
 	 * The to string has the form "Car" + id + "[" + Car model name + "]".
 	 */
@@ -120,6 +125,16 @@ public class Car implements Drawable {
 
 		} else {
 			throw new RuntimeException(this + " is out of track!");
+		}
+		if (position.remaining() <= 0) {
+			EntityDb.removeCarFromSegment(this);
+			if (travelData.hasNext()) {
+				position = travelData.next().getTrackPosition(
+						-position.remaining());
+				EntityDb.addCarToSegment(this);
+			} else {
+				finished = true;
+			}
 		}
 	}
 
@@ -200,7 +215,6 @@ public class Car implements Drawable {
 		acceleration = clamp(-getMaxDeceleration(), getMaxAcceleration(),
 				acceleration);
 	}
-
 
 	/**
 	 * Get the top speed of this car. Same as car.getType().getTopSpeed();
@@ -369,16 +383,14 @@ public class Car implements Drawable {
 	}
 
 	public Car nextCar() {
-		TravelData tD;
 		Segment searchSegment;
 		Iterator<Car> carsOnSegment;
 		boolean passedSelf = false;
 
-		tD = EntityDb.getTravelData(this);
 		passedSelf = false;
-		searchSegment = tD.currentSegment();
+		searchSegment = travelData.currentSegment();
 		while (true) {
-			carsOnSegment = TravelData.getCarsOnSegment(searchSegment)
+			carsOnSegment = EntityDb.getCarsOnSegment(searchSegment)
 					.descendingIterator();
 			while (carsOnSegment.hasNext()) {
 				Car nextCar = carsOnSegment.next();
@@ -388,7 +400,8 @@ public class Car implements Drawable {
 					return nextCar;
 				}
 			}
-			searchSegment = searchSegment.nextSegment(tD.getDestination());
+			searchSegment = searchSegment.nextSegment(travelData
+					.getDestination());
 			if (searchSegment == null) {
 				break;
 			}
@@ -402,7 +415,6 @@ public class Car implements Drawable {
 		// If the car has passed itself during the search.
 		boolean passedSelf = false;
 		// Get the travel data of the car.
-		TravelData tD;
 		// Get the current segment the car is on.
 		Segment searchSegment;
 		// Iterator to check all cars on this segment.
@@ -412,11 +424,10 @@ public class Car implements Drawable {
 		//
 
 		distance = 0;
-		tD = EntityDb.getTravelData(this);
 		passedSelf = false;
-		searchSegment = tD.currentSegment();
+		searchSegment = travelData.currentSegment();
 		while (true) {
-			carsOnSegment = TravelData.getCarsOnSegment(searchSegment)
+			carsOnSegment = EntityDb.getCarsOnSegment(searchSegment)
 					.descendingIterator();
 			while (carsOnSegment.hasNext()) {
 				Car nextCar = carsOnSegment.next();
@@ -428,7 +439,8 @@ public class Car implements Drawable {
 					return distance;
 				}
 			}
-			searchSegment = searchSegment.nextSegment(tD.getDestination());
+			searchSegment = searchSegment.nextSegment(travelData
+					.getDestination());
 			if (searchSegment == null)
 				break;
 			distance += searchSegment.length();
@@ -437,7 +449,7 @@ public class Car implements Drawable {
 		// Return -1 if no car is in front of this car.
 		return -1;
 	}
-	
+
 	/**
 	 * Clamps the speed.
 	 */
@@ -451,5 +463,23 @@ public class Car implements Drawable {
 		else if (value > upperBound)
 			return upperBound;
 		return value;
+	}
+
+	public void setTravelData(TravelData travelData) {
+		this.travelData = travelData;
+		this.position = travelData.currentSegment().getTrackPosition(0);
+		this.heading = position.getHeading();
+	}
+
+	public boolean isFinished(){
+		return finished;
+	}
+
+	public Segment getSegment() {
+		return travelData.currentSegment();
+	}
+
+	public TravelData getTravelData() {
+		return travelData;
 	}
 }
