@@ -80,8 +80,11 @@ public class Segment {
 			position.move(POINT_STEP);
 			if (position.remaining() < 0) {
 				// Must change track!
-				seg = seg.split.values().iterator().next();
-				position = seg.getTrackPosition(-position.remaining());
+				if (seg.split.size() != 0) {
+
+					seg = seg.split.values().iterator().next();
+					position = seg.getTrackPosition(-position.remaining());
+				}
 			}
 			// Calculate the chassi heading.
 			stearingWheel = position.getHeading() - chassiHeading;
