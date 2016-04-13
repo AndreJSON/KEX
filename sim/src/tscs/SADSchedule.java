@@ -38,18 +38,32 @@ public class SADSchedule {
 	}
 
 	/**
+	 * Returns the cars distance to the intersection.
+	 */
+	public double distanceToI(Car car) {
+		return distance(car.getPosition(),INTERSECTION_POINTS[car.getOrigin()]);
+	}
+
+	/**
 	 * Returns the amount of time until the car will get to the intersection given its curent velocity.
 	 */
 	public double timeToI(Car car) {
-		return distance(car.getPosition(),INTERSECTION_POINTS[car.getOrigin()]) / car.getSpeed(); //TODO: Actually calculate the time.
+		return distanceToI(car) / car.getSpeed();
 	}
 
 	/**
 	 * Returns the fastest time the car could get to the intersection given that it accelerates to road max speed as fast as it can.
 	 */
 	private double fastestTimeToI(Car car) {
-		//TODO: Should take ACCELERATION_COEFFIECIENT into account when calculating.
-		return 0; //TODO: Actually calculate the time.
+		double vel = car.getSpeed();
+		double acc = car.getMaxAcceleration() * Const.ACC_COEF;
+		double timeToMaxSpeed = (Const.SPEED_LIMIT - vel) / acc;
+		if(timeToMaxSpeed * (vel + (timeToMaxSpeed * acc / 2)) > distanceToI(car)) { //The car will reach max speed before the intersection.
+			return timeToMaxSpeed + (distanceToI(car) - timeToMaxSpeed * (vel + (timeToMaxSpeed * acc / 2))) / Const.SPEED_LIMIT;
+		}
+		else {
+			return Math.sqrt(Math.pow(vel/acc, 2) + 2 * distanceToI(car) / acc) - vel / acc;
+		}
 	}
 
 	private void stepIndex() {
