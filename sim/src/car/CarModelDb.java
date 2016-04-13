@@ -67,9 +67,9 @@ public class CarModelDb {
 				Color.blue, // Car color
 				0.93, // Car front wheel displacement
 				3.57, // Car rear wheel displacement
-				100 / 3.6 / 10.7, // Max acceleration (m/s)
+				2.6, // Max acceleration (m/s)
 				7, // Max retardation (m/s)
-				185 / 3.6 // Speed limit (m/s)
+				51.4 // Speed limit (m/s)
 		));
 
 	}

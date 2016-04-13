@@ -103,7 +103,7 @@ public class Logic {
 				double car2distance = inFront.getBreakingDistance(car2breakVal);
 
 				if (dist < 0.5 && car.getSpeed() > inFront.getSpeed()) {
-					car.setAcc(-car1breakVal * 1.1);
+					car.setAcc(-car1breakVal);
 				} else if (car1distance < dist + car2distance) {
 					car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 				} else {

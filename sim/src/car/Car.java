@@ -116,7 +116,7 @@ public class Car implements Drawable {
 					* (Math.tan(position.getHeading() - heading) / carModel
 							.getWheelBase());
 
-			heading += rotation * diff % (2 * Math.PI);
+			heading += rotation * diff;
 
 		} else {
 			throw new RuntimeException(this + " is out of track!");

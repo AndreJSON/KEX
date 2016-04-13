@@ -3,7 +3,6 @@ package map.intersection;
 import map.track.*;
 import math.Vector2D;
 import sim.Const;
-import sim.Drawable;
 import sim.Simulation;
 import traveldata.TravelPlan;
 

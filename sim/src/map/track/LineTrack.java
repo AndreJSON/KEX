@@ -29,7 +29,7 @@ public class LineTrack extends AbstractTrack {
 		list.add(startPoint);
 
 		int curr = 1;
-		while (curr * super.POINT_STEP < length) {
+		while (curr * POINT_STEP < length) {
 			list.add(startPoint.plus(unit.mult(curr * super.POINT_STEP)));
 			curr++;
 		}
@@ -133,6 +133,16 @@ public class LineTrack extends AbstractTrack {
 			copy.point = (Vector2D) point.clone();
 			copy.totalDistance = totalDistance;
 			return null;
+		}
+
+		@Override
+		public double getX() {
+			return point.x;
+		}
+
+		@Override
+		public double getY() {
+			return point.y;
 		}
 
 	}

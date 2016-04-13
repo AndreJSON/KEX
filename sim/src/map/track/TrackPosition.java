@@ -3,14 +3,15 @@ package map.track;
 import math.Vector2D;
 
 public interface TrackPosition {
-
+	
 	/**
 	 * Get a double position that is on the track.
 	 * 
 	 * @return
 	 */
 	Vector2D getPoint();
-
+	
+	
 	/**
 	 * Get the heading of the track.
 	 * 
@@ -38,4 +39,7 @@ public interface TrackPosition {
 	 * @return
 	 */
 	TrackPosition copy();
+	
+	double getX();
+	double getY();
 }

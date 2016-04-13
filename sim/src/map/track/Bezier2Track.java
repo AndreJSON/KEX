@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
+
 import sim.Simulation;
 
 import math.Vector2D;
@@ -86,7 +87,7 @@ public class Bezier2Track extends AbstractTrack {
 		list.add(c1);
 
 		while (position.remaining() > 0) {
-			position.move(0.2);
+			position.move(POINT_STEP);
 			list.add(position.point);
 		}
 
@@ -227,6 +228,16 @@ public class Bezier2Track extends AbstractTrack {
 			copy.totalDistance = totalDistance;
 			copy.point = (Vector2D) point.clone();
 			return copy;
+		}
+
+		@Override
+		public double getX() {
+			return point.x;
+		}
+
+		@Override
+		public double getY() {
+			return point.y;
 		}
 
 	}

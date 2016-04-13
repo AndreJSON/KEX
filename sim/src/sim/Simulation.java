@@ -24,7 +24,7 @@ public class Simulation implements ActionListener {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 3;
+	public static final double SCALE_TICK = 60;
 	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
 
 	// private fields
@@ -50,7 +50,7 @@ public class Simulation implements ActionListener {
 
 	// Initializer
 	private void init() {
-		tscs = new SAD(SCALE_TICK / TICKS_PER_SECOND, 10);
+		tscs = new DSCS();
 		logic = new Logic(this, tscs);
 		simDisp = new SimDisplay(this);
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
