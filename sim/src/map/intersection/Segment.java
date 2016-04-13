@@ -75,7 +75,7 @@ public class Segment {
 		double targetDist = length() + carModel.getLength() * 1.2;
 		// How far we are on the current segment.
 		double stearingWheel;
-		double chassiRotation = 0;
+		double chassiRotation;
 		for (int curr = 0; curr * POINT_STEP < targetDist; curr++) {
 			position.move(POINT_STEP);
 			if (position.remaining() < 0) {
@@ -88,11 +88,12 @@ public class Segment {
 			}
 			// Calculate the chassi heading.
 			stearingWheel = position.getHeading() - chassiHeading;
-			chassiRotation += (Math.tan(stearingWheel) / carModel.getWheelBase());
+			chassiRotation = (Math.tan(stearingWheel) / carModel.getWheelBase());
+			chassiHeading += chassiRotation;
 			// Now we calculate the CollisionBox!
 			aF = new AffineTransform();
 			aF.translate(position.getX(), position.getY());
-			aF.rotate(chassiRotation);
+			aF.rotate(chassiHeading);
 			cBs.add(carModel.getCollisionBox().transform(aF));
 		}
 		return cBs;
