@@ -1,7 +1,6 @@
 package sim;
 
 import java.awt.Rectangle;
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -41,11 +40,11 @@ public class Logic {
 		// Use BinomialSpawner for heavy traffic.
 		// Use PoissonSpawner for light traffic.
 		spawners = new SpawnerInterface[] {
-				new BinomialSpawner(this, Const.NORTH, 8, 0.5),
+				new BinomialSpawner(this, Const.NORTH, 5, 0.5),
 				// 10 * 0.5 = 5 <= mean value
-				new BinomialSpawner(this, Const.SOUTH, 8, 0.5),
-				new BinomialSpawner(this, Const.WEST, 8, 0.5),
-				new BinomialSpawner(this, Const.EAST, 8, 0.5) };
+				new BinomialSpawner(this, Const.SOUTH, 5, 0.5),
+				new BinomialSpawner(this, Const.WEST, 5, 0.5),
+				new BinomialSpawner(this, Const.EAST, 5, 0.5) };
 	}
 
 	// package methods
@@ -100,9 +99,7 @@ public class Logic {
 				double car1distance = car.getBreakingDistance(car1breakVal);
 				double car2distance = inFront.getBreakingDistance(car2breakVal);
 
-				if (dist < 0.5 && car.getSpeed() > inFront.getSpeed()) {
-					car.setAcc(-car1breakVal);
-				} else if (car1distance < dist + car2distance) {
+				if (car1distance < dist + car2distance) {
 					car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 				} else {
 					car.setAcc(-car1breakVal);
@@ -122,27 +119,21 @@ public class Logic {
 			Car car = it.next();
 			car.move(diff);
 			if (car.isFinished()) {
-				EntityDb.removeCarFromSegment(car);
 				PerfDb.addData(sim.elapsedTime(), car.getTravelData());
 				it.remove();
 				continue;
 			}
-			car.setCollidable(true);
 		}
 	}
 
 	private void updateCollisionBoxes() {
-		AffineTransform aF;
 		Vector2D p;
-
 		for (Car car : EntityDb.getCars()) {
 			if (!car.isCollidable())
 				continue;
-			aF = new AffineTransform();
 			p = car.getPosition();
-			aF.translate(p.x, p.y);
-			aF.rotate(car.getHeading());
-			car.setCollisionBox(car.getModel().getCollisionBox().transform(aF));
+			CollisionBox cB = car.getModel().getCollisionBox();
+			car.setCollisionBox(cB.transform(p.x, p.y, car.getHeading()));
 		}
 	}
 

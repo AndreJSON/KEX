@@ -1,6 +1,5 @@
 package map.intersection;
 
-import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,17 +12,20 @@ import math.Vector2D;
 public class Segment {
 
 	private static final double POINT_STEP = 0.1;
+	private static int idTracker = 0;
 	private AbstractTrack track;
+	
 	private HashMap<Integer, Segment> split; // Tells which Segment a car has to
 												// enter given its destination
 												// as key. Null instead of a
 												// Segment if destination is
 												// reached.
-	private int id = -1; // Given a value later
+	private final int id;
 
 	public Segment(AbstractTrack t) {
 		track = t;
 		split = new HashMap<>();
+		id = idTracker++;
 	}
 
 	/**
@@ -49,10 +51,6 @@ public class Segment {
 		return id;
 	}
 
-	public void setHashCode(int value) {
-		id = value;
-	}
-
 	public double length() {
 		return track.length();
 	}
@@ -66,7 +64,6 @@ public class Segment {
 	 */
 	public ArrayList<CollisionBox> getCollisionBoxes(CarModel carModel) {
 		TrackPosition position = track.getTrackPosition();
-		AffineTransform aF;
 		Segment seg = this;
 		ArrayList<CollisionBox> cBs = new ArrayList<>();
 		// The heading of the CAR.
@@ -91,10 +88,8 @@ public class Segment {
 			chassiRotation = (Math.tan(stearingWheel) / carModel.getWheelBase());
 			chassiHeading += chassiRotation;
 			// Now we calculate the CollisionBox!
-			aF = new AffineTransform();
-			aF.translate(position.getX(), position.getY());
-			aF.rotate(chassiHeading);
-			cBs.add(carModel.getCollisionBox().transform(aF));
+			cBs.add(carModel.getCollisionBox().transform(position.getX(),
+					position.getY(), chassiHeading));
 		}
 		return cBs;
 	}

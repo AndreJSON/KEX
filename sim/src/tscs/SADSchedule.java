@@ -13,19 +13,28 @@ import util.CollisionBox;
 import sim.Const;
 
 public class SADSchedule {
-	private static final int TILE_AMOUNT = 18; //How many tiles the intersection should have in each dimenstion.
-	private static final double INTERSECTION_DIST = Intersection.straight + Intersection.turn; // Distance from map edge to the intersection.
+	//How many tiles the intersection should have in each dimenstion.
+	private static final int TILE_AMOUNT = 18; 
+	// Distance from map edge to the intersection.
+	private static final double INTERSECTION_DIST = Intersection.straight + Intersection.turn; 
 	private static final double INTERSECTION_SIZE = 3 * Intersection.width + 2 * Intersection.buffer;
-	public static final int[][] SEG_IDS = initSegID();//[FROM][TO]
+	//[FROM][TO]
+	public static final int[][] SEG_IDS = initSegID();
 	private static final double TILE_SIZE_FINE = (INTERSECTION_SIZE / (double)TILE_AMOUNT);
 	private static final double TILE_SIZE_9 = (INTERSECTION_SIZE / (double)3);
 	private static final double TILE_SIZE_4 = (INTERSECTION_SIZE / (double)2);
-	public static final CollisionBox[][] GRID_BOXES_FINE = initGridBox(TILE_AMOUNT); //[X][Y] 0 < X,Y < TILE_AMOUNT
-	public static final CollisionBox[][] GRID_BOXES_9 = initGridBox(3); //[X][Y] 0 < X,Y < 3
-	public static final CollisionBox[][] GRID_BOXES_4 = initGridBox(2); //[X][Y] 0 < X,Y < 2
-	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_FINE = initOccupation(TILE_AMOUNT, GRID_BOXES_FINE); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
-	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_9 = initOccupation(3, GRID_BOXES_9); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
-	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_4 = initOccupation(2, GRID_BOXES_4); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	//[X][Y] 0 < X,Y < TILE_AMOUNT
+	public static final CollisionBox[][] GRID_BOXES_FINE = initGridBox(TILE_AMOUNT); 
+	//[X][Y] 0 < X,Y < 3
+	public static final CollisionBox[][] GRID_BOXES_9 = initGridBox(3); 
+	//[X][Y] 0 < X,Y < 2
+	public static final CollisionBox[][] GRID_BOXES_4 = initGridBox(2); 
+	//[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_FINE = initOccupation(TILE_AMOUNT, GRID_BOXES_FINE); 
+	//[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_9 = initOccupation(3, GRID_BOXES_9); 
+	//[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_4 = initOccupation(2, GRID_BOXES_4); 
 	private static final Vector2D INTERSECTION_POINTS[] = initPoints();
 	private Grid[] grids;
 	private int gridIndex;

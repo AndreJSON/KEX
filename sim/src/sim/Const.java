@@ -19,14 +19,14 @@ public class Const {
 	// Factor slower comfortable breaking should compared to the maximum
 	// retardation.
 	public static final double BREAK_COEF = 2.5;
-	public static final double ACC_COEF = 1.5;
+	public static final double ACC_COEF = 2;
 
 	public static final double SPEED_LIMIT = 50 / 3.6;
 
 
 	// How close to each other vehicles will strive to drive when cruising.
 	// If this value is too low, the cars will collide in curves.
-	public static final double COLUMN_DISTANCE = 1.2;
+	public static final double COLUMN_DISTANCE = 3;
 	
 	// constructor
 	private Const() {

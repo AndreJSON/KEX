@@ -54,6 +54,7 @@ class SimDisplay extends Canvas {
 		drawBackground(g2d);
 		drawIntersection(g2d);
 		drawCars(g2d);
+		
 		if(Simulation.SHOW_GRID) {
 			for(int i = 0; i < SADSchedule.GRID_BOXES_FINE.length; i++) {
 				for(int j = 0; j < SADSchedule.GRID_BOXES_FINE.length; j++) {

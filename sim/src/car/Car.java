@@ -114,8 +114,8 @@ public class Car implements Drawable {
 		}
 		if (position.remaining() > 0) {
 			speed += acceleration * diff;
-
 			speedClamp();
+			
 			position.move(diff * getSpeed());
 			double rotation = getSpeed()
 					* (Math.tan(position.getHeading() - heading) / carModel
@@ -132,6 +132,7 @@ public class Car implements Drawable {
 				position = travelData.next().getTrackPosition(
 						-position.remaining());
 				EntityDb.addCarToSegment(this);
+				collidable = true;
 			} else {
 				finished = true;
 			}
@@ -364,15 +365,6 @@ public class Car implements Drawable {
 	}
 
 	/**
-	 * Set collidable.
-	 * 
-	 * @return
-	 */
-	public void setCollidable(boolean collidable) {
-		this.collidable = collidable;
-	}
-
-	/**
 	 * Get the cars collision box
 	 */
 	public CollisionBox getCollisionBox() {
@@ -401,6 +393,7 @@ public class Car implements Drawable {
 				if (equals(nextCar)) {
 					passedSelf = true;
 				} else if (passedSelf) {
+					System.out.println("Found car.");
 					return nextCar;
 				}
 			}
@@ -439,7 +432,7 @@ public class Car implements Drawable {
 					passedSelf = true;
 				} else if (passedSelf) {
 					distance += -nextCar.remainingOnTrack()
-							+ remainingOnTrack() - getModel().getLength();
+							+ remainingOnTrack() - nextCar.getModel().getLength();
 					return distance;
 				}
 			}
@@ -449,7 +442,6 @@ public class Car implements Drawable {
 				break;
 			distance += searchSegment.length();
 		}
-
 		// Return -1 if no car is in front of this car.
 		return -1;
 	}
@@ -458,7 +450,7 @@ public class Car implements Drawable {
 	 * Clamps the speed.
 	 */
 	private void speedClamp() {
-		speed = clamp(-getTopSpeed() / 10, getTopSpeed(), speed);
+		speed = clamp(0, getTopSpeed(), speed);
 	}
 
 	private double clamp(double lowerBound, double upperBound, double value) {
@@ -473,6 +465,7 @@ public class Car implements Drawable {
 		this.travelData = travelData;
 		this.position = travelData.currentSegment().getTrackPosition(0);
 		this.heading = position.getHeading();
+		EntityDb.addCarToSegment(this);
 	}
 
 	public boolean isFinished(){
@@ -486,4 +479,5 @@ public class Car implements Drawable {
 	public TravelData getTravelData() {
 		return travelData;
 	}
+	
 }

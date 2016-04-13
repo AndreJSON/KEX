@@ -12,7 +12,7 @@ import map.intersection.*;
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 14, 8, 14, 8, 1 };
+	private static final double[] MAX_PHASE_LENGTH = { 13, 7, 13, 7, 2 };
 	private static double GAP_OUT = 1;
 
 	private HashMap<Integer, Pair[]> phases;
@@ -98,29 +98,25 @@ public class DSCS extends AbstractTSCS {
 				}
 				segment = Intersection.getWaitingSegment(pair.getFrom(),
 						pair.getTo());
-				car = EntityDb.getCarsOnSegment(segment).getFirst();
+				car = EntityDb.getFirstCar(segment);
 				car.setAutonomous(false);
-				double maxDec = car.getMaxDeceleration();
+				double maxDec = car.getMaxDeceleration() / Const.BREAK_COEF;
 				double tracRem = car.remainingOnTrack();
 				if (tracRem < car.getBreakingDistance(maxDec)) {
 					// Can't break hard enough! Just try to not stand in the
 					// intersection.
-					car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF * 1.2);
-				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec
-						/ Const.BREAK_COEF)) {
-					// Break medium hard, stop 3 meters from intersection.
-					car.setAcc(-maxDec / Const.BREAK_COEF);
-				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec
-						/ (Const.BREAK_COEF * 1.2))) {
-					// Break medium.
-					car.setAcc(-maxDec / (Const.BREAK_COEF * 1.2));
-				} else if (car.remainingOnTrack() - BUFFER < car
-						.getBreakingDistance(maxDec / (Const.BREAK_COEF * 1.4))) {
-					// Break light.
-					car.setAcc(-maxDec / (Const.BREAK_COEF * 1.4));
+					car.setAcc(-car.getMaxDeceleration());
 				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec)) {
-					// Emergency break.
+					// Break medium hard, stop 3 meters from intersection.
 					car.setAcc(-maxDec);
+				} else if (tracRem - BUFFER < car
+						.getBreakingDistance(maxDec / 1.2)) {
+					// Break medium.
+					car.setAcc(-maxDec / 1.2);
+				} else if (car.remainingOnTrack() - BUFFER < car
+						.getBreakingDistance(maxDec / 1.4)) {
+					// Break light.
+					car.setAcc(-maxDec / 1.4);
 				} else {
 
 					car.setAutonomous(true);

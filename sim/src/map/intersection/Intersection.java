@@ -19,14 +19,11 @@ import java.util.HashMap;
 public class Intersection {
 
 	// public static fields
-	public static final double straight = 5, turn = 5, buffer = 4,
-			width = 3.2;
+	public static final double straight = 0.1, turn = 100, buffer = 3,
+			width = 3.1;
 	private static final double arm = straight + turn + buffer;
 	private static final double square = width * 3;
 	private static final double intersectionSize = arm * 2 + square;
-
-	// counter
-	private static int idTracker = 0;
 
 	// Used in building of intersection.
 	private static HashMap<Vector2D, HashMap<Vector2D, Segment>> points2segment = new HashMap<>();
@@ -45,11 +42,6 @@ public class Intersection {
 	}
 
 	static {
-		init();
-	}
-
-	// private methods
-	private static void init() {
 		generateWayPoints();
 		generateSegments();
 		linkAllSegments();
@@ -59,7 +51,9 @@ public class Intersection {
 		createTravelPlans(getEntry(Const.SOUTH), Const.SOUTH);
 	}
 
+
 	private static void generateSegments() {
+		segments = new ArrayList<>();
 
 		for (int i = 0; i < 4; i++) {
 			Segment seg = lineSegment(waypoints[i][Const.MAP_ENTRANCE],
@@ -81,14 +75,6 @@ public class Intersection {
 
 		}
 
-		segments = new ArrayList<>();
-
-		for (HashMap<Vector2D, Segment> map : points2segment.values()) {
-			for (Segment seg : map.values()) {
-				seg.setHashCode(idTracker++);
-				segments.add(seg);
-			}
-		}
 
 	}
 
@@ -145,6 +131,7 @@ public class Intersection {
 	 * @param s
 	 */
 	private static void addSegment(Vector2D v1, Vector2D v2, Segment s) {
+		segments.add(s);
 		HashMap<Vector2D, Segment> point2segment = points2segment.get(v1);
 		if (point2segment == null) {
 			point2segment = new HashMap<>();
@@ -320,9 +307,9 @@ public class Intersection {
 		trackImage = new BufferedImage(Simulation.SimulationSize,
 				Simulation.SimulationSize, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = trackImage.createGraphics();
+		g.setColor(Color.red);
 		for (Segment seg : segments) {
 			seg.getTrack().draw(g);
-			seg.getTrack().drawID(g, seg.hashCode());
 		}
 	}
 
