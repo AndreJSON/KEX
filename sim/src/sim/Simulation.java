@@ -12,7 +12,8 @@ import javax.swing.JButton;
 public class Simulation implements ActionListener {
 
 	// public static final fields
-	public static final boolean SHOW_TRACKS = true;
+	public static final boolean SHOW_GRID = true;
+	public static final boolean SHOW_TRACKS = false;
 	public static final boolean DEBUG = false;
 	public static final int X = 0, Y = 1;
 	public static final int[] windowSize = { 1000, 800 };

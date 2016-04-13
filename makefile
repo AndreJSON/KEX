@@ -34,6 +34,7 @@ $(TRAVELDATA)/TravelData.java \
 $(TRAVELDATA)/TravelPlan.java \
 $(UTIL)/QuadTree.java \
 $(UTIL)/CollisionBox.java \
+$(SIM)/PerfDb.java \
 $(SIM)/Drawable.java \
 $(SIM)/EntityDb.java \
 $(SIM)/Logic.java \

@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class Intersection {
 
 	// public static fields
-	public static final double straight = 1, turn = 3, buffer = 1,
+	public static final double straight = 5, turn = 5, buffer = 4,
 			width = 3.2;
 	private static final double arm = straight + turn + buffer;
 	private static final double square = width * 3;
@@ -166,6 +166,15 @@ public class Intersection {
 			direction = Const.LEFT;
 		}
 		return getByPoints(waypoints[from][split], waypoints[from][direction]);
+	}
+
+	public static Segment getSquareSegment(int from, int to) {
+
+		int start = Const.STRAIGHT;
+		if (to == (from + 1) % 4) { // Going left
+			start = Const.LEFT;
+		}
+		return getByPoints(waypoints[from][start], waypoints[to][Const.EXIT]);
 	}
 
 	public static Segment getByID(int id) {

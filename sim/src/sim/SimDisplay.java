@@ -15,6 +15,8 @@ import map.intersection.Intersection;
 import car.Car;
 import car.CarModelDb;
 
+import tscs.SADSchedule;
+
 /**
  * SimDisplay handles the rendering of objects in the simulation.
  * 
@@ -52,7 +54,14 @@ class SimDisplay extends Canvas {
 		drawBackground(g2d);
 		drawIntersection(g2d);
 		drawCars(g2d);
-		Intersection.getByID(14).getCollisionBoxes(CarModelDb.getByName("Mazda3")).get(0).draw(g2d);
+		if(Simulation.SHOW_GRID) {
+			for(int i = 0; i < SADSchedule.GRID_BOXES_FINE.length; i++) {
+				for(int j = 0; j < SADSchedule.GRID_BOXES_FINE.length; j++) {
+					SADSchedule.GRID_BOXES_FINE[i][j].draw(g2d);
+				}
+			}
+			Intersection.getByID(SADSchedule.SEG_IDS[2][3]).getCollisionBoxes(CarModelDb.getByName("Mazda3")).get(105).draw(g2d);
+		}
 		drawInterface(g2d);
 
 		// paint to graphics object here

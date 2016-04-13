@@ -15,30 +15,22 @@ public class SADSchedule {
 	private static final int TILE_AMOUNT = 18; //How many tiles the intersection should have in each dimenstion.
 	private static final double INTERSECTION_DIST = Intersection.straight + Intersection.turn; // Distance from map edge to the intersection.
 	private static final double INTERSECTION_SIZE = 3 * Intersection.width + 2 * Intersection.buffer;
-	private static final int[][] SEG_IDS = {//[FROM][TO]
-		{-1, 7, 14, 13},
-		{22, -1, 12, 2},
-		{11, 12, -1, 4},
-		{24, 18, 19, -1}
-	};
+	public static final int[][] SEG_IDS = initSegID();//[FROM][TO]
 	private static final double TILE_SIZE_FINE = (INTERSECTION_SIZE / (double)TILE_AMOUNT);
 	private static final double TILE_SIZE_9 = (INTERSECTION_SIZE / (double)3);
 	private static final double TILE_SIZE_4 = (INTERSECTION_SIZE / (double)2);
-	private static final CollisionBox[][] GRID_BOXES_FINE = initGridBox(TILE_AMOUNT); //[X][Y] 0 < X,Y < TILE_AMOUNT
-	private static final CollisionBox[][] GRID_BOXES_9 = initGridBox(3); //[X][Y] 0 < X,Y < 3
-	private static final CollisionBox[][] GRID_BOXES_4 = initGridBox(2); //[X][Y] 0 < X,Y < 2
+	public static final CollisionBox[][] GRID_BOXES_FINE = initGridBox(TILE_AMOUNT); //[X][Y] 0 < X,Y < TILE_AMOUNT
+	public static final CollisionBox[][] GRID_BOXES_9 = initGridBox(3); //[X][Y] 0 < X,Y < 3
+	public static final CollisionBox[][] GRID_BOXES_4 = initGridBox(2); //[X][Y] 0 < X,Y < 2
 	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_FINE = initOccupation(TILE_AMOUNT, GRID_BOXES_FINE); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
 	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_9 = initOccupation(3, GRID_BOXES_9); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
 	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_4 = initOccupation(2, GRID_BOXES_4); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
-	private static LinkedList<Integer>[][] space4Blocks; //[FROM][TO] dessa ska eventuellt inte finnas
-	private static LinkedList<Integer>[][] space9Blocks; //[FROM][TO]
 	private Grid[] grids;
 	private int gridIndex;
 
 	public SADSchedule() {
 		grids = new Grid[TILE_AMOUNT];
-		System.out.println(Intersection.getByID(SEG_IDS[0][2]).getCollisionBoxes(CarModelDb.getByName("Mazda3")).get(0).getPosition());
-		for(Pair p : OCCUPATION_4[SEG_IDS[1][0]].get(1)) {
+		for(Pair p : OCCUPATION_FINE[SEG_IDS[2][3]].get(105)) {
 			System.out.println(p.first() + " " + p.second());
 		}
 	}
@@ -110,6 +102,19 @@ public class SADSchedule {
 		}
 	}
 
+	private static int[][] initSegID() {
+		int[][] tmp = new int[4][4];
+		for(int from = 0; from <= 3; from++) {
+			for(int to = 0; to <= 3; to++) {
+				if(from == to) {
+					continue;
+				}
+				tmp[from][to] = Intersection.getSquareSegment(from,to).hashCode();
+			}
+		}
+		return tmp;
+	}
+
 	private static CollisionBox[][] initGridBox(int dim) {
 		CollisionBox[][] tmp = new CollisionBox[dim][dim];
 		double tileSize = INTERSECTION_SIZE / (double)dim;
@@ -127,7 +132,8 @@ public class SADSchedule {
 			for(int to = 0; to <= 3; to++) {
 				if(from == to) {
 					continue;
-				}				int id = SEG_IDS[from][to];
+				}				
+				int id = SEG_IDS[from][to];
 				tmp[id] = new ArrayList<LinkedList<Pair>>(200);
 				ArrayList<CollisionBox> boxes = Intersection.getByID(id).getCollisionBoxes(CarModelDb.getByName("Mazda3"));
 				for(int i = 0; i < boxes.size(); i++) {
