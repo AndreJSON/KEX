@@ -36,8 +36,9 @@ public class EntityDb {
 		return cars;
 	}
 
-	public static void addCar(Car car, int from, int to) {
-		TravelData travelData = TravelData.getTravelData(from, to);
+	public static void addCar(Car car, int from, int to, double timeOfCreation) {
+		TravelData travelData = TravelData.getTravelData(from, to, timeOfCreation);
+		car.setSpeed(Const.SPEED_LIMIT);
 		car.setTravelData(travelData);
 		cars.add(car);
 		if (Simulation.DEBUG) {

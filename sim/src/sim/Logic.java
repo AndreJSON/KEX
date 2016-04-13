@@ -10,7 +10,6 @@ import math.Vector2D;
 import car.Car;
 import car.CarModelDb;
 import spawner.*;
-import traveldata.TravelData;
 import tscs.AbstractTSCS;
 import util.CollisionBox;
 import util.QuadTree;
@@ -25,8 +24,9 @@ import util.QuadTree;
 public class Logic {
 
 	// private fields
-	private AbstractTSCS tscs;
-	private SpawnerInterface[] spawners;
+	private final AbstractTSCS tscs;
+	private final SpawnerInterface[] spawners;
+	private final Simulation sim;
 	/**
 	 * For checking collision.
 	 */
@@ -35,8 +35,9 @@ public class Logic {
 			(int) Intersection.getSize() + 20));
 
 	// constructor
-	Logic(AbstractTSCS tscs) {
+	Logic(Simulation sim, AbstractTSCS tscs) {
 		this.tscs = tscs;
+		this.sim = sim;
 		// Use BinomialSpawner for heavy traffic.
 		// Use PoissonSpawner for light traffic.
 		spawners = new SpawnerInterface[] {
@@ -66,8 +67,7 @@ public class Logic {
 	// public methods
 	public void spawnCar(String carName, int from, int to) {
 		Car car = new Car(CarModelDb.getByName(carName));
-		car.setSpeed(Const.SPEED_LIMIT);
-		EntityDb.addCar(car, from, to);
+		EntityDb.addCar(car, from, to, sim.elapsedTime());
 	}
 
 	// private methods
@@ -123,6 +123,7 @@ public class Logic {
 			car.move(diff);
 			if (car.isFinished()) {
 				EntityDb.removeCarFromSegment(car);
+				PerfDb.addData(sim.elapsedTime(), car.getTravelData());
 				it.remove();
 				continue;
 			}

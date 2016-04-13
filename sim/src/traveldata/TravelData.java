@@ -6,18 +6,20 @@ public class TravelData {
 
 	// private final fields
 	private final TravelPlan travelPlan;
+	private final double startTime;
 
 	// private final fields
 	private int segmentIndex;
 
 	// constructor
-	private TravelData(TravelPlan travelPlan) {
+	private TravelData(TravelPlan travelPlan, double startTime) {
 		this.travelPlan = travelPlan;
+		this.startTime = startTime;
 		segmentIndex = 0;
 	}
 	
-	public static TravelData getTravelData(int origin, int destination){
-		return new TravelData(TravelPlan.getTravelPlan(origin, destination));
+	public static TravelData getTravelData(int origin, int destination, double startTime){
+		return new TravelData(TravelPlan.getTravelPlan(origin, destination), startTime);
 	}
 
 	/**
@@ -47,6 +49,14 @@ public class TravelData {
 
 	public int getDestination() {
 		return travelPlan.getDestination();
+	}
+
+	public double getStartTime() {
+		return startTime;
+	}
+
+	public double getOptimalTime() {
+		return travelPlan.optimalTime();
 	}
 
 }

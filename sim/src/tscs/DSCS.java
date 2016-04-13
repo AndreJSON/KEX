@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import sim.Const;
 import sim.EntityDb;
-import traveldata.TravelData;
 import car.Car;
 import math.Pair;
 import map.intersection.*;

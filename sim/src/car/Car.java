@@ -478,4 +478,8 @@ public class Car implements Drawable {
 	public Segment getSegment() {
 		return travelData.currentSegment();
 	}
+
+	public TravelData getTravelData() {
+		return travelData;
+	}
 }
