@@ -20,7 +20,7 @@ import java.util.HashMap;
 public class Intersection {
 
 	// public static fields
-	public static final double straight = 50, turn = 120, buffer = 3,
+	public static final double straight = 50, turn = 120, buffer = 4,
 			width = 3.2;
 	private static final double arm = straight + turn + buffer;
 	private static final double square = width * 3;
@@ -171,6 +171,10 @@ public class Intersection {
 
 	public static Segment getByID(int id) {
 		return segments.get(id);
+	}
+
+	public static int numberOfSegments() {
+		return segments.size();
 	}
 
 	public static double getSize() {
