@@ -5,6 +5,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.Graphics2D;
+import java.awt.Color;
+
+import sim.Simulation;
 
 public class CollisionBox {
 	private final Line2D.Double[] lines;
@@ -90,5 +94,16 @@ public class CollisionBox {
 			throw new RuntimeException(
 					"CollisionBox not completed: lines added = " + linesAdded
 							+ " < " + lines.length);
+	}
+
+	public Point2D getPosition() {
+		return position;
+	}
+
+	public void draw(Graphics2D g2d) {
+		g2d.setColor(Color.PINK);
+		for (Line2D.Double line : this.lines) {
+			g2d.drawLine((int)(Simulation.SCALE * line.x1), (int)(Simulation.SCALE * line.y1), (int)(Simulation.SCALE * line.x2), (int)(Simulation.SCALE * line.y2));
+		}
 	}
 }
