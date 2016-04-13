@@ -15,6 +15,7 @@ import map.intersection.Intersection;
 import traveldata.TravelData;
 
 import car.Car;
+import car.CarModelDb;
 
 /**
  * SimDisplay handles the rendering of objects in the simulation.
@@ -53,6 +54,7 @@ class SimDisplay extends Canvas {
 		drawBackground(g2d);
 		drawIntersection(g2d);
 		drawCars(g2d);
+		Intersection.getByID(14).getCollisionBoxes(CarModelDb.getByName("Mazda3")).get(0).draw(g2d);
 		drawInterface(g2d);
 
 		// paint to graphics object here

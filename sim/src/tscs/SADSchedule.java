@@ -27,8 +27,8 @@ public class SADSchedule {
 	private static final CollisionBox[][] GRID_BOXES_FINE = initGridBox(TILE_AMOUNT); //[X][Y] 0 < X,Y < TILE_AMOUNT
 	private static final CollisionBox[][] GRID_BOXES_9 = initGridBox(3); //[X][Y] 0 < X,Y < 3
 	private static final CollisionBox[][] GRID_BOXES_4 = initGridBox(2); //[X][Y] 0 < X,Y < 2
-	//private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_FINE = initOccupation(TILE_AMOUNT, GRID_BOXES_FINE); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
-	//private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_9 = initOccupation(3, GRID_BOXES_9); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_FINE = initOccupation(TILE_AMOUNT, GRID_BOXES_FINE); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
+	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_9 = initOccupation(3, GRID_BOXES_9); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
 	private static final ArrayList<LinkedList<Pair>>[] OCCUPATION_4 = initOccupation(2, GRID_BOXES_4); //[ID].get(POS) where pos is how the amount of AbstractTrack.POINT_STEPs into the track
 	private static LinkedList<Integer>[][] space4Blocks; //[FROM][TO] dessa ska eventuellt inte finnas
 	private static LinkedList<Integer>[][] space9Blocks; //[FROM][TO]
@@ -37,7 +37,10 @@ public class SADSchedule {
 
 	public SADSchedule() {
 		grids = new Grid[TILE_AMOUNT];
-		//System.out.println(OCCUPATION_4[SEG_IDS[0][1]].get(5));
+		System.out.println(Intersection.getByID(SEG_IDS[0][2]).getCollisionBoxes(CarModelDb.getByName("Mazda3")).get(0).getPosition());
+		for(Pair p : OCCUPATION_4[SEG_IDS[1][0]].get(1)) {
+			System.out.println(p.first() + " " + p.second());
+		}
 	}
 
 	/**
@@ -136,7 +139,6 @@ public class SADSchedule {
 	}
 
 	private static LinkedList<Pair> getOccupationTiles(int dim, CollisionBox[][] grid, CollisionBox b) {
-		System.out.println(b.getPosition());
 		LinkedList<Pair> list = new LinkedList<Pair>();
 		for(int i = 0; i < dim; i++) {
 			for(int j = 0; j < dim; j++) {
