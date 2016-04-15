@@ -21,7 +21,7 @@ public class DSCS extends AbstractTSCS {
 	private double gapOutTimer = 0;
 
 	// Stop x meters from intersection. If no buffer, the cars will spill over.
-	private double BUFFER = 3;
+	private static final double BUFFER = Const.COLUMN_DISTANCE;
 
 	public DSCS() {
 		phases = new HashMap<>();

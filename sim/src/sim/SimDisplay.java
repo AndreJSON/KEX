@@ -13,7 +13,6 @@ import java.util.Collection;
 import map.intersection.Intersection;
 
 import car.Car;
-import car.CarModelDb;
 
 import tscs.SADSchedule;
 

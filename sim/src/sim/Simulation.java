@@ -20,8 +20,7 @@ public class Simulation implements ActionListener {
 	public static final int HUDSize = windowSize[X] - windowSize[Y];
 	public static final int SimulationSize = windowSize[Y];
 	public static final int FPS = 60;
-	public static final double SCALE = windowSize[Y]
-			/ Intersection.getSize();
+	public static final double SCALE = windowSize[Y] / Intersection.getSize();
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
@@ -55,7 +54,7 @@ public class Simulation implements ActionListener {
 		logic = new Logic(this, tscs);
 		simDisp = new SimDisplay(this);
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
-		
+
 		window = new JFrame(
 				"SAD Project - Autonomous Vehicle Intersection Controller");
 		window.setLayout(null);
@@ -91,17 +90,18 @@ public class Simulation implements ActionListener {
 		long tickTime = System.nanoTime();
 		boolean pause = false;
 		while (true) {
+			long now = System.nanoTime();
 
 			// Drawing
+
 			if (nextTime <= System.nanoTime()) {
-				nextTime += delay;
+				nextTime = now + delay;
 				simDisp.render();
 				fps++;
 
 			}
 
 			// ticking
-			long now = System.nanoTime();
 			while (now - tickTime >= 1e9 / TICKS_PER_SECOND && !pause) {
 				try {
 					logic.tick(SCALE_TICK / TICKS_PER_SECOND);
