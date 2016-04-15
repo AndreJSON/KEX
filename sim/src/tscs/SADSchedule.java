@@ -76,7 +76,7 @@ public class SADSchedule {
 		}
 	}
 
-	public void step() {
+	public void tick() {
 		grids[gridIndex].wipe();
 		gridIndex = (gridIndex + 1) % grids.length;
 	}

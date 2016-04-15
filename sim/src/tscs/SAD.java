@@ -12,7 +12,7 @@ import sim.EntityDb;
 
 public class SAD extends AbstractTSCS {
 	private SADSchedule sched;
-	private HashMap<Car, SADPlan> plans;
+	private HashMap<Car, SADPlan> plans; //SAD has a plan for everyone...
 	private ArrayList<Segment> incomingSegments;
 
 	public SAD() {
@@ -23,7 +23,7 @@ public class SAD extends AbstractTSCS {
 
 	public void tick(double diff) {
 		//super.tick(diff);
-		sched.step(); //Step the schedule one step forward per tick.
+		sched.tick(); //Step the schedule one step forward.
 		LinkedList<Car> cars = new LinkedList<Car>();
 		for(Segment seg : incomingSegments) {
 			cars = EntityDb.getCarsOnSegment(seg); //With the current intersection model, this can only ever return 0 or 1 car.
