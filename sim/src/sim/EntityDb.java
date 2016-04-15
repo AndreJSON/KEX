@@ -77,7 +77,6 @@ public class EntityDb {
 			carsOnSegment = new LinkedList<>();
 			segment2car.put(car.getSegment(), carsOnSegment);
 		}
-		System.out.println("Moved " + car + " to " + car.getSegment().hashCode());
 		carsOnSegment.add(car);
 	}
 

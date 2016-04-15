@@ -67,11 +67,8 @@ public class QuadTree {
 		int index = getIndex(shape.getBounds());
 		if (index != -1 && nodes[0] != null) {
 			nodes[index].retrieve(returnObjects, shape);
-			return returnObjects;
 		}
-
 		returnObjects.addAll(shapes);
-
 		return returnObjects;
 	}
 

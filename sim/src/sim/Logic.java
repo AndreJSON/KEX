@@ -8,6 +8,7 @@ import map.intersection.*;
 import math.Vector2D;
 import car.Car;
 import car.CarModelDb;
+import car.RangeData;
 import spawner.*;
 import tscs.AbstractTSCS;
 import util.CollisionBox;
@@ -86,11 +87,13 @@ public class Logic {
 				continue;
 			}
 
-			Car inFront = car.nextCar();
-			if (inFront == null) {
+			RangeData rangeData = car.getRangeData();
+			if (rangeData == null) {
 				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			} else {
-				double dist = car.distNextCar() - Const.COLUMN_DISTANCE;
+				Car inFront = rangeData.getCar();
+				double dist = rangeData.distance();
+				dist -= Const.COLUMN_DISTANCE;
 				double car1breakVal = car.getMaxDeceleration()
 						/ Const.BREAK_COEF;
 				double car2breakVal = inFront.getMaxDeceleration()

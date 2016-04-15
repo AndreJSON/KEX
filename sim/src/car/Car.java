@@ -115,7 +115,7 @@ public class Car implements Drawable {
 		if (position.remaining() > 0) {
 			speed += acceleration * diff;
 			speedClamp();
-			
+
 			position.move(diff * getSpeed());
 			double rotation = getSpeed()
 					* (Math.tan(position.getHeading() - heading) / carModel
@@ -378,37 +378,7 @@ public class Car implements Drawable {
 		this.collisionBox = collisionBox;
 	}
 
-	public Car nextCar() {
-		Segment searchSegment;
-		Iterator<Car> carsOnSegment;
-		boolean passedSelf = false;
-
-		passedSelf = false;
-		searchSegment = travelData.currentSegment();
-		while (true) {
-			carsOnSegment = EntityDb.getCarsOnSegment(searchSegment)
-					.descendingIterator();
-			while (carsOnSegment.hasNext()) {
-				Car nextCar = carsOnSegment.next();
-				if (equals(nextCar)) {
-					passedSelf = true;
-				} else if (passedSelf) {
-					System.out.println("Found car.");
-					return nextCar;
-				}
-			}
-			searchSegment = searchSegment.nextSegment(travelData
-					.getDestination());
-			if (searchSegment == null) {
-				break;
-			}
-		}
-
-		// Return null if no car is in front of this car.
-		return null;
-	}
-
-	public double distNextCar() {
+	public RangeData getRangeData() {
 		// If the car has passed itself during the search.
 		boolean passedSelf = false;
 		// Get the travel data of the car.
@@ -418,7 +388,6 @@ public class Car implements Drawable {
 		Iterator<Car> carsOnSegment;
 		// The distance to next car.
 		double distance;
-		//
 
 		distance = 0;
 		passedSelf = false;
@@ -432,18 +401,17 @@ public class Car implements Drawable {
 					passedSelf = true;
 				} else if (passedSelf) {
 					distance += -nextCar.remainingOnTrack()
-							+ remainingOnTrack() - nextCar.getModel().getLength();
-					return distance;
+							+ remainingOnTrack()
+							- nextCar.getModel().getLength();
+					return new RangeData(nextCar, distance);
 				}
 			}
 			searchSegment = searchSegment.nextSegment(travelData
 					.getDestination());
 			if (searchSegment == null)
-				break;
+				return null;
 			distance += searchSegment.length();
 		}
-		// Return -1 if no car is in front of this car.
-		return -1;
 	}
 
 	/**
@@ -468,7 +436,7 @@ public class Car implements Drawable {
 		EntityDb.addCarToSegment(this);
 	}
 
-	public boolean isFinished(){
+	public boolean isFinished() {
 		return finished;
 	}
 
@@ -479,5 +447,5 @@ public class Car implements Drawable {
 	public TravelData getTravelData() {
 		return travelData;
 	}
-	
+
 }
