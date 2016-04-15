@@ -204,7 +204,7 @@ public class Car implements Drawable {
 	}
 
 	public void setAcc(double value) {
-		acceleration += value;
+		acceleration = value;
 		accelerationClamp();
 	}
 
