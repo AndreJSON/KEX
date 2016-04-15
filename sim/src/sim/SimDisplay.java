@@ -61,7 +61,6 @@ class SimDisplay extends Canvas {
 					SADSchedule.GRID_BOXES_FINE[i][j].draw(g2d);
 				}
 			}
-			Intersection.getByID(SADSchedule.SEG_IDS[2][3]).getCollisionBoxes(CarModelDb.getByName("Mazda3")).get(105).draw(g2d);
 		}
 		drawInterface(g2d);
 

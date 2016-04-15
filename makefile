@@ -27,6 +27,7 @@ $(TSCS)/AbstractTSCS.java \
 $(TSCS)/DSCS.java \
 $(TSCS)/SAD.java \
 $(TSCS)/SADSchedule.java \
+$(TSCS)/SADPlan.java \
 $(SPAWNER)/PoissonSpawner.java \
 $(SPAWNER)/BinomialSpawner.java \
 $(SPAWNER)/SpawnerInterface.java \

@@ -25,8 +25,8 @@ public class Simulation implements ActionListener {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 2;
-	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
+	public static final double SCALE_TICK = 0.1;
+	public static final int TICKS_PER_SECOND = (int) (60 * SCALE_TICK);
 
 	// private fields
 	private double elapsedTime = 0;

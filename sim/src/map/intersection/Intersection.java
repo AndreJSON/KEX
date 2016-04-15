@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class Intersection {
 
 	// public static fields
-	public static final double straight = 0.1, turn = 100, buffer = 3,
+	public static final double straight = 0.0001, turn = 100, buffer = 3,
 			width = 3.1;
 	private static final double arm = straight + turn + buffer;
 	private static final double square = width * 3;

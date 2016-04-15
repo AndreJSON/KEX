@@ -40,9 +40,10 @@ public class SADSchedule {
 	private int gridIndex;
 
 	public SADSchedule() {
+		gridIndex = 0;
 		grids = new Grid[TILE_AMOUNT];
-		for(Pair p : OCCUPATION_FINE[SEG_IDS[2][3]].get(105)) {
-			System.out.println(p.first() + " " + p.second());
+		for(int i = 0; i < grids.length; i++) {
+			grids[i] = new Grid(TILE_AMOUNT);
 		}
 	}
 
@@ -50,7 +51,7 @@ public class SADSchedule {
 	 * Returns the cars distance to the intersection.
 	 */
 	public double distanceToI(Car car) {
-		return distance(car.getPosition(),INTERSECTION_POINTS[car.getOrigin()]);
+		return distance(car.getPosition(), INTERSECTION_POINTS[car.getOrigin()]);
 	}
 
 	/**
@@ -67,7 +68,7 @@ public class SADSchedule {
 		double vel = car.getSpeed();
 		double acc = car.getMaxAcceleration() * Const.ACC_COEF;
 		double timeToMaxSpeed = (Const.SPEED_LIMIT - vel) / acc;
-		if(timeToMaxSpeed * (vel + (timeToMaxSpeed * acc / 2)) > distanceToI(car)) { //The car will reach max speed before the intersection.
+		if(timeToMaxSpeed * (vel + (timeToMaxSpeed * acc / 2)) < distanceToI(car)) { //The car will reach max speed before the intersection.
 			return timeToMaxSpeed + (distanceToI(car) - timeToMaxSpeed * (vel + (timeToMaxSpeed * acc / 2))) / Const.SPEED_LIMIT;
 		}
 		else {
@@ -75,7 +76,7 @@ public class SADSchedule {
 		}
 	}
 
-	private void stepIndex() {
+	public void step() {
 		grids[gridIndex].wipe();
 		gridIndex = (gridIndex + 1) % grids.length;
 	}
