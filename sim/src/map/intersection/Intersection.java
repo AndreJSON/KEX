@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class Intersection {
 
 	// public static fields
-	public static final double straight = 0.0001, turn = 100, buffer = 3,
+	public static final double straight = 0.0001, turn = 200, buffer = 4,
 			width = 3.1;
 	private static final double arm = straight + turn + buffer;
 	private static final double square = width * 3;
@@ -287,7 +287,7 @@ public class Intersection {
 		area.add(a);
 
 		// Turn areas.
-		double damn = square * 1.8;
+		double damn = square * 2;
 		Shape rect = new Rectangle2D.Double(-damn / 2, -damn / 2, damn, damn);
 		AffineTransform aF = new AffineTransform();
 		aF.translate(intersectionSize / 2, intersectionSize / 2);

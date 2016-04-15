@@ -12,8 +12,8 @@ import map.intersection.*;
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 13, 7, 13, 7, 2 };
-	private static double GAP_OUT = 1;
+	private static final double[] MAX_PHASE_LENGTH = { 13, 7, 13, 7, 1.7 };
+	private static double GAP_OUT = 3;
 
 	private HashMap<Integer, Pair[]> phases;
 	private int currentPhase = Const.NORTH, lastPhase = IDLE;
@@ -105,7 +105,7 @@ public class DSCS extends AbstractTSCS {
 				if (tracRem < car.getBreakingDistance(maxDec)) {
 					// Can't break hard enough! Just try to not stand in the
 					// intersection.
-					car.setAcc(-car.getMaxDeceleration());
+					car.setAcc(car.getMaxAcceleration());
 				} else if (tracRem - BUFFER < car.getBreakingDistance(maxDec)) {
 					// Break medium hard, stop 3 meters from intersection.
 					car.setAcc(-maxDec);

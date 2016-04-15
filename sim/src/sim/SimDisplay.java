@@ -53,10 +53,10 @@ class SimDisplay extends Canvas {
 		drawBackground(g2d);
 		drawIntersection(g2d);
 		drawCars(g2d);
-		
-		if(Simulation.SHOW_GRID) {
-			for(int i = 0; i < SADSchedule.GRID_BOXES_FINE.length; i++) {
-				for(int j = 0; j < SADSchedule.GRID_BOXES_FINE.length; j++) {
+
+		if (Simulation.SHOW_GRID) {
+			for (int i = 0; i < SADSchedule.GRID_BOXES_FINE.length; i++) {
+				for (int j = 0; j < SADSchedule.GRID_BOXES_FINE.length; j++) {
 					SADSchedule.GRID_BOXES_FINE[i][j].draw(g2d);
 				}
 			}
@@ -107,12 +107,12 @@ class SimDisplay extends Canvas {
 		// Draw current phase
 		g2d.drawString(sim.drawPhase(), paddingX, 55);
 
-		g2d.drawString("Mean Time Lost: " + PerfDb.getMean(),
-				paddingX, 75);
-		g2d.drawString(
-				"Sqrt of Mean Sq Time Lost: " + PerfDb.getSqrtMeanSq(),
+		g2d.drawString("Mean Time Lost: " + PerfDb.getMean(), paddingX, 75);
+		g2d.drawString("Sqrt of Mean Sq Time Lost: " + PerfDb.getSqrtMeanSq(),
 				paddingX, 90);
-		g2d.drawString("FPS: " + sim.fps(), 700, 25);
+		g2d.drawString("FPS: " + sim.fps() + " Hz", 700, 25);
+		g2d.drawString("TPS: " + (int) (Simulation.TICKS_PER_SECOND) + " Hz",
+				700, 40);
 	}
 
 	private void drawIntersection(Graphics2D g2d) {

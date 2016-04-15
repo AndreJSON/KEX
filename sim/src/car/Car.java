@@ -204,7 +204,7 @@ public class Car implements Drawable {
 	}
 
 	public void setAcc(double value) {
-		acceleration += value;
+		acceleration = value;
 		accelerationClamp();
 	}
 
@@ -244,9 +244,13 @@ public class Car implements Drawable {
 	 * @return
 	 */
 	public double getBreakingDistance(double deceleration) {
+		return getBreakingDistance(getSpeed(), deceleration);
+	}
+
+	public static double getBreakingDistance(double speed, double deceleration) {
 		if (deceleration <= 0)
 			throw new RuntimeException("Deceleration must be positiv.");
-		return 0.5 * Math.pow(getSpeed(), 2.) / deceleration;
+		return 0.5 * Math.pow(speed, 2.) / deceleration;
 	}
 
 	/**
