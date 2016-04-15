@@ -2,7 +2,9 @@ package tscs;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.LinkedList;
+import java.util.Iterator;
 
 import car.Car;
 import map.intersection.Intersection;
@@ -17,7 +19,7 @@ public class SAD extends AbstractTSCS {
 
 	public SAD() {
 		sched = new SADSchedule();
-		plans = new HashMap<Car, SADPlan>();
+		plans = new HashMap<Car,SADPlan>();
 		incomingSegments = initIncomingSegments();
 	}
 
@@ -31,16 +33,34 @@ public class SAD extends AbstractTSCS {
 				makePlan(diff, car);
 			}
 		}
-		executePlans();
-		//car.setAutonomous(false); //All autonomy should be toggled off when running SAD.
+		Iterator<Map.Entry<Car,SADPlan>> it = plans.entrySet().iterator();
+		Map.Entry<Car,SADPlan> entry;
+		while(it.hasNext()) {
+			entry = it.next();
+			executePlan(entry.getKey(), entry.getValue());
+			//End by ticking the plan to step it forward.
+			entry.getValue().tick();
+		}
 	}
 
 	private void makePlan(double diff, Car car) {
-		//Make a plan for the car and add it to the hashmap.
+		SADPlan plan = new SADPlan();
+		plan.addDirective(0,SADPlan.SLOW_DOWN);
+		plans.put(car, plan);
+		//TODO: Take the schedule into account
 	}
 
-	private void executePlans() {
-		//Follow the plans.
+	private void executePlan(Car car, SADPlan plan) {
+		//All autonomy should be toggled off when running SAD.
+		car.setAutonomous(false);
+		int directive = plan.getDirective();
+		switch(directive) {
+			case -1: car.setAcc(-car.getMaxDeceleration() / Const.BREAK_COEF); break;
+			case  0: car.setAcc(0); break;
+			case  1: car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF); break;
+			default: throw new IllegalArgumentException("The plan is corrupt!");
+		}
+		//TODO: Actually follow the plan.
 	}
 
 	private ArrayList<Segment> initIncomingSegments() {

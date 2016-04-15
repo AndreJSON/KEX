@@ -50,7 +50,7 @@ public class Simulation implements ActionListener {
 
 	// Initializer
 	private void init() {
-		tscs = new DSCS();
+		tscs = new SAD();
 		logic = new Logic(this, tscs);
 		simDisp = new SimDisplay(this);
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);

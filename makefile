@@ -14,6 +14,7 @@ FILES = \
 $(CAR)/Car.java \
 $(CAR)/CarModel.java \
 $(CAR)/CarModelDb.java \
+$(CAR)/RangeData.java \
 $(INTERSECTION)/Segment.java \
 $(INTERSECTION)/Intersection.java \
 $(TRACK)/AbstractTrack.java \
