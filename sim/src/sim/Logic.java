@@ -41,11 +41,11 @@ public class Logic {
 		// Use BinomialSpawner for heavy traffic.
 		// Use PoissonSpawner for light traffic.
 		spawners = new SpawnerInterface[] {
-				new BinomialSpawner(this, Const.NORTH, 50, 1./9),
+				new BinomialSpawner(this, Const.NORTH, 5, 4./9),
 				// 10 * 0.5 = 5 <= mean value
-				new BinomialSpawner(this, Const.SOUTH, 50, 1./9),
-				new BinomialSpawner(this, Const.WEST, 50, 1./9),
-				new BinomialSpawner(this, Const.EAST, 50, 1./9) };
+				new BinomialSpawner(this, Const.SOUTH, 5, 4./9),
+				new BinomialSpawner(this, Const.WEST, 5, 4./9),
+				new BinomialSpawner(this, Const.EAST, 5, 4./9) };
 	}
 
 	// package methods
@@ -93,18 +93,18 @@ public class Logic {
 			} else {
 				Car inFront = rangeData.getCar();
 				double dist = rangeData.distance() - Const.COLUMN_DISTANCE;
-				double car1breakVal = car.getMaxDeceleration()
+				double car1breakVal = car.getMaxDec()
 						/ Const.BREAK_COEF;
-				double car2breakVal = inFront.getMaxDeceleration()
+				double car2breakVal = inFront.getMaxDec()
 						/ Const.BREAK_COEF;
 
 				double car1break = car.getBreakingDistance(car1breakVal);
 				double car1max = car.getMaxAcceleration() / Const.ACC_COEF;
 				double car2break = inFront.getBreakingDistance(car2breakVal);
-				double newSpeed = car.getSpeed() + car.getSpeed()*diff + car1max*(diff*diff);
+				double newSpeed = car.getSpeed();
 				newSpeed = Math.min(newSpeed, Const.SPEED_LIMIT);
 
-				if ( Car.getBreakingDistance(newSpeed, car1breakVal)<= dist + car2break) {
+				if ( Car.getBreakingDistance(newSpeed, car1breakVal)< dist + car2break) {
 					car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 				} else if (car1break <= dist + car2break) {
 					car.setAcc(0);

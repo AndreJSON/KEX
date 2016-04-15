@@ -51,6 +51,10 @@ public class Segment {
 		return id;
 	}
 
+	/**
+	 * The length of the segment.
+	 * @return
+	 */
 	public double length() {
 		return track.length();
 	}

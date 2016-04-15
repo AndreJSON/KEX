@@ -55,7 +55,7 @@ public class SAD extends AbstractTSCS {
 		car.setAutonomous(false);
 		int directive = plan.getDirective();
 		switch(directive) {
-			case -1: car.setAcc(-car.getMaxDeceleration() / Const.BREAK_COEF); break;
+			case -1: car.setAcc(-car.getMaxDec() / Const.BREAK_COEF); break;
 			case  0: car.setAcc(0); break;
 			case  1: car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF); break;
 			default: throw new IllegalArgumentException("The plan is corrupt!");

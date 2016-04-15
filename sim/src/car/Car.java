@@ -213,8 +213,7 @@ public class Car implements Drawable {
 	 * Clamps the acceleration.
 	 */
 	private void accelerationClamp() {
-		acceleration = clamp(-getMaxDeceleration(), getMaxAcceleration(),
-				acceleration);
+		acceleration = clamp(-getMaxDec(), getMaxAcceleration(), acceleration);
 	}
 
 	/**
@@ -233,7 +232,7 @@ public class Car implements Drawable {
 	 * @param diff
 	 * @return
 	 */
-	public double getMaxDeceleration() {
+	public double getMaxDec() {
 		return carModel.getMaxDeceleration();
 	}
 
@@ -294,8 +293,11 @@ public class Car implements Drawable {
 		aF.scale(Simulation.SCALE, Simulation.SCALE);
 		g2d.setColor(Color.black);
 		aF.rotate(getHeading());
-
-		g2d.setColor(carModel.getColor());
+		if (isAutonomous) {
+			g2d.setColor(carModel.getColor());
+		} else {
+			g2d.setColor(Color.red);
+		}
 		Shape shape = aF.createTransformedShape(carModel.getShape());
 		g2d.fill(shape);
 

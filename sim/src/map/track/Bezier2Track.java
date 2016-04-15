@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
-
 import sim.Simulation;
 
 import math.Vector2D;
@@ -17,11 +16,6 @@ import math.Vector2D;
  * 
  */
 public class Bezier2Track extends AbstractTrack {
-
-	/**
-	 * Number of iterations when computing the length of the curve.
-	 */
-	public static int RIEMANN_STEPS = 1000; // default value
 
 	// Control points 1,2,3.
 	/**
@@ -54,17 +48,6 @@ public class Bezier2Track extends AbstractTrack {
 		this.c2 = c2;
 		this.c3 = c3;
 
-		// Approximate track length using Riemann sum.
-		double length = 0;
-		Vector2D from = c1;
-		for (int i = 1; i < RIEMANN_STEPS; i++) {
-			Vector2D to = evaluate(i / (double) RIEMANN_STEPS);
-			length += from.distance(to);
-			from = to;
-		}
-
-		this.length = length;
-
 		v1 = (c1.mult(2)).minus(c2.mult(4)).plus(c3.mult(2));
 		v2 = (c2.minus(c1)).mult(2);
 
@@ -74,6 +57,14 @@ public class Bezier2Track extends AbstractTrack {
 		shape.moveTo(c1.x, c1.y);
 		shape.quadTo(c2.x, c2.y, c3.x, c3.y);
 
+		// Approximate track length.
+		double length = 0;
+		Position p = new Position(0);
+		while (p.t < 1) {
+			p.move(0.1);
+			length += 0.1;
+		}
+		this.length = length;
 	}
 
 	/**
