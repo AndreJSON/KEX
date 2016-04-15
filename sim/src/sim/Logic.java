@@ -87,25 +87,24 @@ public class Logic {
 				continue;
 			}
 
-			RangeData rangeData = car.getRangeData();
+			double car1max = car.getMaxAcceleration() / Const.ACC_COEF;
+			double car1breakVal = car.getMaxDeceleration() / Const.BREAK_COEF;
+			RangeData rangeData = car.getRangeData(Math.max(car.getBreakingDistance(car1breakVal),5));
 			if (rangeData == null) {
-				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
+				car.setAcc(car1max);
 			} else {
 				Car inFront = rangeData.getCar();
 				double dist = rangeData.distance() - Const.COLUMN_DISTANCE;
-				double car1breakVal = car.getMaxDec()
+				double car1breakVal = car.getMaxDeceleration()
 						/ Const.BREAK_COEF;
-				double car2breakVal = inFront.getMaxDec()
+				double car2breakVal = inFront.getMaxDeceleration()
 						/ Const.BREAK_COEF;
 
 				double car1break = car.getBreakingDistance(car1breakVal);
-				double car1max = car.getMaxAcceleration() / Const.ACC_COEF;
 				double car2break = inFront.getBreakingDistance(car2breakVal);
-				double newSpeed = car.getSpeed();
-				newSpeed = Math.min(newSpeed, Const.SPEED_LIMIT);
 
-				if ( Car.getBreakingDistance(newSpeed, car1breakVal)< dist + car2break) {
-					car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
+				if ( car1break < dist + car2break) {
+					car.setAcc(car1max);
 				} else if (car1break <= dist + car2break) {
 					car.setAcc(0);
 				} else {
@@ -152,11 +151,21 @@ public class Logic {
 			if (!car.isCollidable())
 				continue;
 			returnObjects.clear();
+<<<<<<< Updated upstream
 			returnObjects = quadTree.retrieve(returnObjects,
 					car.getCollisionBox());
 			for (CollisionBox other : returnObjects) {
 				if (CollisionBox.collide(car.getCollisionBox(), other)) {
 					throw new RuntimeException("Collision");
+=======
+			returnObjects = RangeFinder.allCars.retrieve(returnObjects, car.getBounds());
+			for (Car other : returnObjects) {
+				if (other.equals(car))
+					continue;
+				if (CollisionBox.collide(car.getCollisionBox(),
+						other.getCollisionBox())) {
+					//throw new RuntimeException("Collision");
+>>>>>>> Stashed changes
 				}
 			}
 			quadTree.insert(car.getCollisionBox());
