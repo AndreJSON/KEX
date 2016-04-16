@@ -13,7 +13,7 @@ public class QuadTree {
 	private final int level;
 	private final QuadTree[] nodes;
 
-	public QuadTree(Rectangle area) {
+	public QuadTree(Rectangle2D area) {
 		this(0, area);
 	}
 	

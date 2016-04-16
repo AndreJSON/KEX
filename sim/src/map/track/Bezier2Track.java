@@ -176,6 +176,7 @@ public class Bezier2Track extends AbstractTrack {
 
 		@Override
 		public void move(double distance) {
+
 			calcT(distance);
 			totalDistance += distance;
 
@@ -191,8 +192,10 @@ public class Bezier2Track extends AbstractTrack {
 		 */
 		private void calcT(double distance) {
 			double k1 = 1. / v1.mult(t).plus(v2).norm();
-			double k2 = 1. / v1.mult(t + distance * k1).plus(v2).norm();
-			t += distance * (k1 + k2) / 2.;
+			double k2 = 1. / v1.mult(t + distance / 2. * k1).plus(v2).norm();
+			double k3 = 1. / v1.mult(t + distance / 2 * k2).plus(v2).norm();
+			double k4 = 1. / v1.mult(t + distance * k3).plus(v2).norm();
+			t += distance * (k1 + 2 * k2 + 2 * k3 + k4) / 6.;
 		}
 
 		@Override

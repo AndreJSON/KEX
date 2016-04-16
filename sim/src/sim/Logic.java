@@ -40,11 +40,11 @@ public class Logic {
 		// Use BinomialSpawner for heavy traffic.
 		// Use PoissonSpawner for light traffic.
 		spawners = new SpawnerInterface[] {
-				new BinomialSpawner(this, Const.NORTH, 8, 0.5),
+				new BinomialSpawner(this, Const.NORTH, 12, 0.5),
 				// 10 * 0.5 = 5 <= mean value
-				new BinomialSpawner(this, Const.SOUTH, 8, 0.5),
-				new BinomialSpawner(this, Const.WEST, 8, 0.5),
-				new BinomialSpawner(this, Const.EAST, 8, 0.5) };
+				new BinomialSpawner(this, Const.SOUTH, 12, 0.5),
+				new BinomialSpawner(this, Const.WEST, 12, 0.5),
+				new BinomialSpawner(this, Const.EAST, 12, 0.5) };
 	}
 
 	// package methods

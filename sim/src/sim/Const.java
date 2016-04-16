@@ -27,7 +27,7 @@ public class Const {
 	// If this value is too low, the cars will collide in curves.
 	public static final double COLUMN_DISTANCE = 3;
 
-	public static final double TIME_STEP = 1 / 60.;
+	public static final double TIME_STEP = 1 / 120.;
 	// constructor
 	private Const() {
 	}

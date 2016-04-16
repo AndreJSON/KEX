@@ -1,7 +1,6 @@
 package tscs;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,7 +19,7 @@ import util.QuadTree;
 
 public class RecursiveBooking extends AbstractTSCS {
 	private static final int CACHE = 800;
-	private static final int DETECTOR_RANGE = 70;
+	private static final int DETECTOR_RANGE = 65;
 	private SpaceTime[] spaceTimes;
 	private int lastIndex;
 	private HashSet<ACar> bookedIn;
@@ -28,6 +27,7 @@ public class RecursiveBooking extends AbstractTSCS {
 	private final static double BUFFER = 3;
 	private boolean book = true;
 	private int bookTime = 0;
+	private int firstLane = 0;
 
 	public RecursiveBooking() {
 		spaceTimes = new SpaceTime[CACHE];
@@ -41,7 +41,7 @@ public class RecursiveBooking extends AbstractTSCS {
 				+ DETECTOR_RANGE * 2);
 
 		for (int i = 0; i < CACHE; i++) {
-			spaceTimes[i] = new SpaceTime();
+			spaceTimes[i] = new SpaceTime(controlArea);
 		}
 
 		lastIndex = 0;
@@ -52,17 +52,18 @@ public class RecursiveBooking extends AbstractTSCS {
 	}
 
 	public void tick(double diff) {
-		spaceTimes[(lastIndex + CACHE - 1) % CACHE].returnObjects.clear();
+		spaceTimes[(lastIndex + CACHE - 1) % CACHE].qT.clear();
 		lastIndex++;
 		bookTime++;
 
-		if (bookTime >= 10) {
+		if (bookTime >= 30) {
 			book = true;
+			firstLane = (firstLane + 1) % 4;
 			bookTime = 0;
 		}
 		for (int i = 0; i < 4; i++) {
 			// To prioritize different lanes
-			int from = lastIndex + i % 4;
+			int from = firstLane + i % 4;
 			int right = (from + 3) % 4;
 			for (int to = 0; to < 4; to++) {
 				if (from == to || right == to)
@@ -94,6 +95,7 @@ public class RecursiveBooking extends AbstractTSCS {
 
 			simCar = new SimCar(car);
 			simCar.copyParent();
+			simCar.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			if (book && book(simCar, lastIndex)) {
 				car.setAutonomous(false);
 				bookedIn.add(car);
@@ -120,7 +122,6 @@ public class RecursiveBooking extends AbstractTSCS {
 
 	private boolean book(SimCar car, int index) {
 		SpaceTime sT = getSpace(index);
-		car.setAcc(car.getParent().getMaxAcceleration() / Const.ACC_COEF);
 		car.setSpeed(Math.min(car.getSpeed(), Const.SPEED_LIMIT));
 		car.tick(Const.TIME_STEP);
 		car.updateCollisionBox();
@@ -136,12 +137,15 @@ public class RecursiveBooking extends AbstractTSCS {
 
 	private static class SpaceTime {
 		private final ArrayList<CollisionBox> returnObjects;
-
-		SpaceTime() {
+		QuadTree qT ;
+		SpaceTime(Rectangle2D controlArea) {
 			returnObjects = new ArrayList<>();
+			qT = new QuadTree(controlArea);
 		}
 
 		public boolean canBook(CollisionBox booker) {
+			returnObjects.clear();
+			qT.retrieve(returnObjects, booker);
 			for (CollisionBox other : returnObjects)
 				if (CollisionBox.collide(booker, other))
 					return false;
@@ -149,7 +153,7 @@ public class RecursiveBooking extends AbstractTSCS {
 		}
 
 		public void book(CollisionBox booker) {
-			returnObjects.add(booker);
+			qT.insert(booker);
 		}
 
 	}
