@@ -168,7 +168,7 @@ public class CarModel {
 	 * 
 	 * @return
 	 */
-	public double getMaxAcceleration() {
+	public double getMaxAcc() {
 		return maxAcceleration;
 	}
 
@@ -177,7 +177,7 @@ public class CarModel {
 	 * 
 	 * @return
 	 */
-	public double getMaxDeceleration() {
+	public double getMaxRet() {
 		return maxDeceleration;
 	}
 

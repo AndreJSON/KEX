@@ -6,13 +6,14 @@ import java.awt.Rectangle;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 
 import sim.Simulation;
 
 public class CollisionBox {
 	private final double xs[];
 	private final double ys[];
-	private Rectangle boundingBox;
+	private Rectangle2D.Double boundingBox;
 	private final int npoints;
 	private int points;
 
@@ -63,7 +64,43 @@ public class CollisionBox {
 		return newBox;
 	}
 
-	public Rectangle getBounds() {
+	public CollisionBox scale(double s) {
+		CollisionBox newBox = new CollisionBox(npoints);
+		for (int i = 0; i < npoints; i++) {
+			newBox.xs[i] = xs[i] * s;
+			newBox.ys[i] = ys[i] * s;
+		}
+		return newBox;
+	}
+
+	public CollisionBox scaleX(double s) {
+		CollisionBox newBox = new CollisionBox(npoints);
+		for (int i = 0; i < npoints; i++) {
+			newBox.xs[i] = xs[i] * s;
+			newBox.ys[i] = ys[i];
+		}
+		return newBox;
+	}
+
+	public CollisionBox translate(double dx, double dy) {
+		CollisionBox newBox = new CollisionBox(npoints);
+		for (int i = 0; i < npoints; i++) {
+			newBox.xs[i] = xs[i] + dx;
+			newBox.ys[i] = ys[i] + dy;
+		}
+		return newBox;
+	}
+	
+	public CollisionBox scaleY(double s) {
+		CollisionBox newBox = new CollisionBox(npoints);
+		for (int i = 0; i < npoints; i++) {
+			newBox.xs[i] = xs[i];
+			newBox.ys[i] = ys[i] * s;
+		}
+		return newBox;
+	}
+
+	public Rectangle2D getBounds() {
 		if (boundingBox == null) {
 			double minX = xs[0];
 			double maxX = xs[0];
@@ -85,8 +122,7 @@ public class CollisionBox {
 			}
 			double width = maxX - minX;
 			double height = maxY - minY;
-			boundingBox = new Rectangle((int) minX, (int) maxX, (int) width,
-					(int) height);
+			boundingBox = new Rectangle2D.Double(minX, maxX, width, height);
 		}
 		return boundingBox;
 	}

@@ -12,8 +12,9 @@ import java.util.Collection;
 
 import map.intersection.Intersection;
 
-import car.Car;
+import car.ACar;
 
+import tscs.RecursiveBooking;
 import tscs.SADSchedule;
 
 /**
@@ -53,7 +54,6 @@ class SimDisplay extends Canvas {
 		drawBackground(g2d);
 		drawIntersection(g2d);
 		drawCars(g2d);
-
 		if (Simulation.SHOW_GRID) {
 			for (int i = 0; i < SADSchedule.GRID_BOXES_FINE.length; i++) {
 				for (int j = 0; j < SADSchedule.GRID_BOXES_FINE.length; j++) {
@@ -111,7 +111,7 @@ class SimDisplay extends Canvas {
 		g2d.drawString("Sqrt of Mean Sq Time Lost: " + PerfDb.getSqrtMeanSq(),
 				paddingX, 90);
 		g2d.drawString("FPS: " + sim.fps() + " Hz", 700, 25);
-		g2d.drawString("TPS: " + (int) (Simulation.TICKS_PER_SECOND) + " Hz",
+		g2d.drawString("TPS: " + (int) sim.tps() + " Hz",
 				700, 40);
 	}
 
@@ -130,8 +130,8 @@ class SimDisplay extends Canvas {
 	}
 
 	private void drawCars(Graphics2D g2d) {
-		Collection<Car> cars = EntityDb.getCars();
-		for (Car car : cars) {
+		Collection<ACar> cars = EntityDb.getCars();
+		for (ACar car : cars) {
 			car.draw(g2d);
 		}
 	}

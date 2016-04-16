@@ -3,7 +3,7 @@ package tscs;
 import java.util.Iterator;
 
 import sim.EntityDb;
-import car.Car;
+import car.ACar;
 
 public abstract class AbstractTSCS {
 	protected boolean emergencyBreak = false;
@@ -12,10 +12,10 @@ public abstract class AbstractTSCS {
 
 	public void tick(double diff) {
 		if (emergencyBreak) {
-			Iterator<Car> it = EntityDb.getCars().iterator();
+			Iterator<ACar> it = EntityDb.getCars().iterator();
 			while (it.hasNext()) {
-				Car car = it.next();
-				car.setAcc(car.getMaxDec());
+				ACar car = it.next();
+				car.setAcc(car.getMaxDeceleration());
 				car.setAutonomous(false);
 			}
 		}

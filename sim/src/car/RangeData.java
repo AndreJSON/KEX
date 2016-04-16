@@ -7,15 +7,15 @@ package car;
  * 
  */
 public class RangeData {
-	private final Car car;
+	private final ACar car;
 	private final double distance;
 
-	public RangeData(Car car, double distance) {
+	public RangeData(ACar car, double distance) {
 		this.car = car;
 		this.distance = distance;
 	}
 
-	public Car getCar() {
+	public ACar getCar() {
 		return car;
 	}
 

@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import map.intersection.*;
-import math.Vector2D;
-import car.Car;
+import car.ACar;
 import car.CarModelDb;
 import car.RangeData;
 import spawner.*;
@@ -30,7 +29,7 @@ public class Logic {
 	/**
 	 * For checking collision.
 	 */
-	private final QuadTree quadTree = new QuadTree(0, new Rectangle(0, 0,
+	private final QuadTree quadTree = new QuadTree(new Rectangle(0, 0,
 			(int) Intersection.getSize() + 20,
 			(int) Intersection.getSize() + 20));
 
@@ -41,19 +40,19 @@ public class Logic {
 		// Use BinomialSpawner for heavy traffic.
 		// Use PoissonSpawner for light traffic.
 		spawners = new SpawnerInterface[] {
-				new BinomialSpawner(this, Const.NORTH, 5, 4./9),
+				new BinomialSpawner(this, Const.NORTH, 8, 0.5),
 				// 10 * 0.5 = 5 <= mean value
-				new BinomialSpawner(this, Const.SOUTH, 5, 4./9),
-				new BinomialSpawner(this, Const.WEST, 5, 4./9),
-				new BinomialSpawner(this, Const.EAST, 5, 4./9) };
+				new BinomialSpawner(this, Const.SOUTH, 8, 0.5),
+				new BinomialSpawner(this, Const.WEST, 8, 0.5),
+				new BinomialSpawner(this, Const.EAST, 8, 0.5) };
 	}
 
 	// package methods
 	void tick(double diff) {
 		updateCollisionBoxes();
 		checkCollision();
-		tscs.tick(diff);
 		handleAutonomous(diff);
+		tscs.tick(diff);
 		moveCars(diff);
 		updateSpawners(diff);
 	}
@@ -66,7 +65,7 @@ public class Logic {
 
 	// public methods
 	public void spawnCar(String carName, int from, int to) {
-		Car car = new Car(CarModelDb.getByName(carName));
+		ACar car = new ACar(CarModelDb.getByName(carName));
 		EntityDb.addCar(car, from, to, sim.elapsedTime());
 	}
 
@@ -78,37 +77,40 @@ public class Logic {
 	}
 
 	private void handleAutonomous(double diff) {
-		Iterator<Car> it = EntityDb.getCars().iterator();
+		Iterator<ACar> it = EntityDb.getCars().iterator();
 		while (it.hasNext()) {
-			Car car = it.next();
+			ACar car = it.next();
 
 			if (!car.isAutonomous()) {
 				car.setAutonomous(true);
 				continue;
 			}
 
-			double car1max = car.getMaxAcceleration() / Const.ACC_COEF;
-			double car1breakVal = car.getMaxDeceleration() / Const.BREAK_COEF;
-			RangeData rangeData = car.getRangeData(Math.max(car.getBreakingDistance(car1breakVal),5));
+			RangeData rangeData = car.getRangeData();
 			if (rangeData == null) {
-				car.setAcc(car1max);
+				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			} else {
-				Car inFront = rangeData.getCar();
+				ACar inFront = rangeData.getCar();
 				double dist = rangeData.distance() - Const.COLUMN_DISTANCE;
-				double car1breakVal = car.getMaxDeceleration()
+				double carBreakVal = car.getMaxDeceleration()
 						/ Const.BREAK_COEF;
-				double car2breakVal = inFront.getMaxDeceleration()
+				double frontBreakVal = inFront.getMaxDeceleration()
 						/ Const.BREAK_COEF;
 
-				double car1break = car.getBreakingDistance(car1breakVal);
-				double car2break = inFront.getBreakingDistance(car2breakVal);
-
-				if ( car1break < dist + car2break) {
-					car.setAcc(car1max);
-				} else if (car1break <= dist + car2break) {
-					car.setAcc(0);
+				double carBreakDistance = car.getBreakDistance(carBreakVal);
+				double carMax = car.getMaxAcceleration() / Const.ACC_COEF;
+				double otherBreakDistance = inFront
+						.getBreakDistance(frontBreakVal);
+				double newSpeed = car.getSpeed() + carMax * diff * diff;
+				newSpeed = Math.min(newSpeed, Const.SPEED_LIMIT);
+				double newBreakDist = ACar.getBreakDistance(newSpeed,
+						carBreakVal);
+				if (newBreakDist < dist + otherBreakDistance) {
+					car.setAcc(carMax);
+				} else if (carBreakDistance > dist + otherBreakDistance) {
+					car.setAcc(-carBreakVal);
 				} else {
-					car.setAcc(-car1breakVal);
+					car.setAcc(0);
 				}
 
 			}
@@ -120,10 +122,10 @@ public class Logic {
 	}
 
 	private void moveCars(double diff) {
-		Iterator<Car> it = EntityDb.getCars().iterator();
+		Iterator<ACar> it = EntityDb.getCars().iterator();
 		while (it.hasNext()) {
-			Car car = it.next();
-			car.move(diff);
+			ACar car = it.next();
+			car.tick(diff);
 			if (car.isFinished()) {
 				PerfDb.addData(sim.elapsedTime(), car.getTravelData());
 				it.remove();
@@ -133,13 +135,10 @@ public class Logic {
 	}
 
 	private void updateCollisionBoxes() {
-		Vector2D p;
-		for (Car car : EntityDb.getCars()) {
+		for (ACar car : EntityDb.getCars()) {
 			if (!car.isCollidable())
 				continue;
-			p = car.getPosition();
-			CollisionBox cB = car.getModel().getCollisionBox();
-			car.setCollisionBox(cB.transform(p.x, p.y, car.getHeading()));
+			car.updateCollisionBox();
 		}
 	}
 
@@ -147,25 +146,16 @@ public class Logic {
 		quadTree.clear();
 		ArrayList<CollisionBox> returnObjects = new ArrayList<>();
 
-		for (Car car : EntityDb.getCars()) {
+		for (ACar car : EntityDb.getCars()) {
 			if (!car.isCollidable())
 				continue;
 			returnObjects.clear();
-<<<<<<< Updated upstream
 			returnObjects = quadTree.retrieve(returnObjects,
 					car.getCollisionBox());
 			for (CollisionBox other : returnObjects) {
 				if (CollisionBox.collide(car.getCollisionBox(), other)) {
-					throw new RuntimeException("Collision");
-=======
-			returnObjects = RangeFinder.allCars.retrieve(returnObjects, car.getBounds());
-			for (Car other : returnObjects) {
-				if (other.equals(car))
-					continue;
-				if (CollisionBox.collide(car.getCollisionBox(),
-						other.getCollisionBox())) {
 					//throw new RuntimeException("Collision");
->>>>>>> Stashed changes
+					System.out.println("Collision!");
 				}
 			}
 			quadTree.insert(car.getCollisionBox());

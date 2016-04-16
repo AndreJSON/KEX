@@ -4,7 +4,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
-import car.Car;
+import car.ACar;
 import car.CarModelDb;
 import map.intersection.Intersection;
 import math.Vector2D;
@@ -50,21 +50,21 @@ public class SADSchedule {
 	/**
 	 * Returns the cars distance to the intersection.
 	 */
-	public double distanceToI(Car car) {
-		return distance(car.getPosition(), INTERSECTION_POINTS[car.getOrigin()]);
+	public double distanceToI(ACar car) {
+		return distance(car.getPos(), INTERSECTION_POINTS[car.getOrigin()]);
 	}
 
 	/**
 	 * Returns the amount of time until the car will get to the intersection given its curent velocity.
 	 */
-	public double timeToI(Car car) {
+	public double timeToI(ACar car) {
 		return distanceToI(car) / car.getSpeed();
 	}
 
 	/**
 	 * Returns the fastest time the car could get to the intersection given that it accelerates to road max speed as fast as it can.
 	 */
-	private double fastestTimeToI(Car car) {
+	private double fastestTimeToI(ACar car) {
 		double vel = car.getSpeed();
 		double acc = car.getMaxAcceleration() * Const.ACC_COEF;
 		double timeToMaxSpeed = (Const.SPEED_LIMIT - vel) / acc;
@@ -91,7 +91,7 @@ public class SADSchedule {
 		return true; //TODO: Return calculated value instead of true.
 	}
 
-	public LinkedList<Car> fineCheckCars(/*Have a decent representation of an object in space*/) {
+	public LinkedList<ACar> fineCheckCars(/*Have a decent representation of an object in space*/) {
 		return null; //TODO: Return calculated value instead of null.
 	}
 
@@ -104,12 +104,12 @@ public class SADSchedule {
 
 	private class Grid {
 		public boolean[][] space4, space9;
-		public Car[][] spaceFine;
+		public ACar[][] spaceFine;
 
 		public Grid(int dim) {
 			space4 = new boolean[2][2];
 			space9 = new boolean[3][3];
-			spaceFine = new Car[dim][dim];
+			spaceFine = new ACar[dim][dim];
 		}
 
 		/**

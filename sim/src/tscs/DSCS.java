@@ -6,15 +6,15 @@ import java.util.LinkedList;
 
 import sim.Const;
 import sim.EntityDb;
-import car.Car;
-import car.RangeData;
+import car.ACar;
+import car.AbstractCar;
 import math.Pair;
 import map.intersection.*;
 
 public class DSCS extends AbstractTSCS {
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	private static final double[] MAX_PHASE_LENGTH = { 13, 7, 13, 7, 0 };
+	private static final double[] MAX_PHASE_LENGTH = { 13, 7, 13, 7, 8 };
 	private static double GAP_OUT = 1;
 
 	private HashMap<Integer, Pair[]> phases;
@@ -23,7 +23,7 @@ public class DSCS extends AbstractTSCS {
 	private double gapOutTimer = 0;
 
 	// Stop x meters from intersection. If no buffer, the cars will spill over.
-	private static final double BUFFER = Const.COLUMN_DISTANCE;
+	private static final double BUFFER = 0.5;
 
 	public DSCS() {
 		phases = new HashMap<>();
@@ -93,7 +93,7 @@ public class DSCS extends AbstractTSCS {
 				if (EntityDb.getCarsOnSegment(segment).isEmpty()) {
 					continue;
 				}
-				Car car = EntityDb.getCarsOnSegment(segment).getFirst();
+				ACar car = EntityDb.getCarsOnSegment(segment).getFirst();
 				stopCar(car);
 			}
 		}
@@ -106,53 +106,41 @@ public class DSCS extends AbstractTSCS {
 			if (EntityDb.getCarsOnSegment(segment).isEmpty()) {
 				continue;
 			}
-			LinkedList<Car> car = EntityDb.getCarsOnSegment(segment);
+			LinkedList<ACar> car = EntityDb.getCarsOnSegment(segment);
 			processCars(car);
 		}
 	}
 
-	private void stopCar(Car car) {
+	private void stopCar(ACar car) {
 		car.setAutonomous(false);
-		double maxDec = car.getMaxDec() / Const.BREAK_COEF;
+		double maxDec = car.getMaxDeceleration() / Const.BREAK_COEF;
 		double tracRem = car.remainingOnTrack();
-		if (car.getBreakingDistance(maxDec) > tracRem - BUFFER) {
+		if (car.getBreakDistance(maxDec) > tracRem - BUFFER) {
 			car.setAcc(-maxDec);
-		} else if (car.getBreakingDistance(maxDec / 2.) > tracRem - BUFFER) {
-			car.setAcc(-maxDec / 2);
+		} else if (car.getBreakDistance(maxDec / 1.5) > tracRem - BUFFER) {
+			car.setAcc(-maxDec / 1.5);
 		} else {
 			car.setAutonomous(true);
 		}
 	}
 
-	private void processCars(LinkedList<Car> cars) {
-		for (Car car : cars){
+	private void processCars(LinkedList<ACar> cars) {
+		for (ACar car : cars) {
 			double maxAcc = car.getMaxAcceleration() / Const.ACC_COEF;
-			double maxDec = car.getMaxDec() / Const.BREAK_COEF;
+			double maxDec = car.getMaxDeceleration() / Const.BREAK_COEF;
 			double tracRem = car.remainingOnTrack();
-			double maxDist = distance(car.getSpeed(), maxAcc, phaseTimeLeft(), Const.SPEED_LIMIT);
-			double maxBreak = car.getBreakingDistance(maxDec);
-			if ( maxDist < tracRem - BUFFER) {
-				if (tracRem - BUFFER< maxBreak && maxBreak <  tracRem){
+			double maxDist = AbstractCar.distance(car.getSpeed(), maxAcc, phaseTimeLeft(),
+					Const.SPEED_LIMIT);
+			double maxBreak = car.getBreakDistance(maxDec);
+			if (maxDist - BUFFER <= tracRem) {
+				if (tracRem - BUFFER < maxBreak && maxBreak < tracRem) {
 					car.setAutonomous(false);
 					car.setAcc(-maxDec);
-					return;
 				}
-				
+
 			}
-			
-		}
-	}
 
-	private static double distance(double speed, double acceleration,
-			double time, double maxSpeed) {
-		double distance = 0;
-		for (double t = 0; t < time; t += 0.01) {
-			speed += acceleration * 0.01;
-			speed = Math.min(speed, maxSpeed);
-			distance += speed * 0.01;
 		}
-
-		return distance;
 	}
 
 	private double phaseTimeLeft() {

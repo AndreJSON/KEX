@@ -1,18 +1,23 @@
 package util;
 
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class QuadTree {
 	private static int MAX_LEVEL = 10;
 	private static int MAX_OBJECTS = 10;
 
-	private final Rectangle rect;
+	private final Rectangle2D rect;
 	private final ArrayList<CollisionBox> shapes;
 	private final int level;
 	private final QuadTree[] nodes;
 
-	public QuadTree(int level, Rectangle rect) {
+	public QuadTree(Rectangle area) {
+		this(0, area);
+	}
+	
+	private QuadTree(int level, Rectangle2D rect) {
 		this.rect = rect;
 		this.level = level;
 		this.shapes = new ArrayList<>();
@@ -29,7 +34,7 @@ public class QuadTree {
 	}
 
 	public void insert(CollisionBox collisionBox) {
-		Rectangle rect = collisionBox.getBounds();
+		Rectangle2D rect = collisionBox.getBounds();
 		if (nodes[0] != null) {
 			int index = getIndex(rect);
 
@@ -73,21 +78,21 @@ public class QuadTree {
 	}
 
 	private void split() {
-		int subWidth = (int) rect.width / 2;
-		int subHeight = (int) rect.height / 2;
-		int x = (int) rect.x;
-		int y = (int) rect.y;
-		nodes[0] = new QuadTree(level + 1, new Rectangle(x + subWidth, y
+		double subWidth = rect.getWidth() / 2;
+		double subHeight = rect.getHeight() / 2;
+		double x = rect.getX();
+		double y = rect.getY();
+		nodes[0] = new QuadTree(level + 1, new Rectangle2D.Double(x + subWidth, y
 				+ subHeight, subWidth, subHeight));
-		nodes[1] = new QuadTree(level + 1, new Rectangle(x, y, subWidth,
+		nodes[1] = new QuadTree(level + 1, new Rectangle2D.Double(x, y, subWidth,
 				subHeight));
-		nodes[2] = new QuadTree(level + 1, new Rectangle(x, y + subHeight,
+		nodes[2] = new QuadTree(level + 1, new Rectangle2D.Double(x, y + subHeight,
 				subWidth, subHeight));
-		nodes[3] = new QuadTree(level + 1, new Rectangle(x + subWidth, y,
+		nodes[3] = new QuadTree(level + 1, new Rectangle2D.Double(x + subWidth, y,
 				subWidth, subHeight));
 	}
 
-	private int getIndex(Rectangle pRect) {
+	private int getIndex(Rectangle2D pRect) {
 		int index = -1;
 		double verticalMidpoint = rect.getX() + (rect.getWidth() / 2);
 		double horizontalMidpoint = rect.getY() + (rect.getHeight() / 2);

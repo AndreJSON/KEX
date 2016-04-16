@@ -25,8 +25,9 @@ public class Const {
 
 	// How close to each other vehicles will strive to drive when cruising.
 	// If this value is too low, the cars will collide in curves.
-	public static final double COLUMN_DISTANCE = 2;
-	
+	public static final double COLUMN_DISTANCE = 3;
+
+	public static final double TIME_STEP = 1 / 60.;
 	// constructor
 	private Const() {
 	}

@@ -19,10 +19,10 @@ import java.util.HashMap;
 public class Intersection {
 
 	// public static fields
-	public static final double straight = 100, turn = 50, buffer = 4,
+	public static final double straight = 0.001, turn = 300, buffer = 4,
 			width = 3.1;
 	private static final double arm = straight + turn + buffer;
-	private static final double square = width * 3;
+	public static final double square = width * 3;
 	private static final double intersectionSize = arm * 2 + square;
 
 	// Used in building of intersection.
@@ -313,6 +313,13 @@ public class Intersection {
 		}
 	}
 
+	public static double getX(){
+		return straight + turn;
+	}
+
+	public static double getY(){
+		return straight + turn;
+	}
 	public static Segment getEntry(int cardinalDirection) {
 		return startPoints.get(cardinalDirection);
 	}

@@ -61,8 +61,8 @@ public class Bezier2Track extends AbstractTrack {
 		double length = 0;
 		Position p = new Position(0);
 		while (p.t < 1) {
-			p.move(0.1);
-			length += 0.1;
+			p.move(0.001);
+			length += 0.001;
 		}
 		this.length = length;
 	}

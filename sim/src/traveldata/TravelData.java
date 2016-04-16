@@ -59,4 +59,9 @@ public class TravelData {
 		return travelPlan.optimalTime();
 	}
 
+	public TravelData copy(){
+		TravelData e = new TravelData(travelPlan, startTime);
+		e.segmentIndex = segmentIndex;
+		return e;
+	}
 }

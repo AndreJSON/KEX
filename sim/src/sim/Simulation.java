@@ -24,8 +24,8 @@ public class Simulation implements ActionListener {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 10;
-	public static final int TICKS_PER_SECOND = (int) (120 * SCALE_TICK);
+	public static final double SCALE_TICK = 5;
+	public static final int TICKS_PER_SECOND = (int) (SCALE_TICK/Const.TIME_STEP);
 
 	// private fields
 	private double elapsedTime = 0;
@@ -33,8 +33,9 @@ public class Simulation implements ActionListener {
 	private SimDisplay simDisp;
 	private JButton b1, b2;
 	private Logic logic;
-	private AbstractTSCS tscs;
+	public AbstractTSCS tscs;
 	private int lastFps;
+	private int lastTps;
 	private boolean currentlySpawning = true;
 
 	// main
@@ -50,7 +51,7 @@ public class Simulation implements ActionListener {
 
 	// Initializer
 	private void init() {
-		tscs = new DSCS();
+		tscs = new RecursiveBooking();
 		logic = new Logic(this, tscs);
 		simDisp = new SimDisplay(this);
 		simDisp.setBounds(0, 0, windowSize[Y], windowSize[Y]);
@@ -85,6 +86,7 @@ public class Simulation implements ActionListener {
 		long nextTime = System.nanoTime();
 		long delay = (long) 1e9 / FPS;
 		int fps = 0;
+		int tps = 0;
 		long fpsTime = nextTime;
 
 		long tickTime = System.nanoTime();
@@ -104,14 +106,15 @@ public class Simulation implements ActionListener {
 			// ticking
 			while (now - tickTime >= 1e9 / TICKS_PER_SECOND && !pause) {
 				try {
-					logic.tick(SCALE_TICK / TICKS_PER_SECOND);
+					logic.tick(Const.TIME_STEP);
 				} catch (Exception e) {
 					pause = true;
 					System.err.println();
 					System.err.println("Exception: " + e.toString());
 					e.printStackTrace();
 				}
-				elapsedTime += SCALE_TICK / TICKS_PER_SECOND;
+				tps++;
+				elapsedTime += Const.TIME_STEP;
 				tickTime += 1e9 / TICKS_PER_SECOND;
 			}
 
@@ -119,6 +122,8 @@ public class Simulation implements ActionListener {
 			if (fpsTime <= System.nanoTime()) {
 				fpsTime += 1e9;
 				lastFps = fps;
+				lastTps = tps;
+				tps = 0;
 				fps = 0;
 			}
 		}
@@ -130,6 +135,10 @@ public class Simulation implements ActionListener {
 
 	public int fps() {
 		return lastFps;
+	}
+
+	public int tps() {
+		return lastTps;
 	}
 
 	public String drawPhase() {

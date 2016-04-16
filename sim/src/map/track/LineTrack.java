@@ -123,7 +123,7 @@ public class LineTrack extends AbstractTrack {
 			Position copy = new Position(0);
 			copy.point = (Vector2D) point.clone();
 			copy.totalDistance = totalDistance;
-			return null;
+			return copy;
 		}
 
 		@Override
