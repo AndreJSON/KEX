@@ -11,7 +11,9 @@ MAP = $(SRC)/map
 TRACK = $(MAP)/track
 INTERSECTION = $(MAP)/intersection
 FILES = \
-$(CAR)/Car.java \
+$(CAR)/ACar.java \
+$(CAR)/AbstractCar.java \
+$(CAR)/SimCar.java \
 $(CAR)/CarModel.java \
 $(CAR)/CarModelDb.java \
 $(CAR)/RangeData.java \
@@ -29,6 +31,7 @@ $(TSCS)/DSCS.java \
 $(TSCS)/SAD.java \
 $(TSCS)/SADSchedule.java \
 $(TSCS)/SADPlan.java \
+$(TSCS)/RecursiveBooking.java \
 $(SPAWNER)/PoissonSpawner.java \
 $(SPAWNER)/BinomialSpawner.java \
 $(SPAWNER)/SpawnerInterface.java \
