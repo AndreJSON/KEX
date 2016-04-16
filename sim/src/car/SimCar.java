@@ -15,7 +15,7 @@ public class SimCar extends AbstractCar {
 	public void updateCollisionBox() {
 		double x = tPos.getX();
 		double y = tPos.getY();
-		collisionBox = carModel.getCollisionBox().translate(0.2, 0).scale(1.3).transform(x, y, theta);
+		collisionBox = carModel.getCollisionBox().scale(1.4).transform(x, y, theta).translate(0.1, 0);
 	}
 	
 	public void tick(double diff) {

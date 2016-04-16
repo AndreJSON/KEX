@@ -18,13 +18,14 @@ import util.CollisionBox;
 import util.QuadTree;
 
 public class RecursiveBooking extends AbstractTSCS {
+	private final static double BUFFER = Intersection.buffer + 1;
+	private static final double EXTRA = BUFFER + 5;
 	private static final int CACHE = 800;
 	private static final int DETECTOR_RANGE = 65;
 	private SpaceTime[] spaceTimes;
 	private int lastIndex;
 	private HashSet<ACar> bookedIn;
 	private final Rectangle2D controlArea;
-	private final static double BUFFER = 3;
 	private boolean book = true;
 	private int bookTime = 0;
 	private int firstLane = 0;
@@ -32,10 +33,10 @@ public class RecursiveBooking extends AbstractTSCS {
 	public RecursiveBooking() {
 		spaceTimes = new SpaceTime[CACHE];
 		bookedIn = new HashSet<>();
-		double x = Intersection.getX();
-		double y = Intersection.getY();
-		double width = Intersection.square;
-		double height = Intersection.square;
+		double x = Intersection.getX() - EXTRA;
+		double y = Intersection.getY() - EXTRA;
+		double width = Intersection.square + 2 * EXTRA;
+		double height = Intersection.square + 2 * EXTRA;
 		controlArea = new Rectangle2D.Double(x - DETECTOR_RANGE, y
 				- DETECTOR_RANGE, width + DETECTOR_RANGE * 2, height
 				+ DETECTOR_RANGE * 2);
@@ -99,7 +100,7 @@ public class RecursiveBooking extends AbstractTSCS {
 			if (book && book(simCar, lastIndex)) {
 				car.setAutonomous(false);
 				bookedIn.add(car);
-				car.color = Color.green;
+				car.color = Color.BLACK;
 				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			} else {
 				car.setAutonomous(false);
