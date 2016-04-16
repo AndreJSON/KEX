@@ -15,7 +15,7 @@ public abstract class AbstractTSCS {
 			Iterator<ACar> it = EntityDb.getCars().iterator();
 			while (it.hasNext()) {
 				ACar car = it.next();
-				car.setAcc(car.getMaxDeceleration());
+				car.setAcc(-car.getMaxDeceleration());
 				car.setAutonomous(false);
 			}
 		}

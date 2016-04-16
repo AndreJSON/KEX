@@ -1,9 +1,11 @@
 package tscs;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import car.ACar;
@@ -15,13 +17,12 @@ import map.intersection.Segment;
 import sim.Const;
 import sim.EntityDb;
 import util.CollisionBox;
-import util.QuadTree;
 
 public class RecursiveBooking extends AbstractTSCS {
 	private final static double BUFFER = Intersection.buffer + 1;
 	private static final double EXTRA = BUFFER + 5;
 	private static final int CACHE = 800;
-	private static final int DETECTOR_RANGE = 65;
+	private static final int DETECTOR_RANGE = 30;
 	private SpaceTime[] spaceTimes;
 	private int lastIndex;
 	private HashSet<ACar> bookedIn;
@@ -42,7 +43,7 @@ public class RecursiveBooking extends AbstractTSCS {
 				+ DETECTOR_RANGE * 2);
 
 		for (int i = 0; i < CACHE; i++) {
-			spaceTimes[i] = new SpaceTime(controlArea);
+			spaceTimes[i] = new SpaceTime();
 		}
 
 		lastIndex = 0;
@@ -53,11 +54,15 @@ public class RecursiveBooking extends AbstractTSCS {
 	}
 
 	public void tick(double diff) {
-		spaceTimes[(lastIndex + CACHE - 1) % CACHE].qT.clear();
+		if (emergencyBreak) {
+			super.tick(diff);
+			return;
+		}
+		getSpace(lastIndex).returnObjects.clear();
 		lastIndex++;
 		bookTime++;
 
-		if (bookTime >= 30) {
+		if (bookTime >= 20) {
 			book = true;
 			firstLane = (firstLane + 1) % 4;
 			bookTime = 0;
@@ -73,6 +78,18 @@ public class RecursiveBooking extends AbstractTSCS {
 			}
 		}
 		book = false;
+		Iterator<ACar> cars = bookedIn.iterator();
+		while (cars.hasNext()){
+			ACar car = cars.next();
+			if (controlArea.contains(car.getPos())){
+				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
+				car.setAutonomous(false);
+				
+			} else {
+				car.color = Color.BLUE;
+				cars.remove();
+			}
+		}
 	}
 
 	@Override
@@ -87,30 +104,23 @@ public class RecursiveBooking extends AbstractTSCS {
 		SimCar simCar;
 		for (ACar car : carsOnSegment) {
 			if (bookedIn.contains(car)) {
-				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 				continue;
 			}
 			if (!controlArea.contains(car.getPos())) {
 				return;
 			}
 
-			simCar = new SimCar(car);
-			simCar.copyParent();
+			simCar = car.getSimCar();
 			simCar.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			if (book && book(simCar, lastIndex)) {
-				car.setAutonomous(false);
 				bookedIn.add(car);
 				car.color = Color.BLACK;
-				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
 			} else {
 				car.setAutonomous(false);
 				double maxDec = car.getMaxDeceleration() / Const.BREAK_COEF;
 				double tracRem = car.remainingOnTrack();
 				if (car.getBreakDistance(maxDec) > tracRem - BUFFER) {
 					car.setAcc(-maxDec);
-				} else if (car.getBreakDistance(maxDec / 1.5) > tracRem
-						- BUFFER) {
-					car.setAcc(-maxDec / 1.5);
 				} else {
 					car.setAutonomous(true);
 				}
@@ -120,16 +130,22 @@ public class RecursiveBooking extends AbstractTSCS {
 		}
 
 	}
+	
+	public void draw(Graphics2D g2d) {
+		SpaceTime sT = getSpace(lastIndex);
+		for (CollisionBox cb : sT.returnObjects){
+			cb.draw(g2d);
+		}
+	}
 
 	private boolean book(SimCar car, int index) {
 		SpaceTime sT = getSpace(index);
-		car.setSpeed(Math.min(car.getSpeed(), Const.SPEED_LIMIT));
 		car.tick(Const.TIME_STEP);
 		car.updateCollisionBox();
 		CollisionBox cB = car.getCollisionBox();
 		if (!controlArea.contains(car.getPos()))
 			return true;
-		if (sT.canBook(cB) && book(car, (index + 1))) {
+		if (sT.canBook(cB) && book(car, index + 1)) {
 			sT.book(cB);
 			return true;
 		}
@@ -138,15 +154,12 @@ public class RecursiveBooking extends AbstractTSCS {
 
 	private static class SpaceTime {
 		private final ArrayList<CollisionBox> returnObjects;
-		QuadTree qT ;
-		SpaceTime(Rectangle2D controlArea) {
+
+		SpaceTime() {
 			returnObjects = new ArrayList<>();
-			qT = new QuadTree(controlArea);
 		}
 
 		public boolean canBook(CollisionBox booker) {
-			returnObjects.clear();
-			qT.retrieve(returnObjects, booker);
 			for (CollisionBox other : returnObjects)
 				if (CollisionBox.collide(booker, other))
 					return false;
@@ -154,7 +167,7 @@ public class RecursiveBooking extends AbstractTSCS {
 		}
 
 		public void book(CollisionBox booker) {
-			qT.insert(booker);
+			returnObjects.add(booker);
 		}
 
 	}

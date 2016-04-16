@@ -50,9 +50,13 @@ class SimDisplay extends Canvas {
 				RenderingHints.KEY_TEXT_ANTIALIASING,
 				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.setRenderingHints(rh);
+		
 
 		drawBackground(g2d);
 		drawIntersection(g2d);
+		if (sim.tscs instanceof RecursiveBooking){
+			((RecursiveBooking)sim.tscs).draw(g2d);
+		}
 		drawCars(g2d);
 		if (Simulation.SHOW_GRID) {
 			for (int i = 0; i < SADSchedule.GRID_BOXES_FINE.length; i++) {

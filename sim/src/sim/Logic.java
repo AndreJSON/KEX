@@ -154,8 +154,8 @@ public class Logic {
 					car.getCollisionBox());
 			for (CollisionBox other : returnObjects) {
 				if (CollisionBox.collide(car.getCollisionBox(), other)) {
-					throw new RuntimeException("Collision");
-					//System.out.println("Collision!");
+					// throw new RuntimeException("Collision");
+					// System.out.println("Collision!");
 				}
 			}
 			quadTree.insert(car.getCollisionBox());

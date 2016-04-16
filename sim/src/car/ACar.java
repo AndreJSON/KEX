@@ -26,6 +26,7 @@ public class ACar extends AbstractCar implements Drawable {
 	private TravelData travelData;
 
 	private boolean finished;
+	private SimCar simCar;
 
 	// Constrtuctors
 	/**
@@ -38,6 +39,7 @@ public class ACar extends AbstractCar implements Drawable {
 		isAutonomous = true;
 		collidable = false;
 		finished = false;
+		simCar = new SimCar(this);
 	}
 
 	// public methods
@@ -237,6 +239,11 @@ public class ACar extends AbstractCar implements Drawable {
 
 	public TravelData getTravelData() {
 		return travelData;
+	}
+	
+	public SimCar getSimCar(){
+		simCar.copyParent();
+		return simCar;
 	}
 
 }

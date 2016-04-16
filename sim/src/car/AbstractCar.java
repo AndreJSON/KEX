@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 
 import map.track.TrackPosition;
 import math.Vector2D;
+import sim.Const;
 import sim.Drawable;
 import sim.Simulation;
 import util.CollisionBox;
@@ -61,22 +62,24 @@ public abstract class AbstractCar implements Drawable {
 	 * @param diff
 	 */
 	public void move(double diff) {
+		diff = Const.TIME_STEP;
 		if (tPos.remaining() > 0) {
 			speed += acceleration * diff;
 			speedClamp();
+			setSpeed(Math.min(getSpeed(), Const.SPEED_LIMIT));
 
 			tPos.move(diff * getSpeed());
 			double rotation = getSpeed()
 					* (Math.tan(tPos.getHeading() - theta) / carModel
 							.getWheelBase());
 
-			theta += rotation * diff;
+			theta += (rotation * diff) % Math.PI;
 
 		}
 	}
 
-	public void setHeading(double heading) {
-		this.theta = heading;
+	public void setTheta(int theta) {
+		this.theta = theta;
 	}
 
 	public void setAcc(double acceleration) {
@@ -162,7 +165,6 @@ public abstract class AbstractCar implements Drawable {
 		return 0.5 * Math.pow(speed, 2.) / deceleration;
 	}
 
-
 	public static double distance(double speed, double acceleration,
 			double time, double maxSpeed) {
 		double distance = 0;
@@ -173,7 +175,6 @@ public abstract class AbstractCar implements Drawable {
 		}
 		return distance;
 	}
-	
 
 	public double getBreakDistance(double deceleration) {
 		return getBreakDistance(getSpeed(), deceleration);
