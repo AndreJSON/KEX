@@ -57,6 +57,8 @@ class SimDisplay extends Canvas {
 		if (sim.tscs instanceof RecursiveBooking){
 			((RecursiveBooking)sim.tscs).draw(g2d);
 		}
+		Logic.quadTree.draw(g2d);
+		
 		drawCars(g2d);
 		if (Simulation.SHOW_GRID) {
 			for (int i = 0; i < SADSchedule.GRID_BOXES_FINE.length; i++) {

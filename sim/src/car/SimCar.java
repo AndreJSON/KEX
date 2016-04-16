@@ -14,7 +14,7 @@ public class SimCar extends AbstractCar {
 	public void updateCollisionBox() {
 		double x = tPos.getX();
 		double y = tPos.getY();
-		double s = 1.25;
+		double s = 1.15;
 		double dx = carModel.getLength() * s - carModel.getLength();
 		dx /= 2.;
 		

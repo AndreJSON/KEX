@@ -120,7 +120,7 @@ public class CollisionBox {
 			}
 			double width = maxX - minX;
 			double height = maxY - minY;
-			boundingBox = new Rectangle2D.Double(minX, maxX, width, height);
+			boundingBox = new Rectangle2D.Double(minX, minY, width, height);
 		}
 		return boundingBox;
 	}

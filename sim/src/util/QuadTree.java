@@ -1,11 +1,15 @@
 package util;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+import sim.Simulation;
+
 public class QuadTree {
-	private static int MAX_LEVEL = 10;
-	private static int MAX_OBJECTS = 10;
+	private static int MAX_LEVEL = 5;
+	private static int MAX_OBJECTS = 8;
 
 	private final Rectangle2D rect;
 	private final ArrayList<CollisionBox> shapes;
@@ -15,7 +19,7 @@ public class QuadTree {
 	public QuadTree(Rectangle2D area) {
 		this(0, area);
 	}
-	
+
 	private QuadTree(int level, Rectangle2D rect) {
 		this.rect = rect;
 		this.level = level;
@@ -28,6 +32,7 @@ public class QuadTree {
 		for (int i = 0; i < nodes.length; i++) {
 			if (nodes[i] != null) {
 				nodes[i].clear();
+				nodes[i] = null;
 			}
 		}
 	}
@@ -81,14 +86,14 @@ public class QuadTree {
 		double subHeight = rect.getHeight() / 2;
 		double x = rect.getX();
 		double y = rect.getY();
-		nodes[0] = new QuadTree(level + 1, new Rectangle2D.Double(x + subWidth, y
+		nodes[0] = new QuadTree(level + 1, new Rectangle2D.Double(x, y,
+				subWidth, subHeight));
+		nodes[1] = new QuadTree(level + 1, new Rectangle2D.Double(x + subWidth,
+				y, subWidth, subHeight));
+		nodes[2] = new QuadTree(level + 1, new Rectangle2D.Double(x, y
 				+ subHeight, subWidth, subHeight));
-		nodes[1] = new QuadTree(level + 1, new Rectangle2D.Double(x, y, subWidth,
-				subHeight));
-		nodes[2] = new QuadTree(level + 1, new Rectangle2D.Double(x, y + subHeight,
-				subWidth, subHeight));
-		nodes[3] = new QuadTree(level + 1, new Rectangle2D.Double(x + subWidth, y,
-				subWidth, subHeight));
+		nodes[3] = new QuadTree(level + 1, new Rectangle2D.Double(x + subWidth,
+				y + subHeight, subWidth, subHeight));
 	}
 
 	private int getIndex(Rectangle2D pRect) {
@@ -97,28 +102,47 @@ public class QuadTree {
 		double horizontalMidpoint = rect.getY() + (rect.getHeight() / 2);
 
 		// Object can completely fit within the top quadrants
-		boolean topQuadrant = (pRect.getY() < horizontalMidpoint && pRect
-				.getY() + pRect.getHeight() < horizontalMidpoint);
+		boolean topQuadrant = pRect.getY() + pRect.getHeight() < horizontalMidpoint;
 		// Object can completely fit within the bottom quadrants
-		boolean bottomQuadrant = (pRect.getY() > horizontalMidpoint);
+		boolean bottomQuadrant = pRect.getY() > horizontalMidpoint;
+		// assert topQuadrant != bottomQuadrant;
+		
+		boolean leftQuadrant = pRect.getX() + pRect.getWidth() < verticalMidpoint;
+		boolean rightQuadrant = pRect.getX() > verticalMidpoint;
+		//assert leftQuadrant != rightQuadrant;
 
-		if (pRect.getX() < verticalMidpoint
-				&& pRect.getX() + pRect.getWidth() < verticalMidpoint) {
+		if (leftQuadrant) {
 			// Object can completely fit within the left quadrants
 			if (topQuadrant) {
-				index = 1;
+				index = 0;
 			} else if (bottomQuadrant) {
 				index = 2;
 			}
-		} else if (pRect.getX() > verticalMidpoint) {
+		} else if (rightQuadrant) {
 			// Object can completely fit within the right quadrants
 			if (topQuadrant) {
-				index = 0;
+				index = 1;
 			} else if (bottomQuadrant) {
 				index = 3;
 			}
 		}
 
 		return index;
+	}
+
+	public void draw(Graphics2D g2d) {
+
+		for (CollisionBox cB : shapes) {
+			g2d.draw(Simulation.SCALER.createTransformedShape(cB.getBounds()));
+		}
+		if (nodes[0] == null) {
+			g2d.setColor(Color.white);
+			g2d.draw(Simulation.SCALER.createTransformedShape(rect));
+		} else {
+			for (QuadTree tree : nodes) {
+				tree.draw(g2d);
+			}
+		}
+
 	}
 }

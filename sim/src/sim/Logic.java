@@ -29,7 +29,7 @@ public class Logic {
 	/**
 	 * For checking collision.
 	 */
-	private final QuadTree quadTree = new QuadTree(new Rectangle(0, 0,
+	public static final QuadTree quadTree = new QuadTree(new Rectangle(0, 0,
 			(int) Intersection.getSize() + 20,
 			(int) Intersection.getSize() + 20));
 

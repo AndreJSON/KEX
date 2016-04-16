@@ -16,13 +16,15 @@ import map.intersection.Segment;
 
 import sim.Const;
 import sim.EntityDb;
+import sim.Simulation;
 import util.CollisionBox;
+import util.QuadTree;
 
 public class RecursiveBooking extends AbstractTSCS {
 	private final static double BUFFER = Intersection.buffer + 1;
 	private static final double EXTRA = BUFFER + 5;
 	private static final int CACHE = 800;
-	private static final int DETECTOR_RANGE = 30;
+	private static final int DETECTOR_RANGE = 70;
 	private SpaceTime[] spaceTimes;
 	private int lastIndex;
 	private HashSet<ACar> bookedIn;
@@ -34,23 +36,23 @@ public class RecursiveBooking extends AbstractTSCS {
 	public RecursiveBooking() {
 		spaceTimes = new SpaceTime[CACHE];
 		bookedIn = new HashSet<>();
-		double x = Intersection.getX() - EXTRA;
-		double y = Intersection.getY() - EXTRA;
-		double width = Intersection.square + 2 * EXTRA;
-		double height = Intersection.square + 2 * EXTRA;
-		controlArea = new Rectangle2D.Double(x - DETECTOR_RANGE, y
-				- DETECTOR_RANGE, width + DETECTOR_RANGE * 2, height
-				+ DETECTOR_RANGE * 2);
+		double upperLeft = Intersection.getX() - EXTRA- DETECTOR_RANGE;
+		double size = Intersection.square + 2 * EXTRA+ DETECTOR_RANGE * 2;
+		controlArea = new Rectangle2D.Double(upperLeft ,upperLeft, size, size);
 
+		// Offset by 20 because middle lane is in the middle of the control area
+		// (bad for quad tree).
+		size *= 1.2;
+		Rectangle2D collisionArea = new Rectangle2D.Double(upperLeft ,upperLeft, size, size);
 		for (int i = 0; i < CACHE; i++) {
-			spaceTimes[i] = new SpaceTime();
+			spaceTimes[i] = new SpaceTime(collisionArea);
 		}
 
 		lastIndex = 0;
 	}
 
 	private SpaceTime getSpace(int i) {
-		return spaceTimes[i % CACHE];
+		return spaceTimes[(i + CACHE) % CACHE];
 	}
 
 	public void tick(double diff) {
@@ -58,11 +60,11 @@ public class RecursiveBooking extends AbstractTSCS {
 			super.tick(diff);
 			return;
 		}
-		getSpace(lastIndex).returnObjects.clear();
+		getSpace(lastIndex).clear();
 		lastIndex++;
 		bookTime++;
 
-		if (bookTime >= 20) {
+		if (bookTime >= 10) {
 			book = true;
 			firstLane = (firstLane + 1) % 4;
 			bookTime = 0;
@@ -79,12 +81,12 @@ public class RecursiveBooking extends AbstractTSCS {
 		}
 		book = false;
 		Iterator<ACar> cars = bookedIn.iterator();
-		while (cars.hasNext()){
+		while (cars.hasNext()) {
 			ACar car = cars.next();
-			if (controlArea.contains(car.getPos())){
-				car.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
+			if (controlArea.contains(car.getPos())) {
+				car.setAcc(car.getMaxAcceleration());
 				car.setAutonomous(false);
-				
+
 			} else {
 				car.color = Color.BLUE;
 				cars.remove();
@@ -111,7 +113,7 @@ public class RecursiveBooking extends AbstractTSCS {
 			}
 
 			simCar = car.getSimCar();
-			simCar.setAcc(car.getMaxAcceleration() / Const.ACC_COEF);
+			simCar.setAcc(car.getMaxAcceleration());
 			if (book && book(simCar, lastIndex)) {
 				bookedIn.add(car);
 				car.color = Color.BLACK;
@@ -130,12 +132,12 @@ public class RecursiveBooking extends AbstractTSCS {
 		}
 
 	}
-	
+
 	public void draw(Graphics2D g2d) {
-		SpaceTime sT = getSpace(lastIndex);
-		for (CollisionBox cb : sT.returnObjects){
-			cb.draw(g2d);
-		}
+		SpaceTime sT = getSpace(lastIndex + 120);
+		sT.draw(g2d);
+		g2d.setColor(Color.white);
+		g2d.draw(Simulation.SCALER.createTransformedShape(controlArea));
 	}
 
 	private boolean book(SimCar car, int index) {
@@ -154,20 +156,40 @@ public class RecursiveBooking extends AbstractTSCS {
 
 	private static class SpaceTime {
 		private final ArrayList<CollisionBox> returnObjects;
+		private final ArrayList<CollisionBox> all;
+		private final QuadTree quadTree;
+		private final Rectangle2D collisionArea;
 
-		SpaceTime() {
+		SpaceTime(Rectangle2D collisionArea) {
 			returnObjects = new ArrayList<>();
+			all = new ArrayList<>();
+			this.collisionArea = collisionArea;
+			quadTree = new QuadTree(collisionArea);
 		}
 
 		public boolean canBook(CollisionBox booker) {
+			returnObjects.clear();
+			quadTree.retrieve(returnObjects, booker);
 			for (CollisionBox other : returnObjects)
 				if (CollisionBox.collide(booker, other))
 					return false;
 			return true;
 		}
 
+		public void clear() {
+			all.clear();
+			quadTree.clear();
+		}
+
 		public void book(CollisionBox booker) {
-			returnObjects.add(booker);
+			all.add(booker);
+			quadTree.insert(booker);
+		}
+
+		public void draw(Graphics2D g2d) {
+			for (CollisionBox cB : all) {
+				cB.draw(g2d);
+			}
 		}
 
 	}
