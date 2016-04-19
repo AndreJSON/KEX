@@ -138,7 +138,7 @@ class SimDisplay extends Canvas {
 	}
 
 	private void memoryDebug(Graphics2D g2d) {
-		int paddingX = ((int)Simulation.WINDOW_SIZE[1]) - 140;
+		int paddingX = ((int) Simulation.WINDOW_SIZE[1]) - 140;
 		int y = Simulation.SimulationSize - 80;
 		g2d.drawString("MEMORY ", paddingX, y);
 		y += 15;

@@ -287,7 +287,8 @@ public abstract class AbstractCar implements Drawable, Collidable {
 
 	@Override
 	public String toString() {
-		return String.format("AbstractCar[id = %d,  model = %s]", id, carModel.getName());
+		return String.format("AbstractCar[id = %d,  model = %s]", id,
+				carModel.getName());
 	}
 
 	// private methods

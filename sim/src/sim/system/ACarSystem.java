@@ -13,6 +13,7 @@ import car.range.RangeData;
 
 public class ACarSystem implements SimSystem {
 	private final Simulation sim;
+
 	public ACarSystem(Simulation sim) {
 		this.sim = sim;
 	}

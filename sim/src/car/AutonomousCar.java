@@ -53,12 +53,13 @@ public class AutonomousCar extends AbstractCar implements Drawable {
 	 */
 	@Override
 	public String toString() {
-		return String.format("AutonomousCar[id = %d,  model = %s]", id, carModel.getName());
+		return String.format("AutonomousCar[id = %d,  model = %s]", id,
+				carModel.getName());
 	}
 
 	public void tick(double diff) {
 		move(diff);
-		orderTime-=diff;
+		orderTime -= diff;
 		if (tPos.remaining() < 0) {
 			EntityDb.removeCarFromSegment(this);
 			if (travelData.hasNext()) {
@@ -102,8 +103,10 @@ public class AutonomousCar extends AbstractCar implements Drawable {
 	public boolean isCollidable() {
 		return collidable;
 	}
+
 	public RangeData getRangeData() {
-		return rangeFinder.getRange(getBreakDistance(getMaxDeceleration() / Const.BREAK_COEF) + 2);
+		return rangeFinder.getRange(getBreakDistance(getMaxDeceleration()
+				/ Const.BREAK_COEF) + 2);
 	}
 
 	public void setTravelData(TravelData travelData) {

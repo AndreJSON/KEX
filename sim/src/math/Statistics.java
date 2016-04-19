@@ -1,14 +1,14 @@
 package math;
 
-
 import java.util.Random;
 
 public class Statistics {
 	private Statistics() {
 		throw new AssertionError();
 	}
+
 	static {
-		
+
 	}
 
 	private final static Random r = new Random(1000);
@@ -23,8 +23,8 @@ public class Statistics {
 		} while (p > L);
 		return k - 1;
 	}
-	
-	public static void reset(){
+
+	public static void reset() {
 		r.setSeed(1000);
 	}
 
@@ -41,8 +41,8 @@ public class Statistics {
 		}
 		return x;
 	}
-	
-	public static double uniform(){
+
+	public static double uniform() {
 		return r.nextDouble();
 	}
 

@@ -42,7 +42,7 @@ public class SpawnSystem implements SimSystem {
 	}
 
 	private void handleSpawner(Spawner spawner) {
-		
+
 		if (spawner.getSpawnQueue() < 0
 				|| spawner.getSpawnTimer() < Const.SPAWN_WAIT_INTERVAL) {
 			return;

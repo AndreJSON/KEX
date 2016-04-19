@@ -174,5 +174,5 @@ public class QuadTree<T extends Collidable> {
 
 		return index;
 	}
-	
+
 }

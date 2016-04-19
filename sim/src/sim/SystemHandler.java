@@ -24,8 +24,8 @@ public class SystemHandler {
 			system.tick(diff);
 		}
 	}
-	
-	public void addSystem(SimSystem system){
+
+	public void addSystem(SimSystem system) {
 		systems.add(system);
 	}
 

@@ -39,8 +39,7 @@ public class CarModel {
 	private final double maxAcceleration;
 	private final double maxDeceleration;
 	private final double topSpeed;
-	
-	
+
 	// constructor
 	/**
 	 * 
@@ -68,8 +67,8 @@ public class CarModel {
 		carShape = new Rectangle2D.Double(-length, -width / 2, length, width);
 		collisionBox = new CollisionBox((Rectangle2D) carShape);
 	}
-	
-	// public methods 
+
+	// public methods
 	/**
 	 * Get the name of the car type.
 	 * 
@@ -201,5 +200,5 @@ public class CarModel {
 		double y = pos.getY() - Math.sin(heading) * length;
 		return new Vector2D(x, y);
 	}
-	
+
 }

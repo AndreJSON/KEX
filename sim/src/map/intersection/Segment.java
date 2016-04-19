@@ -11,7 +11,7 @@ public class Segment {
 
 	private static int idTracker = 0;
 	private AbstractTrack track;
-	
+
 	private HashMap<Integer, Segment> split; // Tells which Segment a car has to
 												// enter given its destination
 												// as key. Null instead of a
@@ -19,18 +19,18 @@ public class Segment {
 												// reached.
 	private final int id;
 	private int start;
-	
+
 	public Segment(AbstractTrack t) {
 		track = t;
 		split = new HashMap<>();
 		id = idTracker++;
 	}
-	
-	public void setStart(int start){
+
+	public void setStart(int start) {
 		this.start = start;
 	}
-	
-	public boolean preIntersection(){
+
+	public boolean preIntersection() {
 		return start == Const.MAP_ENTRANCE || start == Const.MAP_EXIT;
 	}
 
@@ -38,11 +38,11 @@ public class Segment {
 	 * Make seg the next segment if travelling towards the given destination.
 	 */
 	public void linkSegment(int destination, Segment seg) {
-		split.put(destination%4, seg);
+		split.put(destination % 4, seg);
 	}
 
 	public Segment nextSegment(int destination) {
-		return split.get(destination%4);
+		return split.get(destination % 4);
 	}
 
 	public Vector2D[] getPoints() {
@@ -59,6 +59,7 @@ public class Segment {
 
 	/**
 	 * The length of the segment.
+	 * 
 	 * @return
 	 */
 	public double length() {

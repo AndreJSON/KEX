@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
 
-
 public class CarModels {
 	private CarModels() {
 		throw new AssertionError();
