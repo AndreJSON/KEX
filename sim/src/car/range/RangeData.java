@@ -1,4 +1,6 @@
-package car;
+package car.range;
+
+import car.AbstractCar;
 
 /**
  * Class containing the distance to the next car and the next car itself.
@@ -7,19 +9,23 @@ package car;
  * 
  */
 public class RangeData {
-	private final ACar car;
+	private final AbstractCar car;
 	private final double distance;
 
-	public RangeData(ACar car, double distance) {
+	public RangeData(AbstractCar car, double distance) {
 		this.car = car;
 		this.distance = distance;
 	}
 
-	public ACar getCar() {
+	public AbstractCar getCar() {
 		return car;
 	}
 
 	public double distance() {
 		return distance;
+	}
+
+	public String toString() {
+		return car.getID() + "[" + distance + "]";
 	}
 }

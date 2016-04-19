@@ -15,18 +15,18 @@ import math.Vector2D;
  * @author henrik
  * 
  */
-public class Bezier2Track extends AbstractTrack {
+public class Bezier3Track extends AbstractTrack {
 
 	// Control points 1,2,3.
 	/**
 	 * Curves goes from c1 to c3, with c2 as a control point.
 	 */
-	private final Vector2D c1, c2, c3;
+	private final Vector2D c1, c2, c3, c4;
 
 	/**
 	 * Used for stepping through the curve with a certain length.
 	 */
-	private final Vector2D v1, v2;
+	private final Vector2D v1, v2, v3;
 
 	/**
 	 * The length of the curve.
@@ -43,19 +43,24 @@ public class Bezier2Track extends AbstractTrack {
 	 */
 	private Vector2D[] points;
 
-	public Bezier2Track(Vector2D c1, Vector2D c2, Vector2D c3) {
+	public Bezier3Track(Vector2D c1, Vector2D c2, Vector2D c3, Vector2D c4) {
 		this.c1 = c1;
 		this.c2 = c2;
 		this.c3 = c3;
+		this.c4 = c4;
 
-		v1 = (c1.mult(2)).minus(c2.mult(4)).plus(c3.mult(2));
-		v2 = (c2.minus(c1)).mult(2);
+		// v1 = -3A + 9B - 9C + 3D
+		// v2 = 6A - 12B + 6C
+		// v3 = -3A + 3B
+		v1 = c1.mult(-3).plus(c2.mult(9).plus(c3.mult(-9).plus(c4.mult(3))));
+		v2 = c1.mult(6).plus(c2.mult(-12).plus(c3.mult(6)));
+		v3 = c1.mult(-3).plus(c2.mult(3));
 
 		generatePoints();
 
 		shape = new Path2D.Double();
 		shape.moveTo(c1.x, c1.y);
-		shape.quadTo(c2.x, c2.y, c3.x, c3.y);
+		shape.curveTo(c2.x, c2.y, c3.x, c3.y, c4.x, c4.y);
 
 		// Approximate track length.
 		double length = 0;
@@ -95,7 +100,8 @@ public class Bezier2Track extends AbstractTrack {
 	 */
 	private Vector2D evaluate(double t) {
 		double t2 = 1 - t;
-		return c1.mult(t2 * t2).plus(c2.mult(2 * t2 * t)).plus(c3.mult(t * t));
+		return c1.mult(t2 * t2 * t2).plus(c2.mult(3 * t2 * t2 * t))
+				.plus(c3.mult(3 * t2 * t * t)).plus(c4.mult(t * t * t));
 	}
 
 	@Override
@@ -105,7 +111,7 @@ public class Bezier2Track extends AbstractTrack {
 
 	@Override
 	public Vector2D getEndPoint() {
-		return c3;
+		return c4;
 	}
 
 	@Override
@@ -125,7 +131,8 @@ public class Bezier2Track extends AbstractTrack {
 
 	@Override
 	public String toString() {
-		return getClass().getName() + "{" + c1 + ", " + c2 + ", " + c3 + "}";
+		return getClass().getName() + "{" + c1 + ", " + c2 + ", " + c3 + ","
+				+ c4 + "}";
 	}
 
 	@Override
@@ -143,7 +150,11 @@ public class Bezier2Track extends AbstractTrack {
 		Vector2D p;
 		p = c1.mult(Simulation.SCALE);
 		g2d.drawOval((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
+		p = c2.mult(Simulation.SCALE);
+		g2d.drawOval((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
 		p = c3.mult(Simulation.SCALE);
+		g2d.drawOval((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
+		p = c4.mult(Simulation.SCALE);
 		g2d.drawOval((int) (p.x - 1.5), (int) (p.y - 1.5), 3, 3);
 	}
 
@@ -187,12 +198,13 @@ public class Bezier2Track extends AbstractTrack {
 			double k1 = 1. / derive(0).norm();
 			double k2 = 1. / derive(distance / 2. * k1).norm();
 			double k3 = 1. / derive(distance / 2. * k2).norm();
-			double k4 = 1. / derive(distance * k3).norm();
+			double k4 = 1. / derive(k3).norm();
 			t += distance * (k1 + 2 * k2 + 2 * k3 + k4) / 6.;
 		}
 
-		public Vector2D derive(double dt) {
-			return v1.mult(t + dt).plus(v2);
+		private Vector2D derive(double dt) {
+			double t = this.t + dt;
+			return v1.mult(t * t).plus(v2.mult(t)).plus(v3);
 		}
 
 		@Override

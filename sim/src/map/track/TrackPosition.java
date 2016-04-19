@@ -17,7 +17,7 @@ public interface TrackPosition {
 	 * 
 	 * @return
 	 */
-	double getHeading();
+	double getTheta();
 
 	/**
 	 * Move the position by the distance specified along the track.

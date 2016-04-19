@@ -1,4 +1,4 @@
-package car;
+package car.model;
 
 import java.awt.Color;
 import java.awt.Shape;
@@ -53,7 +53,7 @@ public class CarModel {
 	 * @param color
 	 *            the color of the car type
 	 */
-	public CarModel(String name, double length, double width, Color color,
+	CarModel(String name, double length, double width, Color color,
 			double frontAxleDisplacement, double rearAxleDisplacement,
 			double maxAcceleration, double maxRetardation, double topSpeed) {
 		this.topSpeed = topSpeed;
@@ -107,7 +107,6 @@ public class CarModel {
 	 * @return rear point of the car
 	 */
 	public Vector2D getCenterPoint(Vector2D pos, double heading) {
-		// EJ KONTROLLERAD
 		double x = pos.getX() - Math.cos(heading) * length / 2;
 		double y = pos.getY() - Math.sin(heading) * length / 2;
 		return new Vector2D(x, y);
@@ -196,4 +195,11 @@ public class CarModel {
 	public CollisionBox getCollisionBox() {
 		return collisionBox;
 	}
+
+	public Vector2D getRearPoint(Vector2D pos, double heading) {
+		double x = pos.getX() - Math.cos(heading) * length;
+		double y = pos.getY() - Math.sin(heading) * length;
+		return new Vector2D(x, y);
+	}
+	
 }

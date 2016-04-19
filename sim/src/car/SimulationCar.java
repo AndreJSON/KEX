@@ -2,19 +2,26 @@ package car;
 
 import traveldata.TravelData;
 
-public class SimCar extends AbstractCar {
-	private final ACar parent;
+/**
+ * A simplyfied version of ACar.
+ * @author henrik
+ *
+ */
+public class SimulationCar extends AbstractCar {
+	private final AutonomousCar parent;
 	private TravelData travelData;
-	public SimCar(ACar parent) {
+	private boolean done;
+	SimulationCar(AutonomousCar parent) {
 		super(parent.carModel);
 		this.parent = parent;
+		done = false;
 	}
 	
 
 	public void updateCollisionBox() {
 		double x = tPos.getX();
 		double y = tPos.getY();
-		double s = 1.15;
+		double s = 1.2;
 		double dx = carModel.getLength() * s - carModel.getLength();
 		dx /= 2.;
 		
@@ -29,11 +36,15 @@ public class SimCar extends AbstractCar {
 			if (travelData.hasNext()) {
 				tPos = travelData.next().getTrackPosition(
 						-tPos.remaining());
-			} 
+			} else {
+				done = true;
+			}
 		}
 	}
 	
-	
+	public boolean done(){
+		return done;
+	}
 	
 	public void copyParent(){
 		travelData = parent.getTravelData().copy();
@@ -43,7 +54,7 @@ public class SimCar extends AbstractCar {
 		acceleration = parent.acceleration;
 	}
 	
-	public ACar getParent(){
+	public AutonomousCar getParent(){
 		return parent;
 	}
 

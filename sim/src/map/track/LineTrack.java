@@ -98,7 +98,7 @@ public class LineTrack extends AbstractTrack {
 		}
 
 		@Override
-		public double getHeading() {
+		public double getTheta() {
 			return unit.theta();
 		}
 

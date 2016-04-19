@@ -1,6 +1,5 @@
 package util;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -8,7 +7,7 @@ import java.awt.geom.Rectangle2D;
 
 import sim.Simulation;
 
-public class CollisionBox {
+public class CollisionBox implements Collidable {
 	private final double xs[];
 	private final double ys[];
 	private Rectangle2D.Double boundingBox;
@@ -88,7 +87,7 @@ public class CollisionBox {
 		}
 		return newBox;
 	}
-	
+
 	public CollisionBox scaleY(double s) {
 		CollisionBox newBox = new CollisionBox(npoints);
 		for (int i = 0; i < npoints; i++) {
@@ -125,6 +124,29 @@ public class CollisionBox {
 		return boundingBox;
 	}
 
+	public boolean collide(Line2D line) {
+		int cp;
+		for (int i = 0; i < npoints; i++) {
+			cp = (i + 1) % npoints;
+			if (line.intersectsLine(xs[i], ys[i], xs[cp], ys[cp])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean collide(double x1, double y1, double x2, double y2) {
+		int cp;
+		for (int i = 0; i < npoints; i++) {
+			cp = (i + 1) % npoints;
+			if (Line2D.linesIntersect(x1, y1, x2, y2, xs[i], ys[i], xs[cp],
+					ys[cp])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static boolean collide(CollisionBox c1, CollisionBox c2) {
 		int c1p;
 		int c2p;
@@ -143,7 +165,6 @@ public class CollisionBox {
 
 	public void draw(Graphics2D g2d) {
 		int c1p;
-		g2d.setColor(Color.pink);
 		for (int i = 0; i < npoints; i++) {
 			c1p = (i + 1) % npoints;
 			g2d.drawLine((int) (xs[i] * Simulation.SCALE),
@@ -151,6 +172,11 @@ public class CollisionBox {
 					(int) (xs[c1p] * Simulation.SCALE),
 					(int) (ys[c1p] * Simulation.SCALE));
 		}
+	}
+
+	@Override
+	public CollisionBox getCollisionBox() {
+		return this;
 	}
 
 }

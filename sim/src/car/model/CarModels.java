@@ -1,22 +1,23 @@
-package car;
+package car.model;
 
 import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class CarModelDb {
-	private static HashMap<String, CarModel> carModels = new HashMap<String, CarModel>();
 
-	// constructor
-	/**
-	 * To prevent instantiation.
-	 */
-	private CarModelDb() {
+public class CarModels {
+	private CarModels() {
+		throw new AssertionError();
 	}
+
+	/**
+	 * Static methods for cars.
+	 */
+	private static HashMap<String, CarModel> carModels = new HashMap<String, CarModel>();
 
 	// static fields
 	/**
-	 * Register a new car type, or override an older car type.
+	 * Register a new car model.
 	 * 
 	 * @param carModel
 	 */
@@ -29,7 +30,7 @@ public class CarModelDb {
 	 * 
 	 * @return
 	 */
-	public static Collection<String> getCarModelNames() {
+	public static Collection<String> getNames() {
 		return carModels.keySet();
 	}
 
@@ -39,7 +40,7 @@ public class CarModelDb {
 	 * @param name
 	 * @return
 	 */
-	public static CarModel getByName(String name) {
+	public static CarModel getCarModel(String name) {
 		if (!carModels.containsKey(name)) {
 			throw new RuntimeException("Car model " + name + " does not exist.");
 		}

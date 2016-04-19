@@ -1,12 +1,17 @@
 package math;
 
+
 import java.util.Random;
 
 public class Statistics {
 	private Statistics() {
+		throw new AssertionError();
+	}
+	static {
+		
 	}
 
-	private static Random r = new Random();
+	private final static Random r = new Random(1000);
 
 	public static int getPoissonRandom(double mean) {
 		double L = Math.exp(-mean);
@@ -18,6 +23,10 @@ public class Statistics {
 		} while (p > L);
 		return k - 1;
 	}
+	
+	public static void reset(){
+		r.setSeed(1000);
+	}
 
 	public static double getBellRandom(double mean, double variance) {
 		double k = r.nextGaussian();
@@ -27,10 +36,14 @@ public class Statistics {
 	public static int getBinomial(int n, double p) {
 		int x = 0;
 		for (int i = 0; i < n; i++) {
-			if (Math.random() < p)
+			if (r.nextDouble() < p)
 				x++;
 		}
 		return x;
+	}
+	
+	public static double uniform(){
+		return r.nextDouble();
 	}
 
 }
