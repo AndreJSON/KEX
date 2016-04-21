@@ -1,10 +1,7 @@
 package sim;
 
 import map.intersection.*;
-import sim.system.ACarSystem;
-import sim.system.CollisionSystem;
-import sim.system.DSCS;
-import sim.system.SpawnSystem;
+import sim.system.*;
 
 import java.awt.geom.AffineTransform;
 
@@ -73,7 +70,7 @@ public class Simulation {
 		systemHandler.addSystem(new SpawnSystem(this));
 		systemHandler.addSystem(new ACarSystem(this));
 		systemHandler.addSystem(new CollisionSystem());
-		systemHandler.addSystem(new DSCS());
+		systemHandler.addSystem(new SAD());
 	}
 
 	// public methods.
