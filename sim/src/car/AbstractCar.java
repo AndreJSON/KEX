@@ -110,7 +110,6 @@ public abstract class AbstractCar implements Drawable, Collidable {
 							.getWheelBase());
 
 			theta += (rotation * diff) % Math.PI;
-
 		}
 	}
 
@@ -152,6 +151,7 @@ public abstract class AbstractCar implements Drawable, Collidable {
 		g2d.setColor(color);
 		Shape shape = aF.createTransformedShape(carModel.getShape());
 		g2d.fill(shape);
+
 	}
 
 	public Vector2D getPos() {

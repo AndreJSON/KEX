@@ -64,7 +64,8 @@ public class CarModel {
 		this.name = name;
 		this.length = length;
 		this.width = width;
-		carShape = new Rectangle2D.Double(-length, -width / 2, length, width);
+		carShape = new Rectangle2D.Double(-length + frontAxleDisplacement,
+				-width / 2, length, width);
 		collisionBox = new CollisionBox((Rectangle2D) carShape);
 	}
 
@@ -94,21 +95,6 @@ public class CarModel {
 	 */
 	public double getWidth() {
 		return width;
-	}
-
-	/**
-	 * Gets the center point of the car.
-	 * 
-	 * @param pos
-	 *            the center point of the car
-	 * @param heading
-	 *            the heading of the car
-	 * @return rear point of the car
-	 */
-	public Vector2D getCenterPoint(Vector2D pos, double heading) {
-		double x = pos.getX() - Math.cos(heading) * length / 2;
-		double y = pos.getY() - Math.sin(heading) * length / 2;
-		return new Vector2D(x, y);
 	}
 
 	/**
@@ -195,9 +181,40 @@ public class CarModel {
 		return collisionBox;
 	}
 
+	/**
+	 * Gets the center point of the car.
+	 * 
+	 * @param pos
+	 *            the center point of the car
+	 * @param heading
+	 *            the heading of the car
+	 * @return rear point of the car
+	 */
+	public Vector2D getCenterPoint(Vector2D pos, double heading) {
+		return getCarPoint(pos, heading, length / 2 - frontAxleDisplacement);
+	}
+
+	public Vector2D getFrontPoint(Vector2D pos, double heading) {
+		return getCarPoint(pos, heading, -frontAxleDisplacement);
+	}
+
 	public Vector2D getRearPoint(Vector2D pos, double heading) {
-		double x = pos.getX() - Math.cos(heading) * length;
-		double y = pos.getY() - Math.sin(heading) * length;
+		return getCarPoint(pos, heading, length - frontAxleDisplacement);
+	}
+
+	public Vector2D getFrontAxelPoint(Vector2D pos, double heading) {
+		return getCarPoint(pos, heading, 0);
+	}
+
+	public Vector2D getRearAxelPoint(Vector2D pos, double heading) {
+		return getCarPoint(pos, heading, rearAxleDisplacement
+				- frontAxleDisplacement);
+	}
+
+	private Vector2D getCarPoint(Vector2D pos, double heading,
+			double displacement) {
+		double x = pos.getX() - Math.cos(heading) * displacement;
+		double y = pos.getY() - Math.sin(heading) * displacement;
 		return new Vector2D(x, y);
 	}
 

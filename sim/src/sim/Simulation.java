@@ -10,8 +10,7 @@ import javax.swing.JFrame;
 public class Simulation {
 
 	// public static final fields
-	public static final boolean SHOW_GRID = false;
-	public static final boolean SHOW_TRACKS = false;
+	public static final boolean SHOW_TRACKS = true;
 	public static final boolean DEBUG = true;
 	public static final boolean COLLISION = false;
 	public static final int X = 0, Y = 1;
@@ -23,7 +22,7 @@ public class Simulation {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 4;
+	public static final double SCALE_TICK = 0.75;
 	public static final int TICKS_PER_SECOND = (int) (SCALE_TICK / Const.TIME_STEP);
 	// Time between printing data (seconds)
 	public static final double PRINT_TIME = 10 * 60;
@@ -69,8 +68,7 @@ public class Simulation {
 		systemHandler.addSystem(new CollisionSystem());
 		systemHandler.addSystem(new SpawnSystem(this));
 		systemHandler.addSystem(new ACarSystem(this));
-		systemHandler.addSystem(new CollisionSystem());
-		systemHandler.addSystem(new SAD());
+		systemHandler.addSystem(new DSCS());
 	}
 
 	// public methods.

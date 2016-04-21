@@ -31,32 +31,6 @@ public class Vector2D extends Point2D.Double {
 	}
 
 	/**
-	 * 
-	 * @param x
-	 */
-	public void setX(double x) {
-		this.x = x;
-	}
-
-	/**
-	 * 
-	 * @param y
-	 */
-	public void setY(double y) {
-		this.y = y;
-	}
-
-	/**
-	 * 
-	 * @param dx
-	 * @param dy
-	 */
-	public void move(double dx, double dy) {
-		x += dx;
-		y += dy;
-	}
-
-	/**
 	 * The unit vector.
 	 * 
 	 * @return
