@@ -13,7 +13,7 @@ public class Simulation {
 	public static final boolean SHOW_TRACKS = true;
 	public static final boolean DEBUG = true;
 	public static final boolean COLLISION = false;
-	public static final boolean SAD = false;
+	public static final boolean SAD = true;
 	public static final int X = 0, Y = 1;
 	public static final int[] WINDOW_SIZE = { 1000, 800 };
 	public static final int HUDSize = WINDOW_SIZE[X] - WINDOW_SIZE[Y];
@@ -23,7 +23,7 @@ public class Simulation {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 25;
+	public static final double SCALE_TICK = 10;
 	public static final int TICKS_PER_SECOND = (int) (SCALE_TICK / Const.TIME_STEP);
 	// Time between printing data (seconds)
 	public static final double PRINT_TIME = 10 * 60;
@@ -91,12 +91,13 @@ public class Simulation {
 		int fps = 0;
 		int tps = 0;
 		long fpsTime = nextTime;
+		long tpsTime = 0;
 		long tickTime = System.nanoTime();
 
 		double printTimer = PRINT_TIME;
 
 		boolean pause = false;
-		while (true) {
+		while (elapsedTime < 60 * 60 * 3 + 60) {
 			long now = System.nanoTime();
 
 			// Drawing
@@ -107,7 +108,6 @@ public class Simulation {
 				fps++;
 
 			}
-
 			// ticking
 			while (now - tickTime >= 1e9 / TICKS_PER_SECOND && !pause) {
 				try {
@@ -121,7 +121,6 @@ public class Simulation {
 				tps++;
 				elapsedTime += Const.TIME_STEP;
 				tickTime += 1e9 / TICKS_PER_SECOND;
-				
 
 				if (printTimer - elapsedTime <= 0) {
 					// Print data.
@@ -130,18 +129,26 @@ public class Simulation {
 					printTimer += PRINT_TIME;
 					PerfDb.resetIntervalStatistics();
 				}
+
+				
+				
 			}
-
-
+			
+			// TPS
+			if (tpsTime <= now) {
+				lastTps = tps;
+				tpsTime += 1e9;
+				tps = 0;
+			}
 			// FPS
 			if (fpsTime <= now) {
 				fpsTime += 1e9;
 				lastFps = fps;
-				lastTps = tps;
-				tps = 0;
 				fps = 0;
 			}
 		}
+
+		System.exit(0);
 	}
 
 	public double elapsedTime() {
