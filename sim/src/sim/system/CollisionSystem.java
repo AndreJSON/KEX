@@ -8,5 +8,4 @@ public class CollisionSystem implements SimSystem {
 	public void tick(double diff) {
 		EntityDb.checkCollision();
 	}
-
 }

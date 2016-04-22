@@ -15,7 +15,8 @@ public class DSCS implements SimSystem {
 
 	private static final int PHASE0 = 0, PHASE1 = 1, PHASE2 = 2, PHASE3 = 3,
 			IDLE = 4;
-	public double[] MAX_PHASE_LENGTH = { 9, 6, 9, 6, 1.5 };
+	private static double a = 11.5,b = 8;
+	public double[] MAX_PHASE_LENGTH = { a, b, a, b, 1 };
 	private static double GAP_OUT = 1;
 
 	private HashMap<Integer, Pair[]> phases;
@@ -24,7 +25,7 @@ public class DSCS implements SimSystem {
 	private double gapOutTimer = 0;
 
 	// Stop x meters from intersection. If no buffer, the cars will spill over.
-	private static final double BUFFER = 0.5;
+	private static final double BUFFER = 1;
 
 	public DSCS() {
 		phases = new HashMap<>();
@@ -152,4 +153,5 @@ public class DSCS implements SimSystem {
 		return "Phase: " + currentPhase + " Time left: "
 				+ new DecimalFormat("0.0").format(phaseTimeLeft());
 	}
+
 }

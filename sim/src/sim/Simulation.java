@@ -13,6 +13,7 @@ public class Simulation {
 	public static final boolean SHOW_TRACKS = true;
 	public static final boolean DEBUG = true;
 	public static final boolean COLLISION = false;
+	public static final boolean SAD = false;
 	public static final int X = 0, Y = 1;
 	public static final int[] WINDOW_SIZE = { 1000, 800 };
 	public static final int HUDSize = WINDOW_SIZE[X] - WINDOW_SIZE[Y];
@@ -22,7 +23,7 @@ public class Simulation {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 0.75;
+	public static final double SCALE_TICK = 25;
 	public static final int TICKS_PER_SECOND = (int) (SCALE_TICK / Const.TIME_STEP);
 	// Time between printing data (seconds)
 	public static final double PRINT_TIME = 10 * 60;
@@ -34,6 +35,7 @@ public class Simulation {
 	private final SystemHandler systemHandler;
 	private int lastFps;
 	private int lastTps;
+	private DSCS dscs;
 
 	// main
 	public static void main(String[] args) {
@@ -66,9 +68,18 @@ public class Simulation {
 
 	private void initSystems() {
 		systemHandler.addSystem(new CollisionSystem());
+		if (SAD) {
+			systemHandler.addSystem(new SAD());
+		} else {
+			dscs = new DSCS();
+			systemHandler.addSystem(dscs);
+		}
 		systemHandler.addSystem(new SpawnSystem(this));
 		systemHandler.addSystem(new ACarSystem(this));
-		systemHandler.addSystem(new DSCS());
+	}
+
+	public DSCS getDSCS() {
+		return dscs;
 	}
 
 	// public methods.
@@ -110,18 +121,20 @@ public class Simulation {
 				tps++;
 				elapsedTime += Const.TIME_STEP;
 				tickTime += 1e9 / TICKS_PER_SECOND;
+				
+
+				if (printTimer - elapsedTime <= 0) {
+					// Print data.
+					System.out.printf("%4.0f\t%s\t%s\n", printTimer / 60,
+							PerfDb.getWholeData(), PerfDb.getIntervalData());
+					printTimer += PRINT_TIME;
+					PerfDb.resetIntervalStatistics();
+				}
 			}
 
-			if (printTimer - elapsedTime <= 0) {
-				// Print data.
-				System.out.printf("%4.0f\t%s\t%s\n", printTimer / 60,
-						PerfDb.getWholeData(), PerfDb.getIntervalData());
-				printTimer += PRINT_TIME;
-				PerfDb.resetIntervalStatistics();
-			}
 
 			// FPS
-			if (fpsTime <= System.nanoTime()) {
+			if (fpsTime <= now) {
 				fpsTime += 1e9;
 				lastFps = fps;
 				lastTps = tps;
