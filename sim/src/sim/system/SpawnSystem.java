@@ -22,7 +22,7 @@ public class SpawnSystem implements SimSystem {
 	public SpawnSystem(Simulation sim) {
 		this.sim = sim;
 		// Average m cars per second.
-		Distribution distr = Spawners.getPoisson(0.65/* m */);
+		Distribution distr = Spawners.getPoisson(0.1/* m */);
 		spawners = new Spawner[] { Spawners.getSpawner(Const.NORTH, distr),
 				Spawners.getSpawner(Const.SOUTH, distr),
 				Spawners.getSpawner(Const.WEST, distr),

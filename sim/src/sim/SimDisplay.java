@@ -93,7 +93,6 @@ class SimDisplay extends Canvas {
 	private void drawInterface(Graphics2D g2d) {
 		g2d.setColor(Color.black);
 		drawTime(g2d);
-		//drawPerfData(g2d);
 		drawScale(g2d);
 		drawTFPS(g2d);
 		if (Simulation.DEBUG)
@@ -110,14 +109,6 @@ class SimDisplay extends Canvas {
 		if (!Simulation.SAD) {
 			g2d.drawString("DSCS: " + sim.getDSCS().drawPhase(), paddingX, 55);
 		}
-	}
-
-	@SuppressWarnings("unused")
-	private void drawPerfData(Graphics2D g2d) {
-		int paddingX = 20;
-		g2d.drawString("Performance data: " + PerfDb.getWholeData(), paddingX,
-				75);
-		
 	}
 
 	private void drawScale(Graphics2D g2d) {

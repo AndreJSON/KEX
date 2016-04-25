@@ -23,7 +23,7 @@ public class Simulation {
 	public static final AffineTransform SCALER = AffineTransform
 			.getScaleInstance(SCALE, SCALE);
 	// 1 = normal speed, 2 = double speed etc.
-	public static final double SCALE_TICK = 10;
+	public static final double SCALE_TICK = 30;
 	public static final int TICKS_PER_SECOND = (int) (SCALE_TICK / Const.TIME_STEP);
 	// Time between printing data (seconds)
 	public static final double PRINT_TIME = 10 * 60;
@@ -56,7 +56,6 @@ public class Simulation {
 	// Initializer
 	private void initFrame() {
 		simDisp.setBounds(0, 0, WINDOW_SIZE[Y], WINDOW_SIZE[Y]);
-
 		window.setLayout(null);
 		window.add(simDisp);
 		window.setSize(WINDOW_SIZE[X], WINDOW_SIZE[Y]);
@@ -64,6 +63,7 @@ public class Simulation {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
 		window.setResizable(false);
+
 	}
 
 	private void initSystems() {
@@ -123,17 +123,17 @@ public class Simulation {
 				tickTime += 1e9 / TICKS_PER_SECOND;
 
 				if (printTimer - elapsedTime <= 0) {
-					// Print data.
-					System.out.printf("%4.0f\t%s\t%s\n", printTimer / 60,
-							PerfDb.getWholeData(), PerfDb.getIntervalData());
+					PerfDb.Data data = PerfDb.compileData();
+					if (data != null) {
+						System.out.printf("%d\t%.2f\t%.2f\t%.2f\n",
+								(int) (elapsedTime / 60), data.getMSCD(),
+								data.getMean(), data.getVariance());
+					}
 					printTimer += PRINT_TIME;
-					PerfDb.resetIntervalStatistics();
 				}
 
-				
-				
 			}
-			
+
 			// TPS
 			if (tpsTime <= now) {
 				lastTps = tps;

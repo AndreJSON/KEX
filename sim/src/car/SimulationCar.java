@@ -19,6 +19,7 @@ public class SimulationCar extends AbstractCar {
 		done = false;
 	}
 
+	@Override
 	public void updateCollisionBox() {
 		double x = tPos.getX();
 		double y = tPos.getY();
