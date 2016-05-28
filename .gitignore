@@ -22,3 +22,6 @@ hs_err_pid*
 # --- gedit ---
 *~
 /sad/nbproject/private/
+/java/nbproject/private/
+/java/build/
+/java/dist/
