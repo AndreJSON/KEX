@@ -16,12 +16,7 @@ import util.CollisionBox;
 import util.QuadTree;
 
 import car.AutonomousCar;
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * EntityDatabase manages the collection of Entities that are IN the simulator

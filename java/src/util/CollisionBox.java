@@ -4,7 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import org.apache.commons.math3.util.FastMath;
 
 import sim.Simulation;
 
@@ -54,8 +53,8 @@ public class CollisionBox implements Collidable {
     }
 
     public CollisionBox transform(double dx, double dy, double theta) {
-        double sinTheta = FastMath.sin(theta);
-        double cosTheta = FastMath.cos(theta);
+        double sinTheta = Math.sin(theta);
+        double cosTheta = Math.cos(theta);
         CollisionBox newBox = new CollisionBox(npoints);
         for (int i = 0; i < npoints; i++) {
             newBox.xs[i] = xs[i] * cosTheta - ys[i] * sinTheta + dx;

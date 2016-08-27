@@ -2,7 +2,6 @@ package math;
 
 import java.awt.geom.Point2D;
 
-import org.apache.commons.math3.util.FastMath;
 
 @SuppressWarnings("serial")
 public class Vector2D extends Point2D.Double {
@@ -48,12 +47,12 @@ public class Vector2D extends Point2D.Double {
      * @return
      */
     public double theta() {
-        return FastMath.atan2(y, x);
+        return Math.atan2(y, x);
     }
 
     /**
      *
-     * @param p
+     * @param point
      * @return
      */
     public double dot(Vector2D point) {
@@ -65,7 +64,7 @@ public class Vector2D extends Point2D.Double {
      * @return
      */
     public double norm() {
-        return FastMath.sqrt(this.dot(this));
+        return Math.sqrt(this.dot(this));
     }
 
     /**
@@ -87,7 +86,7 @@ public class Vector2D extends Point2D.Double {
 
     /**
      *
-     * @param p
+     * @param point
      * @return
      */
     public Vector2D plus(Point2D point) {
@@ -96,7 +95,7 @@ public class Vector2D extends Point2D.Double {
 
     /**
      *
-     * @param p
+     * @param point
      * @return
      */
     public Vector2D minus(Vector2D point) {
@@ -105,12 +104,12 @@ public class Vector2D extends Point2D.Double {
 
     /**
      *
-     * @param p
+     * @param theta
      * @return
      */
     public Vector2D rotate(double theta) {
-        double sin = FastMath.sin(theta);
-        double cos = FastMath.cos(theta);
+        double sin = Math.sin(theta);
+        double cos = Math.cos(theta);
         return new Vector2D(x * cos - y * sin, x * sin + y * cos);
     }
 
